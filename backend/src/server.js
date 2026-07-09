@@ -42,7 +42,7 @@ app.use(xss);
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000'], // Restrict to specific origins
+  origin: ['http://localhost:5173', 'http://localhost:3000', /.+\.vercel\.app$/], // Restrict to specific origins and Vercel domains
   credentials: true
 }));
 app.use(bodyParser.json({ limit: '10mb' })); // Add request size limit
