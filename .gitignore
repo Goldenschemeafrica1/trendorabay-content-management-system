@@ -25,3 +25,6 @@ dist-ssr
 
 # Uploads directory
 backend/uploads
+
+# Environment variables
+backend/.env
