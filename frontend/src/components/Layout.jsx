@@ -56,7 +56,7 @@ export const SidebarVisibilityContext = createContext({
 })
 
 const navigation = [
-  { name: 'Dashboard', href: '/', icon: LayoutDashboard },
+  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { section: 'Content' },
   { name: 'Stories', href: '/stories', icon: FileText },
   { name: 'Magazines', href: '/magazines', icon: BookOpen },
