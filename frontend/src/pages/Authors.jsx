@@ -101,7 +101,7 @@ export default function Authors() {
     email: author.email || '',
     bio: author.bio || ''
   })
-  setAvatarPreview(author.avatar_url ? `http://localhost:5002${author.avatar_url}` : null)
+  setAvatarPreview(author.avatar_url ? `https://trendorabay-content-management-system.onrender.com${author.avatar_url}` : null)
   setShowEditModal(true)
 }
 
@@ -309,7 +309,7 @@ const handleUpdateAuthor = async () => {
                     }}>
                       {author.avatar_url ? (
                         <img 
-                          src={`http://localhost:5002${author.avatar_url}`}
+                          src={`https://trendorabay-content-management-system.onrender.com${author.avatar_url}`}
                           alt={author.name}
                           style={{ 
                             width: '100%', 

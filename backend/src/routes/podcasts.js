@@ -1,28 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const { uploadFields } = require('../config/upload');
+const { deleteFromS3 } = require('../config/s3');
 const { authenticate, optionalAuth } = require('../middleware/auth');
 const { isEditor, hasRole } = require('../middleware/authorize');
 
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = 'uploads/podcasts';
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, 'podcast-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
-
-const upload = multer({ storage: storage });
+// Configure upload for podcasts with S3 support
+const upload = uploadFields([
+  { name: 'cover_art', maxCount: 1 },
+  { name: 'audio_file', maxCount: 1 },
+  { name: 'video_file', maxCount: 1 }
+], 'podcasts', 200 * 1024 * 1024); // 200MB limit for podcasts
 
 // Get all podcasts (public read, editor+ for full access)
 router.get('/', optionalAuth, async (req, res) => {
@@ -58,12 +47,12 @@ router.get('/:id', optionalAuth, async (req, res) => {
 });
 
 // Create podcast (editor+)
-router.post('/', authenticate, isEditor, upload.fields([{ name: 'cover_art' }, { name: 'audio_file' }, { name: 'video_file' }]), async (req, res) => {
+router.post('/', authenticate, isEditor, upload, async (req, res) => {
   try {
     const { title, episode_number, category, description, guest, duration, host, status } = req.body;
-    const cover_art_url = req.files['cover_art'] ? `/uploads/podcasts/${req.files['cover_art'][0].filename}` : null;
-    const audio_file_url = req.files['audio_file'] ? `/uploads/podcasts/${req.files['audio_file'][0].filename}` : null;
-    const video_file_url = req.files['video_file'] ? `/uploads/podcasts/${req.files['video_file'][0].filename}` : null;
+    const cover_art_url = req.files['cover_art'] ? req.files['cover_art'][0].location : null;
+    const audio_file_url = req.files['audio_file'] ? req.files['audio_file'][0].location : null;
+    const video_file_url = req.files['video_file'] ? req.files['video_file'][0].location : null;
     const published_at = new Date().toISOString().split('T')[0];
     
     // Find category_id from category name

@@ -1,28 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const { uploadSingle } = require('../config/upload');
+const { deleteFromS3 } = require('../config/s3');
 const { authenticate } = require('../middleware/auth');
 const { isAdmin } = require('../middleware/authorize');
 
-// Configure multer for advertisement image uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = 'uploads/advertisements';
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, 'ad-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
-
-const upload = multer({ storage: storage });
+// Configure upload for advertisements with S3 support
+const upload = uploadSingle('image', 'advertisements', 5 * 1024 * 1024); // 5MB limit for ad images
 
 // Get all advertisements (admin+)
 router.get('/', authenticate, isAdmin, async (req, res) => {
@@ -156,7 +141,7 @@ router.post('/upload', authenticate, isAdmin, upload.single('image'), async (req
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
-    const file_url = `/uploads/advertisements/${req.file.filename}`;
+    const file_url = req.file ? (req.file.location || `/uploads/advertisements/${req.file.filename}`) : null;
     res.status(201).json({
       message: 'Image uploaded successfully',
       file_url: file_url,

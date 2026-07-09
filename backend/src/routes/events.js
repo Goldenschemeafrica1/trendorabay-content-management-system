@@ -1,28 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const { uploadSingle } = require('../config/upload');
+const { deleteFromS3 } = require('../config/s3');
 const { authenticate, optionalAuth } = require('../middleware/auth');
 const { isEditor, hasRole } = require('../middleware/authorize');
 
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = 'uploads/events';
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, 'event-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
-
-const upload = multer({ storage: storage });
+// Configure upload for events with S3 support
+const upload = uploadSingle('image', 'events', 5 * 1024 * 1024); // 5MB limit for event images
 
 // Get all events (public read)
 router.get('/', optionalAuth, async (req, res) => {
@@ -38,7 +23,7 @@ router.get('/', optionalAuth, async (req, res) => {
 router.post('/', authenticate, isEditor, upload.single('image'), async (req, res) => {
   try {
     const { title, description, event_date, event_time, location, event_type, category, price, attendees, type, status } = req.body;
-    const image_url = req.file ? `/uploads/events/${req.file.filename}` : null;
+    const image_url = req.file ? (req.file.location || `/uploads/events/${req.file.filename}`) : null;
     
     // Auto-determine status based on event date
     let autoStatus = 'upcoming';
@@ -70,7 +55,7 @@ router.post('/', authenticate, isEditor, upload.single('image'), async (req, res
 router.put('/:id', authenticate, isEditor, upload.single('image'), async (req, res) => {
   try {
     const { title, description, event_date, event_time, location, event_type, category, price, attendees, type, status } = req.body;
-    const image_url = req.file ? `/uploads/events/${req.file.filename}` : null;
+    const image_url = req.file ? (req.file.location || `/uploads/events/${req.file.filename}`) : null;
     
     // Auto-determine status based on event date
     let autoStatus = status;

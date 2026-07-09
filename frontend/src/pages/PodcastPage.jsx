@@ -43,7 +43,7 @@ export default function PodcastPage() {
         const imageUrl = podcast.cover_art_url 
           ? (podcast.cover_art_url.startsWith('http') 
               ? podcast.cover_art_url 
-              : `http://localhost:5002${podcast.cover_art_url}`)
+              : `https://trendorabay-content-management-system.onrender.com${podcast.cover_art_url}`)
           : ''
         
         return {
@@ -71,7 +71,7 @@ export default function PodcastPage() {
         const imageUrl = host.photo_url 
           ? (host.photo_url.startsWith('http') 
               ? host.photo_url 
-              : `http://localhost:5002${host.photo_url}`)
+              : `https://trendorabay-content-management-system.onrender.com${host.photo_url}`)
           : ''
         
         return {
@@ -94,7 +94,7 @@ export default function PodcastPage() {
         const imageUrl = guest.avatar_url 
           ? (guest.avatar_url.startsWith('http') 
               ? guest.avatar_url 
-              : `http://localhost:5002${guest.avatar_url}`)
+              : `https://trendorabay-content-management-system.onrender.com${guest.avatar_url}`)
           : ''
         
         return {

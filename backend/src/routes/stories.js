@@ -1,55 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const { uploadSingle } = require('../config/upload');
+const { deleteFromS3 } = require('../config/s3');
 const { authenticate, optionalAuth } = require('../middleware/auth');
 const { isEditor, hasRole } = require('../middleware/authorize');
 const { storyValidation, storyIdValidation } = require('../middleware/validation');
 
-// Allowed image types for stories
-const ALLOWED_IMAGE_TYPES = {
-  'image/jpeg': '.jpg',
-  'image/jpg': '.jpg',
-  'image/png': '.png',
-  'image/gif': '.gif',
-  'image/webp': '.webp'
-};
-
-// File filter to validate image types
-const fileFilter = (req, file, cb) => {
-  if (ALLOWED_IMAGE_TYPES[file.mimetype]) {
-    cb(null, true);
-  } else {
-    cb(new Error(`Invalid file type. Allowed types: ${Object.keys(ALLOWED_IMAGE_TYPES).join(', ')}`), false);
-  }
-};
-
-// Configure multer for file uploads with security
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = 'uploads/stories';
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const ext = ALLOWED_IMAGE_TYPES[file.mimetype] || path.extname(file.originalname);
-    cb(null, 'cover-' + uniqueSuffix + ext);
-  }
-});
-
-const upload = multer({
-  storage: storage,
-  fileFilter: fileFilter,
-  limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB limit for images
-    files: 1 // Single file for cover image
-  }
-});
+// Configure upload for stories with S3 support
+const upload = uploadSingle('cover_image', 'stories', 5 * 1024 * 1024); // 5MB limit for images
 
 // Get all stories (public read, editor+ for full access)
 router.get('/', optionalAuth, async (req, res) => {
@@ -109,7 +68,7 @@ router.post('/', authenticate, isEditor, upload.single('cover_image'), storyVali
     
     console.log('Creating story with data:', { title, author_id, category, contentLength: content?.length, status, featured, read_time });
     
-    const featured_image_url = req.file ? `/uploads/stories/${req.file.filename}` : null;
+    const featured_image_url = req.file ? (req.file.location || `/uploads/stories/${req.file.filename}`) : null;
     
     // Find category_id from category name
     let category_id = null;
@@ -147,7 +106,7 @@ router.post('/', authenticate, isEditor, upload.single('cover_image'), storyVali
 router.put('/:id', authenticate, isEditor, storyIdValidation, upload.single('cover_image'), storyValidation, async (req, res) => {
   try {
     const { title, author_id, category, content, status, featured, read_time } = req.body;
-    const featured_image_url = req.file ? `/uploads/stories/${req.file.filename}` : null;
+    const featured_image_url = req.file ? (req.file.location || `/uploads/stories/${req.file.filename}`) : null;
     
     // Get current story to preserve existing image if no new one is uploaded
     const [currentStory] = await db.query('SELECT featured_image_url, published_at FROM stories WHERE id = ?', [req.params.id]);

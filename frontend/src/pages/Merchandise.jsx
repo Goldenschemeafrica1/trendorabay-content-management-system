@@ -72,7 +72,7 @@ export default function Merchandise() {
       if (imageFile) {
         const formDataUpload = new FormData()
         formDataUpload.append('image', imageFile)
-        const uploadResponse = await fetch('http://localhost:5002/api/products/upload', {
+        const uploadResponse = await fetch('https://trendorabay-content-management-system.onrender.com/api/products/upload', {
           method: 'POST',
           body: formDataUpload
         })
@@ -123,7 +123,7 @@ export default function Merchandise() {
       if (imageFile) {
         const formDataUpload = new FormData()
         formDataUpload.append('image', imageFile)
-        const uploadResponse = await fetch('http://localhost:5002/api/products/upload', {
+        const uploadResponse = await fetch('https://trendorabay-content-management-system.onrender.com/api/products/upload', {
           method: 'POST',
           body: formDataUpload
         })

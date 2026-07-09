@@ -1,28 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const { uploadSingle } = require('../config/upload');
+const { deleteFromS3 } = require('../config/s3');
 const { authenticate, optionalAuth } = require('../middleware/auth');
 const { isEditor, hasRole } = require('../middleware/authorize');
 
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = 'uploads/products';
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, 'product-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
-
-const upload = multer({ storage: storage });
+// Configure upload for products with S3 support
+const upload = uploadSingle('image', 'products', 5 * 1024 * 1024); // 5MB limit for product images
 
 // Upload product image (editor+)
 router.post('/upload', authenticate, isEditor, upload.single('image'), (req, res) => {
@@ -30,7 +15,7 @@ router.post('/upload', authenticate, isEditor, upload.single('image'), (req, res
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
-    const imageUrl = `/uploads/products/${req.file.filename}`;
+    const imageUrl = req.file ? (req.file.location || `/uploads/products/${req.file.filename}`) : null;
     res.json({ imageUrl });
   } catch (error) {
     res.status(500).json({ error: error.message });

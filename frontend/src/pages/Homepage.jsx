@@ -443,7 +443,7 @@ export default function Homepage() {
                       </span>
                       {mainCoverStory.featured_image_url && (
                         <img 
-                          src={`http://localhost:5002${mainCoverStory.featured_image_url}`}
+                          src={`https://trendorabay-content-management-system.onrender.com${mainCoverStory.featured_image_url}`}
                           alt="Cover"
                           style={{ 
                             width: '100%', 
@@ -781,7 +781,7 @@ export default function Homepage() {
                     <input type="checkbox" style={{ width: '16px', height: '16px' }} />
                     {magazine.cover_image_url && (
                       <img 
-                        src={`http://localhost:5002${magazine.cover_image_url}`}
+                        src={`https://trendorabay-content-management-system.onrender.com${magazine.cover_image_url}`}
                         alt={magazine.title}
                         style={{ 
                           width: '50px', 
@@ -919,7 +919,7 @@ export default function Homepage() {
                     }}>
                       {magazine.cover_image_url ? (
                         <img 
-                          src={`http://localhost:5002${magazine.cover_image_url}`}
+                          src={`https://trendorabay-content-management-system.onrender.com${magazine.cover_image_url}`}
                           alt={magazine.title}
                           style={{ 
                             width: '100%', 

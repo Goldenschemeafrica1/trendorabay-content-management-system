@@ -1,40 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const { uploadFields } = require('../config/upload');
+const { deleteFromS3 } = require('../config/s3');
 const { authenticate, optionalAuth } = require('../middleware/auth');
 const { isEditor, hasRole } = require('../middleware/authorize');
 
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = 'uploads/magazines';
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, 'cover-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
-
-const upload = multer({ storage: storage });
-
-// Configure multer for multiple file uploads
-const uploadFields = upload.fields([
+// Configure upload for magazines with S3 support
+const uploadFieldsConfig = uploadFields([
   { name: 'cover_image', maxCount: 1 },
   { name: 'pdf_file', maxCount: 1 },
   { name: 'preview_pages_file_0', maxCount: 1 },
   { name: 'preview_pages_file_1', maxCount: 1 },
   { name: 'preview_pages_file_2', maxCount: 1 }
-]);
-
-// Alternative: accept any files
-const uploadAny = upload.any();
+], 'magazines', 50 * 1024 * 1024); // 50MB limit for PDFs
 
 // Get all magazines (public read, editor+ for full access)
 router.get('/', optionalAuth, async (req, res) => {
@@ -70,7 +49,7 @@ router.get('/:id', optionalAuth, async (req, res) => {
 });
 
 // Create magazine (editor+)
-router.post('/', authenticate, isEditor, uploadFields, async (req, res) => {
+router.post('/', authenticate, isEditor, uploadFieldsConfig, async (req, res) => {
   try {
     console.log('Request body:', req.body);
     console.log('Request files:', req.files);
@@ -85,8 +64,8 @@ router.post('/', authenticate, isEditor, uploadFields, async (req, res) => {
     const coverImageFile = req.files?.['cover_image']?.[0];
     const pdfFile = req.files?.['pdf_file']?.[0];
 
-    const cover_image_url = coverImageFile ? `/uploads/magazines/${coverImageFile.filename}` : null;
-    const pdf_file_url = pdfFile ? `/uploads/magazines/${pdfFile.filename}` : null;
+    const cover_image_url = coverImageFile ? (coverImageFile.location || `/uploads/magazines/${coverImageFile.filename}`) : null;
+    const pdf_file_url = pdfFile ? (pdfFile.location || `/uploads/magazines/${pdfFile.filename}`) : null;
 
     // Handle preview pages files
     const preview_pages_urls = [];
@@ -94,7 +73,7 @@ router.post('/', authenticate, isEditor, uploadFields, async (req, res) => {
       const fieldName = `preview_pages_file_${i}`;
       const file = req.files?.[fieldName]?.[0];
       if (file) {
-        preview_pages_urls.push(`/uploads/magazines/${file.filename}`);
+        preview_pages_urls.push(file.location || `/uploads/magazines/${file.filename}`);
       }
     }
 
@@ -131,7 +110,7 @@ router.post('/', authenticate, isEditor, uploadFields, async (req, res) => {
 });
 
 // Update magazine (editor+)
-router.put('/:id', authenticate, isEditor, uploadFields, async (req, res) => {
+router.put('/:id', authenticate, isEditor, uploadFieldsConfig, async (req, res) => {
   try {
     const {
       title, issue, category, description, pdf_url, price, digital_price, print_price,
@@ -143,8 +122,8 @@ router.put('/:id', authenticate, isEditor, uploadFields, async (req, res) => {
     const coverImageFile = req.files?.['cover_image']?.[0];
     const pdfFile = req.files?.['pdf_file']?.[0];
 
-    const cover_image_url = coverImageFile ? `/uploads/magazines/${coverImageFile.filename}` : null;
-    const pdf_file_url = pdfFile ? `/uploads/magazines/${pdfFile.filename}` : null;
+    const cover_image_url = coverImageFile ? (coverImageFile.location || `/uploads/magazines/${coverImageFile.filename}`) : null;
+    const pdf_file_url = pdfFile ? (pdfFile.location || `/uploads/magazines/${pdfFile.filename}`) : null;
 
     // Handle preview pages files
     const preview_pages_urls = [];
@@ -152,7 +131,7 @@ router.put('/:id', authenticate, isEditor, uploadFields, async (req, res) => {
       const fieldName = `preview_pages_file_${i}`;
       const file = req.files?.[fieldName]?.[0];
       if (file) {
-        preview_pages_urls.push(`/uploads/magazines/${file.filename}`);
+        preview_pages_urls.push(file.location || `/uploads/magazines/${file.filename}`);
       }
     }
 

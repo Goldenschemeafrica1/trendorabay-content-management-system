@@ -24,7 +24,7 @@ export default function StorePage() {
         const imageUrl = product.image_url 
           ? (product.image_url.startsWith('http') 
               ? product.image_url 
-              : `http://localhost:5002${product.image_url}`)
+              : `https://trendorabay-content-management-system.onrender.com${product.image_url}`)
           : ''
         
         return {
@@ -44,7 +44,7 @@ export default function StorePage() {
         const imageUrl = product.image_url 
           ? (product.image_url.startsWith('http') 
               ? product.image_url 
-              : `http://localhost:5002${product.image_url}`)
+              : `https://trendorabay-content-management-system.onrender.com${product.image_url}`)
           : ''
         
         return {

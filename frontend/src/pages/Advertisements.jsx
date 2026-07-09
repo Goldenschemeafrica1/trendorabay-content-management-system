@@ -757,7 +757,7 @@ export default function Advertisements() {
                         overflow: 'hidden'
                       }}>
                         <img
-                          src={`http://localhost:5002${formData.image_url}`}
+                          src={`https://trendorabay-content-management-system.onrender.com${formData.image_url}`}
                           alt="Desktop Preview"
                           style={{
                             maxWidth: '100%',
@@ -800,7 +800,7 @@ export default function Advertisements() {
                         overflow: 'hidden'
                       }}>
                         <img
-                          src={`http://localhost:5002${formData.mobile_image_url}`}
+                          src={`https://trendorabay-content-management-system.onrender.com${formData.mobile_image_url}`}
                           alt="Mobile Preview"
                           style={{
                             maxWidth: '100%',

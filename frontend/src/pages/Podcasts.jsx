@@ -177,7 +177,7 @@ export default function Podcasts() {
       category: podcast.category_name || podcast.category,
       description: podcast.description || ''
     })
-    setCoverArtPreview(podcast.cover_art_url ? `http://localhost:5002${podcast.cover_art_url}` : null)
+    setCoverArtPreview(podcast.cover_art_url ? `https://trendorabay-content-management-system.onrender.com${podcast.cover_art_url}` : null)
     setShowEditModal(true)
   }
 
@@ -245,7 +245,7 @@ export default function Podcasts() {
       }
 
       // Play new audio
-      const audio = new Audio(`http://localhost:5002${podcast.audio_file_url}`)
+      const audio = new Audio(`https://trendorabay-content-management-system.onrender.com${podcast.audio_file_url}`)
       audio.play()
       setAudioRef(audio)
       setPlayingAudio(podcast.id)
@@ -361,7 +361,7 @@ export default function Podcasts() {
             <div style={{ 
               aspectRatio: '16/9', 
               background: podcast.cover_art_url 
-                ? `url(http://localhost:5002${podcast.cover_art_url}) center/cover no-repeat` 
+                ? `url(https://trendorabay-content-management-system.onrender.com${podcast.cover_art_url}) center/cover no-repeat` 
                 : 'linear-gradient(135deg, #a855f7 0%, #ec4899 100)', 
               display: 'flex', 
               alignItems: 'center', 

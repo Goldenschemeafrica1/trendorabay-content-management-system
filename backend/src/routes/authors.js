@@ -1,28 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const { uploadSingle } = require('../config/upload');
+const { deleteFromS3 } = require('../config/s3');
 const { authenticate, optionalAuth } = require('../middleware/auth');
 const { isEditor, hasRole } = require('../middleware/authorize');
 
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = 'uploads/authors';
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, 'avatar-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
-
-const upload = multer({ storage: storage });
+// Configure upload for authors with S3 support
+const upload = uploadSingle('avatar', 'authors', 5 * 1024 * 1024); // 5MB limit for avatars
 
 // Get all authors (public read)
 router.get('/', optionalAuth, async (req, res) => {
@@ -51,7 +36,7 @@ router.get('/:id', optionalAuth, async (req, res) => {
 router.post('/', authenticate, isEditor, upload.single('avatar'), async (req, res) => {
   try {
     const { name, email, bio } = req.body;
-    const avatar_url = req.file ? `/uploads/authors/${req.file.filename}` : null;
+    const avatar_url = req.file ? (req.file.location || `/uploads/authors/${req.file.filename}`) : null;
     
     const [result] = await db.query(
       `INSERT INTO authors (name, bio, avatar_url, email) 
@@ -76,7 +61,7 @@ router.put('/:id', authenticate, isEditor, upload.single('avatar'), async (req, 
       return res.status(400).json({ error: 'Name is required' });
     }
     
-    const avatar_url = req.file ? `/uploads/authors/${req.file.filename}` : null;
+    const avatar_url = req.file ? (req.file.location || `/uploads/authors/${req.file.filename}`) : null;
     
     // Build the update query dynamically based on what fields are provided
     let query = 'UPDATE authors SET name = ?, email = ?, bio = ?';

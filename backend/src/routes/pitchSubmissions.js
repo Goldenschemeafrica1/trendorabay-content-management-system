@@ -1,34 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const { uploadSingle } = require('../config/upload');
+const { deleteFromS3 } = require('../config/s3');
 const { authenticate, optionalAuth } = require('../middleware/auth');
 const { isEditor, hasRole } = require('../middleware/authorize');
 
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = 'uploads/pitches';
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const ext = path.extname(file.originalname);
-    cb(null, 'pitch-' + uniqueSuffix + ext);
-  }
-});
-
-const upload = multer({
-  storage: storage,
-  limits: {
-    fileSize: 10 * 1024 * 1024, // 10MB limit
-  }
-});
+// Configure upload for pitch submissions with S3 support
+const upload = uploadSingle('article_attachment', 'pitches', 10 * 1024 * 1024); // 10MB limit for pitch documents
 
 // Get all pitch submissions (editor+)
 router.get('/', authenticate, isEditor, async (req, res) => {
@@ -71,7 +50,7 @@ router.post('/', upload.single('article_attachment'), optionalAuth, async (req, 
       status 
     } = req.body;
     
-    const article_attachment = req.file ? `/uploads/pitches/${req.file.filename}` : null;
+    const article_attachment = req.file ? (req.file.location || `/uploads/pitches/${req.file.filename}`) : null;
     
     const [result] = await db.query(
       `INSERT INTO pitch_submissions 
