@@ -18,7 +18,7 @@ export default function Login() {
 
     try {
       const response = await api.login(email, password)
-      navigate('/')
+      navigate('/dashboard')
     } catch (err) {
       setError(err.message || 'Invalid email or password')
     } finally {
