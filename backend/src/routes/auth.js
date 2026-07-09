@@ -67,8 +67,8 @@ router.post('/register', registerValidation, async (req, res) => {
   }
 });
 
-// Login userloginValidation, 
-router.post('/login', async (req, res) => {
+// Login user
+router.post('/login', loginValidation, async (req, res) => {
   try {
     const { email, password } = req.body;
     
