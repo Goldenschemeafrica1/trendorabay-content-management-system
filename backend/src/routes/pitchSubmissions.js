@@ -33,7 +33,7 @@ router.get('/:id', authenticate, isEditor, async (req, res) => {
 });
 
 // Create pitch submission (public - for external submissions)
-router.post('/', upload.single('article_attachment'), optionalAuth, async (req, res) => {
+router.post('/', upload, optionalAuth, async (req, res) => {
   try {
     const { 
       full_name, 
@@ -80,7 +80,7 @@ router.post('/', upload.single('article_attachment'), optionalAuth, async (req, 
 });
 
 // Update pitch submission (editor+)
-router.put('/:id', upload.single('article_attachment'), authenticate, isEditor, async (req, res) => {
+router.put('/:id', upload, authenticate, isEditor, async (req, res) => {
   try {
     const { 
       full_name, 

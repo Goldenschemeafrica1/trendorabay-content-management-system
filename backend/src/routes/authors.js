@@ -33,7 +33,7 @@ router.get('/:id', optionalAuth, async (req, res) => {
 });
 
 // Create author (editor+)
-router.post('/', authenticate, isEditor, upload.single('avatar'), async (req, res) => {
+router.post('/', authenticate, isEditor, upload, async (req, res) => {
   try {
     const { name, email, bio } = req.body;
     const avatar_url = req.file ? (req.file.location || `/uploads/authors/${req.file.filename}`) : null;
@@ -51,7 +51,7 @@ router.post('/', authenticate, isEditor, upload.single('avatar'), async (req, re
 });
 
 // Update author (editor+)
-router.put('/:id', authenticate, isEditor, upload.single('avatar'), async (req, res) => {
+router.put('/:id', authenticate, isEditor, upload, async (req, res) => {
   try {
     console.log('Request body:', req.body);
     console.log('Request file:', req.file);

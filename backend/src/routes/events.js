@@ -20,7 +20,7 @@ router.get('/', optionalAuth, async (req, res) => {
 });
 
 // Create event (editor+)
-router.post('/', authenticate, isEditor, upload.single('image'), async (req, res) => {
+router.post('/', authenticate, isEditor, upload, async (req, res) => {
   try {
     const { title, description, event_date, event_time, location, event_type, category, price, attendees, type, status } = req.body;
     const image_url = req.file ? (req.file.location || `/uploads/events/${req.file.filename}`) : null;
@@ -52,7 +52,7 @@ router.post('/', authenticate, isEditor, upload.single('image'), async (req, res
 });
 
 // Update event (editor+)
-router.put('/:id', authenticate, isEditor, upload.single('image'), async (req, res) => {
+router.put('/:id', authenticate, isEditor, upload, async (req, res) => {
   try {
     const { title, description, event_date, event_time, location, event_type, category, price, attendees, type, status } = req.body;
     const image_url = req.file ? (req.file.location || `/uploads/events/${req.file.filename}`) : null;

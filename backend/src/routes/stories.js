@@ -62,7 +62,7 @@ router.get('/:id', optionalAuth, async (req, res) => {
 });
 
 // Create story (editor+)
-router.post('/', authenticate, isEditor, upload.single('cover_image'), storyValidation, async (req, res) => {
+router.post('/', authenticate, isEditor, upload, storyValidation, async (req, res) => {
   try {
     const { title, author_id, category, content, status, featured, read_time } = req.body;
     
@@ -103,7 +103,7 @@ router.post('/', authenticate, isEditor, upload.single('cover_image'), storyVali
 });
 
 // Update story (editor+)
-router.put('/:id', authenticate, isEditor, storyIdValidation, upload.single('cover_image'), storyValidation, async (req, res) => {
+router.put('/:id', authenticate, isEditor, storyIdValidation, upload, storyValidation, async (req, res) => {
   try {
     const { title, author_id, category, content, status, featured, read_time } = req.body;
     const featured_image_url = req.file ? (req.file.location || `/uploads/stories/${req.file.filename}`) : null;

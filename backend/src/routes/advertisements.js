@@ -136,7 +136,7 @@ router.delete('/:id', authenticate, isAdmin, async (req, res) => {
 });
 
 // Upload advertisement image (admin+)
-router.post('/upload', authenticate, isAdmin, upload.single('image'), async (req, res) => {
+router.post('/upload', authenticate, isAdmin, upload, async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });

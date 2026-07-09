@@ -10,7 +10,7 @@ const { isEditor, hasRole } = require('../middleware/authorize');
 const upload = uploadSingle('image', 'products', 5 * 1024 * 1024); // 5MB limit for product images
 
 // Upload product image (editor+)
-router.post('/upload', authenticate, isEditor, upload.single('image'), (req, res) => {
+router.post('/upload', authenticate, isEditor, upload, (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
