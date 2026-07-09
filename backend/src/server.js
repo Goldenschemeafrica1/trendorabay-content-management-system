@@ -57,6 +57,7 @@ app.get('/', (req, res) => {
 });
 
 // Import routes
+console.log('Loading routes...');
 const storiesRoutes = require('./routes/stories');
 const authorsRoutes = require('./routes/authors');
 const magazinesRoutes = require('./routes/magazines');
@@ -86,6 +87,7 @@ const podcastGuestsRoutes = require('./routes/podcastGuests');
 const guestApplicationsRoutes = require('./routes/guestApplications');
 const pitchSubmissionsRoutes = require('./routes/pitchSubmissions');
 const contactMessagesRoutes = require('./routes/contactMessages');
+console.log('Routes loaded successfully');
 
 // Use routes
 app.use('/api/stories', storiesRoutes);
