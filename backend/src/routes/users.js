@@ -232,6 +232,8 @@ router.put('/:id', authenticate, async (req, res) => {
 // Delete user (admin+)
 router.delete('/:id', authenticate, isAdmin, async (req, res) => {
   try {
+    console.log('Delete user request for ID:', req.params.id);
+    
     // Prevent deleting yourself
     if (parseInt(req.params.id) === req.user.id) {
       return res.status(400).json({ error: 'Cannot delete your own account' });
@@ -239,16 +241,26 @@ router.delete('/:id', authenticate, isAdmin, async (req, res) => {
     
     // Get the cms_user_id before deleting
     const [userToDelete] = await db.query('SELECT cms_user_id FROM users WHERE id = ?', [req.params.id]);
+    console.log('User to delete:', userToDelete);
+    
+    if (userToDelete.length === 0) {
+      console.log('User not found in users table');
+      return res.status(404).json({ error: 'User not found' });
+    }
     
     // Delete from users table
-    await db.query('DELETE FROM users WHERE id = ?', [req.params.id]);
+    const [deleteResult] = await db.query('DELETE FROM users WHERE id = ?', [req.params.id]);
+    console.log('Delete result from users table:', deleteResult);
     
     // Also delete from cms_users if cms_user_id exists
     if (userToDelete.length > 0 && userToDelete[0].cms_user_id) {
+      console.log('Deleting from cms_users with ID:', userToDelete[0].cms_user_id);
       await db.query('DELETE FROM cms_users WHERE id = ?', [userToDelete[0].cms_user_id]);
     }
+    
     res.json({ message: 'User deleted successfully' });
   } catch (error) {
+    console.error('Delete user error:', error);
     res.status(500).json({ error: error.message });
   }
 });
