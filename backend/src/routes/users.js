@@ -229,8 +229,8 @@ router.put('/:id', authenticate, async (req, res) => {
   }
 });
 
-// Delete user (superadmin only)
-router.delete('/:id', authenticate, isSuperAdmin, async (req, res) => {
+// Delete user (admin+)
+router.delete('/:id', authenticate, isAdmin, async (req, res) => {
   try {
     // Prevent deleting yourself
     if (parseInt(req.params.id) === req.user.id) {
