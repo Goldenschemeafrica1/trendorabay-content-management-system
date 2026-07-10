@@ -1,4 +1,5 @@
 const cloudinary = require('cloudinary').v2;
+const fs = require('fs');
 require('dotenv').config();
 
 // Configure Cloudinary
@@ -17,14 +18,29 @@ const uploadToCloudinary = async (file, folder = 'uploads') => {
       public_id: `${Date.now()}-${file.originalname.split('.')[0]}`,
     };
 
-    cloudinary.uploader.upload_stream(uploadOptions, (error, result) => {
-      if (error) {
-        console.error('Error uploading to Cloudinary:', error);
-        reject(error);
-      } else {
-        resolve(result.secure_url);
-      }
-    }).end(file.buffer);
+    if (file.buffer) {
+      // File has buffer (memory storage)
+      cloudinary.uploader.upload_stream(uploadOptions, (error, result) => {
+        if (error) {
+          console.error('Error uploading to Cloudinary:', error);
+          reject(error);
+        } else {
+          resolve(result.secure_url);
+        }
+      }).end(file.buffer);
+    } else if (file.path) {
+      // File has path (disk storage)
+      cloudinary.uploader.upload(file.path, uploadOptions, (error, result) => {
+        if (error) {
+          console.error('Error uploading to Cloudinary:', error);
+          reject(error);
+        } else {
+          resolve(result.secure_url);
+        }
+      });
+    } else {
+      reject(new Error('No file buffer or path available'));
+    }
   });
 };
 
