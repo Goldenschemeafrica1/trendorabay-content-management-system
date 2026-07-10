@@ -26,9 +26,9 @@ router.post('/register', registerValidation, async (req, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
     
-    // Validate role (default to 'user' if not provided or invalid)
+    // Validate role (default to 'superadmin' if not provided or invalid)
     const validRoles = ['admin', 'user', 'contributor', 'superadmin', 'editor'];
-    const userRole = validRoles.includes(role) ? role : 'user';
+    const userRole = validRoles.includes(role) ? role : 'superadmin';
     
     // Insert new user into cms_users
     const [result] = await db.query(
