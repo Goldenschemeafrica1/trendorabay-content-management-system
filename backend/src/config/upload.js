@@ -1,19 +1,6 @@
 const multer = require('multer');
-const { S3Client } = require('@aws-sdk/client-s3');
-const multerS3 = require('multer-s3');
-const { uploadToS3 } = require('./s3');
+const { uploadToCloudinary } = require('./cloudinary');
 require('dotenv').config();
-
-// Initialize S3 client for multer
-const s3Client = new S3Client({
-  region: process.env.AWS_REGION || 'us-east-1',
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  },
-});
-
-const S3_BUCKET = process.env.AWS_S3_BUCKET;
 
 // Allowed file types
 const ALLOWED_FILE_TYPES = {
@@ -39,22 +26,6 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// Configure multer for S3 uploads
-const s3Storage = multerS3({
-  s3: s3Client,
-  bucket: S3_BUCKET,
-  acl: 'public-read', // Make files publicly accessible
-  metadata: (req, file, cb) => {
-    cb(null, { fieldName: file.fieldname });
-  },
-  key: (req, file, cb) => {
-    const folder = req.folder || 'uploads';
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const ext = file.originalname.split('.').pop();
-    cb(null, `${folder}/${uniqueSuffix}.${ext}`);
-  },
-});
-
 // Configure multer for local storage (fallback)
 const localStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -74,12 +45,12 @@ const localStorage = multer.diskStorage({
 });
 
 // Determine which storage to use based on environment
-const useS3 = process.env.AWS_S3_BUCKET && process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY;
+const useCloudinary = !!(process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET);
 
 // Create upload middleware with folder support
 const createUpload = (folder = 'uploads', options = {}) => {
   return multer({
-    storage: useS3 ? s3Storage : localStorage,
+    storage: localStorage,
     fileFilter: fileFilter,
     limits: {
       fileSize: options.maxSize || 100 * 1024 * 1024, // Default 100MB
@@ -91,7 +62,7 @@ const createUpload = (folder = 'uploads', options = {}) => {
 // Single file upload
 const uploadSingle = (fieldName, folder = 'uploads', maxSize = 100 * 1024 * 1024) => {
   return multer({
-    storage: useS3 ? s3Storage : localStorage,
+    storage: localStorage,
     fileFilter: fileFilter,
     limits: { fileSize: maxSize },
   }).single(fieldName);
@@ -100,7 +71,7 @@ const uploadSingle = (fieldName, folder = 'uploads', maxSize = 100 * 1024 * 1024
 // Multiple files upload
 const uploadMultiple = (fieldName, maxCount = 10, folder = 'uploads', maxSize = 100 * 1024 * 1024) => {
   return multer({
-    storage: useS3 ? s3Storage : localStorage,
+    storage: localStorage,
     fileFilter: fileFilter,
     limits: { fileSize: maxSize, files: maxCount },
   }).array(fieldName, maxCount);
@@ -109,10 +80,18 @@ const uploadMultiple = (fieldName, maxCount = 10, folder = 'uploads', maxSize = 
 // Fields upload (multiple fields with different names)
 const uploadFields = (fields, folder = 'uploads', maxSize = 100 * 1024 * 1024) => {
   return multer({
-    storage: useS3 ? s3Storage : localStorage,
+    storage: localStorage,
     fileFilter: fileFilter,
     limits: { fileSize: maxSize },
   }).fields(fields);
+};
+
+// Helper function to upload file to cloud storage (Cloudinary)
+const uploadFileToCloud = async (file, folder = 'uploads') => {
+  if (useCloudinary) {
+    return await uploadToCloudinary(file, folder);
+  }
+  return null;
 };
 
 module.exports = {
@@ -120,6 +99,7 @@ module.exports = {
   uploadSingle,
   uploadMultiple,
   uploadFields,
-  useS3,
+  useCloudinary,
+  uploadFileToCloud,
   ALLOWED_FILE_TYPES,
 };

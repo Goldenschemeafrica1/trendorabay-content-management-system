@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
-const { uploadFields } = require('../config/upload');
-const { deleteFromS3 } = require('../config/s3');
+const { uploadFields, uploadFileToCloud, useCloudinary } = require('../config/upload');
+const { deleteFromCloudinary } = require('../config/cloudinary');
 const { authenticate, optionalAuth } = require('../middleware/auth');
 const { isEditor, hasRole } = require('../middleware/authorize');
 
@@ -64,8 +64,25 @@ router.post('/', authenticate, isEditor, uploadFieldsConfig, async (req, res) =>
     const coverImageFile = req.files?.['cover_image']?.[0];
     const pdfFile = req.files?.['pdf_file']?.[0];
 
-    const cover_image_url = coverImageFile ? (coverImageFile.location || `/uploads/magazines/${coverImageFile.filename}`) : null;
-    const pdf_file_url = pdfFile ? (pdfFile.location || `/uploads/magazines/${pdfFile.filename}`) : null;
+    // Upload files to cloud storage (Cloudinary) if configured
+    let cover_image_url = null;
+    let pdf_file_url = null;
+    
+    if (coverImageFile) {
+      if (useCloudinary) {
+        cover_image_url = await uploadFileToCloud(coverImageFile, 'magazines');
+      } else {
+        cover_image_url = coverImageFile.location || `/uploads/magazines/${coverImageFile.filename}`;
+      }
+    }
+    
+    if (pdfFile) {
+      if (useCloudinary) {
+        pdf_file_url = await uploadFileToCloud(pdfFile, 'magazines');
+      } else {
+        pdf_file_url = pdfFile.location || `/uploads/magazines/${pdfFile.filename}`;
+      }
+    }
 
     // Handle preview pages files
     const preview_pages_urls = [];
@@ -73,7 +90,12 @@ router.post('/', authenticate, isEditor, uploadFieldsConfig, async (req, res) =>
       const fieldName = `preview_pages_file_${i}`;
       const file = req.files?.[fieldName]?.[0];
       if (file) {
-        preview_pages_urls.push(file.location || `/uploads/magazines/${file.filename}`);
+        if (useCloudinary) {
+          const url = await uploadFileToCloud(file, 'magazines');
+          preview_pages_urls.push(url);
+        } else {
+          preview_pages_urls.push(file.location || `/uploads/magazines/${file.filename}`);
+        }
       }
     }
 
@@ -122,8 +144,25 @@ router.put('/:id', authenticate, isEditor, uploadFieldsConfig, async (req, res) 
     const coverImageFile = req.files?.['cover_image']?.[0];
     const pdfFile = req.files?.['pdf_file']?.[0];
 
-    const cover_image_url = coverImageFile ? (coverImageFile.location || `/uploads/magazines/${coverImageFile.filename}`) : null;
-    const pdf_file_url = pdfFile ? (pdfFile.location || `/uploads/magazines/${pdfFile.filename}`) : null;
+    // Upload files to cloud storage (Cloudinary) if configured
+    let cover_image_url = null;
+    let pdf_file_url = null;
+    
+    if (coverImageFile) {
+      if (useCloudinary) {
+        cover_image_url = await uploadFileToCloud(coverImageFile, 'magazines');
+      } else {
+        cover_image_url = coverImageFile.location || `/uploads/magazines/${coverImageFile.filename}`;
+      }
+    }
+    
+    if (pdfFile) {
+      if (useCloudinary) {
+        pdf_file_url = await uploadFileToCloud(pdfFile, 'magazines');
+      } else {
+        pdf_file_url = pdfFile.location || `/uploads/magazines/${pdfFile.filename}`;
+      }
+    }
 
     // Handle preview pages files
     const preview_pages_urls = [];
@@ -131,7 +170,12 @@ router.put('/:id', authenticate, isEditor, uploadFieldsConfig, async (req, res) 
       const fieldName = `preview_pages_file_${i}`;
       const file = req.files?.[fieldName]?.[0];
       if (file) {
-        preview_pages_urls.push(file.location || `/uploads/magazines/${file.filename}`);
+        if (useCloudinary) {
+          const url = await uploadFileToCloud(file, 'magazines');
+          preview_pages_urls.push(url);
+        } else {
+          preview_pages_urls.push(file.location || `/uploads/magazines/${file.filename}`);
+        }
       }
     }
 
@@ -179,6 +223,31 @@ router.delete('/:id', authenticate, async (req, res) => {
     if (!hasRole(req.user.role, 'admin')) {
       return res.status(403).json({ error: 'Admin access required to delete magazines' });
     }
+    
+    // Get magazine data before deletion to remove files from cloud storage
+    const [magazine] = await db.query('SELECT * FROM magazines WHERE id = ?', [req.params.id]);
+    if (magazine.length > 0) {
+      const mag = magazine[0];
+      
+      // Delete cover image from cloud storage
+      if (mag.cover_image_url && useCloudinary && mag.cover_image_url.includes('cloudinary.com')) {
+        try {
+          await deleteFromCloudinary(mag.cover_image_url);
+        } catch (error) {
+          console.error('Error deleting cover image from Cloudinary:', error);
+        }
+      }
+      
+      // Delete PDF file from cloud storage
+      if (mag.pdf_url && useCloudinary && mag.pdf_url.includes('cloudinary.com')) {
+        try {
+          await deleteFromCloudinary(mag.pdf_url);
+        } catch (error) {
+          console.error('Error deleting PDF from Cloudinary:', error);
+        }
+      }
+    }
+    
     await db.query('DELETE FROM magazines WHERE id = ?', [req.params.id]);
     res.json({ message: 'Magazine deleted successfully' });
   } catch (error) {
