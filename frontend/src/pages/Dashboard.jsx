@@ -168,10 +168,10 @@ export default function Dashboard() {
   }, [])
 
   const quickActions = [
-    { name: 'Create Story', href: '/stories/new', icon: FileText, gradient: 'from-blue-500 to-cyan-500' },
-    { name: 'Upload Magazine', href: '/magazines/new', icon: BookOpen, gradient: 'from-emerald-500 to-teal-500' },
-    { name: 'Add Podcast', href: '/podcasts/new', icon: Mic, gradient: 'from-violet-500 to-purple-500' },
-    { name: 'Add Author', href: '/authors/new', icon: Users, gradient: 'from-orange-500 to-amber-500' },
+    { name: 'Create Story', href: '/dashboard/stories/new', icon: FileText, gradient: 'from-blue-500 to-cyan-500' },
+    { name: 'Upload Magazine', href: '/dashboard/magazines/new', icon: BookOpen, gradient: 'from-emerald-500 to-teal-500' },
+    { name: 'Add Podcast', href: '/dashboard/podcasts/new', icon: Mic, gradient: 'from-violet-500 to-purple-500' },
+    { name: 'Add Author', href: '/dashboard/authors/new', icon: Users, gradient: 'from-orange-500 to-amber-500' },
   ]
 
   if (loading) {
