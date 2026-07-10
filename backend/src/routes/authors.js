@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
-const { uploadSingle } = require('../config/upload');
+const { uploadSingle, uploadFileToCloud, useCloudinary } = require('../config/upload');
 const { deleteFromS3 } = require('../config/s3');
+const { deleteFromCloudinary } = require('../config/cloudinary');
 const { authenticate, optionalAuth } = require('../middleware/auth');
 const { isEditor, hasRole } = require('../middleware/authorize');
 
@@ -36,7 +37,15 @@ router.get('/:id', optionalAuth, async (req, res) => {
 router.post('/', authenticate, isEditor, upload, async (req, res) => {
   try {
     const { name, email, bio } = req.body;
-    const avatar_url = req.file ? (req.file.location || `/uploads/authors/${req.file.filename}`) : null;
+    let avatar_url = null;
+    
+    if (req.file) {
+      if (useCloudinary) {
+        avatar_url = await uploadFileToCloud(req.file, 'authors');
+      } else {
+        avatar_url = req.file.location || `/uploads/authors/${req.file.filename}`;
+      }
+    }
     
     const [result] = await db.query(
       `INSERT INTO authors (name, bio, avatar_url, email) 
@@ -64,7 +73,23 @@ router.put('/:id', authenticate, isEditor, upload, async (req, res) => {
     // Get current author to preserve existing data
     const [currentAuthor] = await db.query('SELECT * FROM authors WHERE id = ?', [req.params.id]);
     
-    const avatar_url = req.file ? (req.file.location || `/uploads/authors/${req.file.filename}`) : currentAuthor[0]?.avatar_url;
+    let avatar_url = currentAuthor[0]?.avatar_url;
+    
+    if (req.file) {
+      if (useCloudinary) {
+        avatar_url = await uploadFileToCloud(req.file, 'authors');
+        // Delete old avatar from Cloudinary if it exists
+        if (currentAuthor[0]?.avatar_url && currentAuthor[0].avatar_url.includes('cloudinary.com')) {
+          try {
+            await deleteFromCloudinary(currentAuthor[0].avatar_url);
+          } catch (error) {
+            console.error('Error deleting old avatar from Cloudinary:', error);
+          }
+        }
+      } else {
+        avatar_url = req.file.location || `/uploads/authors/${req.file.filename}`;
+      }
+    }
     
     // Build the update query dynamically based on what fields are provided
     let query = 'UPDATE authors SET name = ?, email = ?, bio = ?, avatar_url = ?';
