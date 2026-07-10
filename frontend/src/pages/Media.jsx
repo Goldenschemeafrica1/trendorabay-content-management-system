@@ -18,7 +18,7 @@ export default function Media() {
     items.forEach(item => {
       if (item.file_type?.startsWith('image/')) {
         const img = new Image()
-        img.src = `https://trendorabay-content-management-system.onrender.com${item.file_url}`
+        img.src = item.file_url.startsWith('http') ? item.file_url : `https://trendorabay-content-management-system.onrender.com${item.file_url}`
         img.onload = () => {
           setImagesLoaded(prev => ({ ...prev, [item.id]: true }))
         }
@@ -110,7 +110,7 @@ export default function Media() {
 
   const handleDownloadMedia = (mediaItem) => {
     const link = document.createElement('a')
-    link.href = `https://trendorabay-content-management-system.onrender.com${mediaItem.file_url}`
+    link.href = mediaItem.file_url.startsWith('http') ? mediaItem.file_url : `https://trendorabay-content-management-system.onrender.com${mediaItem.file_url}`
     link.download = mediaItem.original_name
     link.click()
   }
@@ -280,7 +280,7 @@ export default function Media() {
             <div style={{ 
               aspectRatio: '1/1', 
               background: item.type === 'image' && item.file_url && imagesLoaded[item.id]
-                ? `url(https://trendorabay-content-management-system.onrender.com${item.file_url}) center/cover no-repeat` 
+                ? `url(${item.file_url.startsWith('http') ? item.file_url : `https://trendorabay-content-management-system.onrender.com${item.file_url}`}) center/cover no-repeat` 
                 : item.type === 'image' && item.file_url
                 ? 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100)'
                 : 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100)', 

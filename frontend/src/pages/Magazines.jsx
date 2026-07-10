@@ -221,7 +221,7 @@ export default function Magazines() {
       preview_pages: magazine.preview_pages || ''
     })
     setCoverImagePreview(magazine.cover_image_url 
-      ? `${API_BASE_URL}${magazine.cover_image_url}` 
+      ? (magazine.cover_image_url.startsWith('http') ? magazine.cover_image_url : `${API_BASE_URL}${magazine.cover_image_url}`)
       : null)
     setShowEditModal(true)
   }
