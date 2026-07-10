@@ -1,6 +1,14 @@
 const multer = require('multer');
 const { uploadToCloudinary } = require('./cloudinary');
+const cloudinary = require('cloudinary').v2;
 require('dotenv').config();
+
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 // Allowed file types
 const ALLOWED_FILE_TYPES = {
@@ -26,6 +34,9 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
+// Configure multer for Cloudinary storage
+const cloudinaryStorage = multer.memoryStorage();
+
 // Configure multer for local storage (fallback)
 const localStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -47,10 +58,13 @@ const localStorage = multer.diskStorage({
 // Determine which storage to use based on environment
 const useCloudinary = !!(process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET);
 
+// Choose storage based on configuration
+const storage = useCloudinary ? cloudinaryStorage : localStorage;
+
 // Create upload middleware with folder support
 const createUpload = (folder = 'uploads', options = {}) => {
   return multer({
-    storage: localStorage,
+    storage: storage,
     fileFilter: fileFilter,
     limits: {
       fileSize: options.maxSize || 100 * 1024 * 1024, // Default 100MB
@@ -62,7 +76,7 @@ const createUpload = (folder = 'uploads', options = {}) => {
 // Single file upload
 const uploadSingle = (fieldName, folder = 'uploads', maxSize = 100 * 1024 * 1024) => {
   return multer({
-    storage: localStorage,
+    storage: storage,
     fileFilter: fileFilter,
     limits: { fileSize: maxSize },
   }).single(fieldName);
@@ -71,7 +85,7 @@ const uploadSingle = (fieldName, folder = 'uploads', maxSize = 100 * 1024 * 1024
 // Multiple files upload
 const uploadMultiple = (fieldName, maxCount = 10, folder = 'uploads', maxSize = 100 * 1024 * 1024) => {
   return multer({
-    storage: localStorage,
+    storage: storage,
     fileFilter: fileFilter,
     limits: { fileSize: maxSize, files: maxCount },
   }).array(fieldName, maxCount);
@@ -80,7 +94,7 @@ const uploadMultiple = (fieldName, maxCount = 10, folder = 'uploads', maxSize = 
 // Fields upload (multiple fields with different names)
 const uploadFields = (fields, folder = 'uploads', maxSize = 100 * 1024 * 1024) => {
   return multer({
-    storage: localStorage,
+    storage: storage,
     fileFilter: fileFilter,
     limits: { fileSize: maxSize },
   }).fields(fields);
