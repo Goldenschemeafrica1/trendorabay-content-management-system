@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
-const { uploadFields } = require('../config/upload');
+const { uploadFields, uploadFileToCloud, useCloudinary } = require('../config/upload');
 const { deleteFromS3 } = require('../config/s3');
+const { deleteFromCloudinary } = require('../config/cloudinary');
 const { authenticate, optionalAuth } = require('../middleware/auth');
 const { isEditor, hasRole } = require('../middleware/authorize');
 
@@ -50,9 +51,40 @@ router.get('/:id', optionalAuth, async (req, res) => {
 router.post('/', authenticate, isEditor, upload, async (req, res) => {
   try {
     const { title, episode_number, category, description, guest, duration, host, status } = req.body;
-    const cover_art_url = req.files['cover_art'] ? req.files['cover_art'][0].location : null;
-    const audio_file_url = req.files['audio_file'] ? req.files['audio_file'][0].location : null;
-    const video_file_url = req.files['video_file'] ? req.files['video_file'][0].location : null;
+    
+    let cover_art_url = null;
+    let audio_file_url = null;
+    let video_file_url = null;
+    
+    // Upload files to cloud storage (Cloudinary) if configured
+    const coverArtFile = req.files?.['cover_art']?.[0];
+    const audioFile = req.files?.['audio_file']?.[0];
+    const videoFile = req.files?.['video_file']?.[0];
+    
+    if (coverArtFile) {
+      if (useCloudinary) {
+        cover_art_url = await uploadFileToCloud(coverArtFile, 'podcasts');
+      } else {
+        cover_art_url = coverArtFile.location || `/uploads/podcasts/${coverArtFile.filename}`;
+      }
+    }
+    
+    if (audioFile) {
+      if (useCloudinary) {
+        audio_file_url = await uploadFileToCloud(audioFile, 'podcasts');
+      } else {
+        audio_file_url = audioFile.location || `/uploads/podcasts/${audioFile.filename}`;
+      }
+    }
+    
+    if (videoFile) {
+      if (useCloudinary) {
+        video_file_url = await uploadFileToCloud(videoFile, 'podcasts');
+      } else {
+        video_file_url = videoFile.location || `/uploads/podcasts/${videoFile.filename}`;
+      }
+    }
+    
     const published_at = new Date().toISOString().split('T')[0];
     
     // Find category_id from category name
@@ -84,9 +116,66 @@ router.post('/', authenticate, isEditor, upload, async (req, res) => {
 router.put('/:id', authenticate, isEditor, upload, async (req, res) => {
   try {
     const { title, episode_number, description, category, guest, duration, host, status } = req.body;
-    const cover_art_url = req.files['cover_art'] ? req.files['cover_art'][0].location : req.body.cover_art_url;
-    const audio_file_url = req.files['audio_file'] ? req.files['audio_file'][0].location : req.body.audio_file_url;
-    const video_file_url = req.files['video_file'] ? req.files['video_file'][0].location : req.body.video_file_url;
+    
+    // Get current podcast to preserve existing data if not being updated
+    const [currentPodcast] = await db.query('SELECT * FROM podcasts WHERE id = ?', [req.params.id]);
+    
+    let cover_art_url = currentPodcast[0]?.cover_art_url;
+    let audio_file_url = currentPodcast[0]?.audio_file_url;
+    let video_file_url = currentPodcast[0]?.video_file_url;
+    
+    // Upload files to cloud storage (Cloudinary) if configured
+    const coverArtFile = req.files?.['cover_art']?.[0];
+    const audioFile = req.files?.['audio_file']?.[0];
+    const videoFile = req.files?.['video_file']?.[0];
+    
+    if (coverArtFile) {
+      if (useCloudinary) {
+        cover_art_url = await uploadFileToCloud(coverArtFile, 'podcasts');
+        // Delete old cover art from Cloudinary if it exists
+        if (currentPodcast[0]?.cover_art_url && currentPodcast[0].cover_art_url.includes('cloudinary.com')) {
+          try {
+            await deleteFromCloudinary(currentPodcast[0].cover_art_url);
+          } catch (error) {
+            console.error('Error deleting old cover art from Cloudinary:', error);
+          }
+        }
+      } else {
+        cover_art_url = coverArtFile.location || `/uploads/podcasts/${coverArtFile.filename}`;
+      }
+    }
+    
+    if (audioFile) {
+      if (useCloudinary) {
+        audio_file_url = await uploadFileToCloud(audioFile, 'podcasts');
+        // Delete old audio from Cloudinary if it exists
+        if (currentPodcast[0]?.audio_file_url && currentPodcast[0].audio_file_url.includes('cloudinary.com')) {
+          try {
+            await deleteFromCloudinary(currentPodcast[0].audio_file_url);
+          } catch (error) {
+            console.error('Error deleting old audio from Cloudinary:', error);
+          }
+        }
+      } else {
+        audio_file_url = audioFile.location || `/uploads/podcasts/${audioFile.filename}`;
+      }
+    }
+    
+    if (videoFile) {
+      if (useCloudinary) {
+        video_file_url = await uploadFileToCloud(videoFile, 'podcasts');
+        // Delete old video from Cloudinary if it exists
+        if (currentPodcast[0]?.video_file_url && currentPodcast[0].video_file_url.includes('cloudinary.com')) {
+          try {
+            await deleteFromCloudinary(currentPodcast[0].video_file_url);
+          } catch (error) {
+            console.error('Error deleting old video from Cloudinary:', error);
+          }
+        }
+      } else {
+        video_file_url = videoFile.location || `/uploads/podcasts/${videoFile.filename}`;
+      }
+    }
     
     // Convert string values to proper types
     const episodeNumberValue = episode_number && episode_number !== 'undefined' ? parseInt(episode_number) : null;
@@ -100,11 +189,6 @@ router.put('/:id', authenticate, isEditor, upload, async (req, res) => {
       }
     }
     
-    // Get current podcast to preserve existing data if not being updated
-    const [currentPodcast] = await db.query('SELECT * FROM podcasts WHERE id = ?', [req.params.id]);
-    const final_cover_art_url = cover_art_url || currentPodcast[0]?.cover_art_url;
-    const final_audio_file_url = audio_file_url || currentPodcast[0]?.audio_file_url;
-    const final_video_file_url = video_file_url || currentPodcast[0]?.video_file_url;
     const final_category_id = category_id || currentPodcast[0]?.category_id;
     const final_published_at = currentPodcast[0]?.published_at;
     
@@ -112,7 +196,7 @@ router.put('/:id', authenticate, isEditor, upload, async (req, res) => {
       `UPDATE podcasts 
        SET title = ?, episode_number = ?, description = ?, cover_art_url = ?, audio_file_url = ?, video_file_url = ?, category_id = ?, published_at = ?, guest = ?, duration = ?, host = ?, status = ? 
        WHERE id = ?`,
-      [title, episodeNumberValue, description, final_cover_art_url, final_audio_file_url, final_video_file_url, final_category_id, final_published_at, guest || null, duration || null, host || null, status || 'draft', req.params.id]
+      [title, episodeNumberValue, description, cover_art_url, audio_file_url, video_file_url, final_category_id, final_published_at, guest || null, duration || null, host || null, status || 'draft', req.params.id]
     );
     res.json({ message: 'Podcast updated successfully' });
   } catch (error) {
