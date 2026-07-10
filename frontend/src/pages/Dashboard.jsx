@@ -43,8 +43,15 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        // Fetch stories
-        const stories = await api.get('/stories').catch(() => [])
+        // Fetch all data in parallel for better performance
+        const [stories, magazines, podcasts, orders, authors, subscribers] = await Promise.all([
+          api.get('/stories').catch(() => []),
+          api.get('/magazines').catch(() => []),
+          api.get('/podcasts').catch(() => []),
+          isEditorOrHigher ? api.get('/orders').catch(() => []) : Promise.resolve([]),
+          isEditorOrHigher ? api.get('/authors').catch(() => []) : Promise.resolve([]),
+          isAdminOrHigher ? api.get('/subscribers').catch(() => []) : Promise.resolve([])
+        ])
         
         // Calculate article metrics
         const published = stories.filter(s => s.status === 'published').length
@@ -62,6 +69,15 @@ export default function Dashboard() {
         ).slice(0, 3)
         setTopStories(latestPublished || [])
 
+        // Update original stats with real data
+        setOriginalStats([
+          { name: 'Total Stories', value: stories.length.toString(), change: '+12%', icon: FileText, gradient: 'from-blue-500 to-cyan-500' },
+          { name: 'Magazines', value: magazines.length.toString(), change: '+5%', icon: BookOpen, gradient: 'from-emerald-500 to-teal-500' },
+          { name: 'Podcasts', value: podcasts.length.toString(), change: '+8%', icon: Mic, gradient: 'from-violet-500 to-purple-500' },
+          { name: 'Users', value: authors.length.toString(), change: '+15%', icon: Users, gradient: 'from-orange-500 to-amber-500' },
+          { name: 'Orders', value: orders.length.toString(), change: '+3%', icon: ShoppingBag, gradient: 'from-pink-500 to-rose-500' },
+        ])
+        
         // Build recent activity from fetched data
         const activity = []
         
@@ -75,23 +91,6 @@ export default function Dashboard() {
             type: 'story'
           })
         }
-        
-        // Fetch other content types for activity and original stats
-        const [magazines, podcasts, orders, authors] = await Promise.all([
-          api.get('/magazines').catch(() => []),
-          api.get('/podcasts').catch(() => []),
-          isEditorOrHigher ? api.get('/orders').catch(() => []) : Promise.resolve([]),
-          isEditorOrHigher ? api.get('/authors').catch(() => []) : Promise.resolve([])
-        ])
-        
-        // Update original stats with real data
-        setOriginalStats([
-          { name: 'Total Stories', value: stories.length.toString(), change: '+12%', icon: FileText, gradient: 'from-blue-500 to-cyan-500' },
-          { name: 'Magazines', value: magazines.length.toString(), change: '+5%', icon: BookOpen, gradient: 'from-emerald-500 to-teal-500' },
-          { name: 'Podcasts', value: podcasts.length.toString(), change: '+8%', icon: Mic, gradient: 'from-violet-500 to-purple-500' },
-          { name: 'Users', value: authors.length.toString(), change: '+15%', icon: Users, gradient: 'from-orange-500 to-amber-500' },
-          { name: 'Orders', value: orders.length.toString(), change: '+3%', icon: ShoppingBag, gradient: 'from-pink-500 to-rose-500' },
-        ])
         
         if (magazines.length > 0) {
           const latestMagazine = magazines[0]
@@ -127,9 +126,6 @@ export default function Dashboard() {
         }
 
         setRecentActivity(activity.slice(0, 5))
-
-        // Fetch subscribers
-        const subscribers = isAdminOrHigher ? await api.get('/subscribers').catch(() => []) : []
         setLatestSubscribers(subscribers.slice(0, 5))
 
         // Popular categories from stories
