@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:5002/api';
+const API_BASE_URL = 'https://trendorabay-content-management-system.onrender.com/api';
 
 // Simple in-memory cache with 5-minute TTL
 const cache = new Map();
