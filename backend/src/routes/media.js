@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
-const { uploadMultiple } = require('../config/upload');
+const { uploadMultiple, uploadFileToCloud, useCloudinary } = require('../config/upload');
 const { deleteFromS3 } = require('../config/s3');
+const { deleteFromCloudinary } = require('../config/cloudinary');
 const { authenticate, optionalAuth } = require('../middleware/auth');
 const { isSuperAdmin, hasRole } = require('../middleware/authorize');
 const { mediaIdValidation } = require('../middleware/validation');
@@ -46,7 +47,13 @@ router.post('/', authenticate, isSuperAdmin, upload, async (req, res) => {
     const uploadedMedia = [];
     
     for (const file of files) {
-      const file_url = file.location || `/uploads/media/${file.filename}`;
+      let file_url;
+      if (useCloudinary) {
+        file_url = await uploadFileToCloud(file, folder || 'media');
+      } else {
+        file_url = file.location || `/uploads/media/${file.filename}`;
+      }
+      
       const [result] = await db.query(
         `INSERT INTO media (filename, original_name, file_url, file_type, file_size, folder, uploaded_by) 
          VALUES (?, ?, ?, ?, ?, ?, ?)`,
@@ -84,8 +91,15 @@ router.delete('/:id', authenticate, isSuperAdmin, mediaIdValidation, async (req,
     
     const media = rows[0];
     
-    // Delete from S3 if it's an S3 URL
-    if (media.file_url.includes('amazonaws.com')) {
+    // Delete from Cloudinary if it's a Cloudinary URL
+    if (media.file_url.includes('cloudinary.com')) {
+      try {
+        await deleteFromCloudinary(media.file_url);
+      } catch (error) {
+        console.error('Error deleting from Cloudinary:', error);
+      }
+    } else if (media.file_url.includes('amazonaws.com')) {
+      // Delete from S3 if it's an S3 URL
       await deleteFromS3(media.file_url);
     } else {
       // Delete local file
