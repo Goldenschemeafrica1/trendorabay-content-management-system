@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require('../config/database');
 const { authenticate, optionalAuth } = require('../middleware/auth');
 const { isEditor, hasRole } = require('../middleware/authorize');
-const { uploadSingle } = require('../config/upload');
+const { uploadSingle, uploadFileToCloud, useCloudinary } = require('../config/upload');
 
 // Configure upload for team member avatars
 const upload = uploadSingle('image', 'team', 5 * 1024 * 1024); // 5MB limit for team images
@@ -11,10 +11,26 @@ const upload = uploadSingle('image', 'team', 5 * 1024 * 1024); // 5MB limit for 
 // Upload team member avatar (editor+)
 router.post('/upload', authenticate, isEditor, upload, async (req, res) => {
   try {
+    console.log('Team upload request received');
+    console.log('File:', req.file);
+    console.log('Use Cloudinary:', useCloudinary);
+    
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
-    const file_url = req.file ? (req.file.location || `/uploads/team/${req.file.filename}`) : null;
+    
+    let file_url;
+    if (useCloudinary) {
+      console.log('Uploading to Cloudinary...');
+      file_url = await uploadFileToCloud(req.file, 'team');
+      console.log('Cloudinary upload result:', file_url);
+    } else {
+      console.log('Using local storage');
+      file_url = req.file ? (req.file.location || `/uploads/team/${req.file.filename}`) : null;
+    }
+    
+    console.log('Final file_url:', file_url);
+    
     res.status(201).json({
       message: 'Image uploaded successfully',
       file_url: file_url,
