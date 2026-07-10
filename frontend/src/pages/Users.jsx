@@ -51,10 +51,11 @@ export default function Users() {
     const matchesSearch = displayName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          user.email.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesRole = filterRole === 'all' || user.role === filterRole
-    return matchesSearch && matchesRole
+    const isNotSuperadmin = user.role !== 'superadmin'
+    return matchesSearch && matchesRole && isNotSuperadmin
   })
 
-  const totalUsers = users.length
+  const totalUsers = users.filter(u => u.role !== 'superadmin').length
   const adminUsers = users.filter(u => u.role === 'admin').length
 
   const handleDeleteUser = async (userId) => {

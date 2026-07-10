@@ -305,66 +305,53 @@ export default function Dashboard() {
 
       {/* Charts Section */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px', width: '100%', minWidth: '0' }}>
-        {/* Latest Subscribers */}
-        <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
-          backdropFilter: 'blur(20px)',
-          borderRadius: '24px',
-          padding: '16px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-            <h2 style={{ fontSize: '16px', fontWeight: 'bold', color: '#0f172a' }}>Latest Subscribers</h2>
-            <UserPlus style={{ width: '16px', height: '16px', color: '#f43f5e' }} />
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            {latestSubscribers.length > 0 ? (
-              latestSubscribers.map((subscriber) => (
-                <div key={subscriber.id} style={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: '12px', 
-                  padding: '12px', 
-                  background: '#f8fafc', 
-                  borderRadius: '10px',
-                  border: '1px solid rgba(226, 232, 240, 0.8)'
-                }}>
-                  <div style={{ 
-                    width: '32px', 
-                    height: '32px', 
-                    borderRadius: '50%', 
-                    background: 'linear-gradient(135deg, #f43f5e 0%, #ec4899 100)', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    color: 'white',
-                    fontSize: '12px',
-                    fontWeight: '600'
-                  }}>
-                    {subscriber.name.charAt(0).toUpperCase()}
+        {/* Top Stories */}
+        {topStories.length > 0 && (
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.95)',
+            backdropFilter: 'blur(20px)',
+            borderRadius: '24px',
+            padding: '16px',
+            border: '1px solid rgba(226, 232, 240, 0.8)',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+              <h2 style={{ fontSize: '16px', fontWeight: 'bold', color: '#0f172a' }}>Top Stories</h2>
+              <TrendingUp style={{ width: '16px', height: '16px', color: '#8b5cf6' }} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {topStories.map((story, index) => (
+                <div key={story.id} style={{ padding: '12px', background: '#f8fafc', borderRadius: '10px', border: '1px solid rgba(226, 232, 240, 0.8)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
+                    <span style={{ 
+                      fontSize: '11px', 
+                      fontWeight: 'bold', 
+                      color: '#8b5cf6', 
+                      minWidth: '18px'
+                    }}>#{index + 1}</span>
+                    <h3 style={{ fontSize: '14px', fontWeight: '600', color: '#0f172a', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', lineHeight: '1.3', maxHeight: '2.6em' }}>{story.title}</h3>
                   </div>
-                  <div style={{ flex: 1 }}>
-                    <p style={{ fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>{subscriber.name}</p>
-                    <p style={{ fontSize: '11px', color: '#64748b' }}>{subscriber.email}</p>
+                  {story.excerpt && <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '6px' }}>{story.excerpt}</p>}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{ fontSize: '10px', color: '#94a3b8', fontWeight: '500' }}>
+                      {story.published_at ? new Date(story.published_at).toLocaleDateString() : 'Not published'}
+                    </span>
+                    <span style={{ 
+                      padding: '2px 6px', 
+                      background: '#dcfce7', 
+                      color: '#166534', 
+                      borderRadius: '10px', 
+                      fontSize: '10px', 
+                      fontWeight: '500' 
+                    }}>
+                      Published
+                    </span>
                   </div>
-                  <span style={{ 
-                    padding: '3px 8px', 
-                    background: subscriber.status === 'active' ? '#dcfce7' : '#fef9c3', 
-                    color: subscriber.status === 'active' ? '#166534' : '#854d0e', 
-                    borderRadius: '12px', 
-                    fontSize: '11px', 
-                    fontWeight: '500' 
-                  }}>
-                    {subscriber.status}
-                  </span>
                 </div>
-              ))
-            ) : (
-              <p style={{ fontSize: '13px', color: '#64748b', textAlign: 'center', padding: '20px' }}>No subscribers yet</p>
-            )}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Popular Categories */}
         <div style={{
@@ -437,55 +424,68 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Top Story, Quick Actions, Recent Activity */}
+      {/* Latest Subscribers, Quick Actions, Recent Activity */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
-        {/* Top Story */}
-        {topStories.length > 0 && (
-          <div style={{
-            background: 'rgba(255, 255, 255, 0.95)',
-            backdropFilter: 'blur(20px)',
-            borderRadius: '24px',
-            padding: '16px',
-            border: '1px solid rgba(226, 232, 240, 0.8)',
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-              <h2 style={{ fontSize: '16px', fontWeight: 'bold', color: '#0f172a' }}>Top Stories</h2>
-              <TrendingUp style={{ width: '16px', height: '16px', color: '#8b5cf6' }} />
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              {topStories.map((story, index) => (
-                <div key={story.id} style={{ padding: '12px', background: '#f8fafc', borderRadius: '10px', border: '1px solid rgba(226, 232, 240, 0.8)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
-                    <span style={{ 
-                      fontSize: '11px', 
-                      fontWeight: 'bold', 
-                      color: '#8b5cf6', 
-                      minWidth: '18px'
-                    }}>#{index + 1}</span>
-                    <h3 style={{ fontSize: '14px', fontWeight: '600', color: '#0f172a', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', lineHeight: '1.3', maxHeight: '2.6em' }}>{story.title}</h3>
-                  </div>
-                  {story.excerpt && <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '6px' }}>{story.excerpt}</p>}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{ fontSize: '10px', color: '#94a3b8', fontWeight: '500' }}>
-                      {story.published_at ? new Date(story.published_at).toLocaleDateString() : 'Not published'}
-                    </span>
-                    <span style={{ 
-                      padding: '2px 6px', 
-                      background: '#dcfce7', 
-                      color: '#166534', 
-                      borderRadius: '10px', 
-                      fontSize: '10px', 
-                      fontWeight: '500' 
-                    }}>
-                      Published
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
+        {/* Latest Subscribers */}
+        <div style={{
+          background: 'rgba(255, 255, 255, 0.95)',
+          backdropFilter: 'blur(20px)',
+          borderRadius: '24px',
+          padding: '16px',
+          border: '1px solid rgba(226, 232, 240, 0.8)',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+            <h2 style={{ fontSize: '16px', fontWeight: 'bold', color: '#0f172a' }}>Latest Subscribers</h2>
+            <UserPlus style={{ width: '16px', height: '16px', color: '#f43f5e' }} />
           </div>
-        )}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            {latestSubscribers.length > 0 ? (
+              latestSubscribers.map((subscriber) => (
+                <div key={subscriber.id} style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '12px', 
+                  padding: '12px', 
+                  background: '#f8fafc', 
+                  borderRadius: '10px',
+                  border: '1px solid rgba(226, 232, 240, 0.8)'
+                }}>
+                  <div style={{ 
+                    width: '32px', 
+                    height: '32px', 
+                    borderRadius: '50%', 
+                    background: 'linear-gradient(135deg, #f43f5e 0%, #ec4899 100)', 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    color: 'white',
+                    fontSize: '12px',
+                    fontWeight: '600'
+                  }}>
+                    {subscriber.name.charAt(0).toUpperCase()}
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <p style={{ fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>{subscriber.name}</p>
+                    <p style={{ fontSize: '11px', color: '#64748b' }}>{subscriber.email}</p>
+                  </div>
+                  <span style={{ 
+                    padding: '3px 8px', 
+                    background: subscriber.status === 'active' ? '#dcfce7' : '#fef9c3', 
+                    color: subscriber.status === 'active' ? '#166534' : '#854d0e', 
+                    borderRadius: '12px', 
+                    fontSize: '11px', 
+                    fontWeight: '500' 
+                  }}>
+                    {subscriber.status}
+                  </span>
+                </div>
+              ))
+            ) : (
+              <p style={{ fontSize: '13px', color: '#64748b', textAlign: 'center', padding: '20px' }}>No subscribers yet</p>
+            )}
+          </div>
+        </div>
 
         {/* Quick Actions */}
         <div style={{
