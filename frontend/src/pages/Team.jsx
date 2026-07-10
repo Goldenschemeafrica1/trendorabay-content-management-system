@@ -240,7 +240,7 @@ export default function Team() {
             <div style={{ padding: '12px' }}>
               <h3 style={{ fontWeight: '600', color: '#0f172a', fontSize: '14px', marginBottom: '3px' }}>{member.name}</h3>
               <p style={{ fontSize: '12px', color: '#7c3aed', fontWeight: '500', marginBottom: '6px' }}>{member.role}</p>
-              <p style={{ fontSize: '11px', color: '#64748b', marginBottom: '10px' }}>{member.bio}</p>
+              <p style={{ fontSize: '11px', color: '#64748b', marginBottom: '10px', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', lineHeight: '1.4', maxHeight: '2.8em' }}>{member.bio}</p>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <button 
                   onClick={() => handleEditMember(member)}
