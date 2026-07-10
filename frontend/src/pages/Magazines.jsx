@@ -3,7 +3,7 @@ import { Plus, Search, Filter, Edit, Trash2, Eye, Upload } from 'lucide-react'
 import api from '../services/api'
 import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
 
-const API_BASE_URL = 'https://trendorabay-content-management-system.onrender.com'
+const API_BASE_URL = 'http://localhost:5002'
 
 export default function Magazines() {
   const { setHideHeader } = useContext(HeaderVisibilityContext)

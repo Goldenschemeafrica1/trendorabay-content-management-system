@@ -3,12 +3,16 @@ const { body, param, query, validationResult } = require('express-validator');
 // Validation middleware factory
 const validate = (req, res, next) => {
   const errors = validationResult(req);
+  console.log('Validation middleware called for:', req.path);
+  console.log('Request body:', req.body);
   if (!errors.isEmpty()) {
+    console.log('Validation errors:', errors.array());
     return res.status(400).json({ 
       error: 'Validation failed', 
       details: errors.array() 
     });
   }
+  console.log('Validation passed');
   next();
 };
 

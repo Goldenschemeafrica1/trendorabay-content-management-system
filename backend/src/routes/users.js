@@ -11,7 +11,27 @@ const SALT_ROUNDS = 10;
 // Get all users (admin only)
 router.get('/', authenticate, isAdmin, async (req, res) => {
   try {
-    const [rows] = await db.query('SELECT id, username, first_name, last_name, email, role, profile_image_url, created_at FROM users ORDER BY created_at DESC');
+    const [rows] = await db.query(`
+      SELECT 
+        c.id as cms_user_id,
+        c.name,
+        c.email,
+        c.role,
+        c.status,
+        c.profile_image_url,
+        c.last_active,
+        c.created_at as cms_created_at,
+        c.updated_at as cms_updated_at,
+        u.id as users_table_id,
+        u.username,
+        u.first_name,
+        u.last_name,
+        u.created_at as users_created_at,
+        u.updated_at as users_updated_at
+      FROM cms_users c
+      LEFT JOIN users u ON c.id = u.cms_user_id
+      ORDER BY c.created_at DESC
+    `);
     res.json(rows);
   } catch (error) {
     console.error('Error fetching users:', error);
@@ -19,7 +39,7 @@ router.get('/', authenticate, isAdmin, async (req, res) => {
   }
 });
 
-// Get single user (admin or own idValidation, user)
+// Get single user (admin or own profile)
 router.get('/:id', authenticate, async (req, res) => {
   try {
     // Allow if admin or if requesting own profile
@@ -27,7 +47,28 @@ router.get('/:id', authenticate, async (req, res) => {
       return res.status(403).json({ error: 'Access denied' });
     }
     
-    const [rows] = await db.query('SELECT id, username, first_name, last_name, email, role, profile_image_url, created_at FROM users WHERE id = ?', [req.params.id]);
+    const [rows] = await db.query(`
+      SELECT 
+        c.id as cms_user_id,
+        c.name,
+        c.email,
+        c.role,
+        c.status,
+        c.profile_image_url,
+        c.last_active,
+        c.created_at as cms_created_at,
+        c.updated_at as cms_updated_at,
+        u.id as users_table_id,
+        u.username,
+        u.first_name,
+        u.last_name,
+        u.created_at as users_created_at,
+        u.updated_at as users_updated_at
+      FROM cms_users c
+      LEFT JOIN users u ON c.id = u.cms_user_id
+      WHERE c.id = ?
+    `, [req.params.id]);
+    
     if (rows.length === 0) {
       return res.status(404).json({ error: 'User not found' });
     }
@@ -83,29 +124,18 @@ router.post('/', authenticate, isAdmin, async (req, res) => {
   }
 });
 
-// Update user (admin or own useridValidation, updateUserValidation, )
+// Update user (admin or own profile)
 router.put('/:id', authenticate, async (req, res) => {
   try {
     const { name, email, role, profile_image_url, password } = req.body;
+    const cmsUserId = parseInt(req.params.id);
     
     // Check permissions
-    const isOwnProfile = req.user.id === parseInt(req.params.id);
+    const isOwnProfile = req.user.id === cmsUserId;
     const isAdminUser = hasRole(req.user.role, 'admin');
     
-    if (!isOwfile && !isAdminUser) {
+    if (!isOwnProfile && !isAdminUser) {
       return res.status(403).json({ error: 'Access denied' });
-    }
-    
-    // Non-admins can only update their own name and profile image
-    if (!isAdminUser) {
-      const [result] = await db.query(
-        `UPDATE users 
-         SET name = ?, profile_image_url = ? 
-         WHERE id = ?`,
-        [name, profile_image_url, req.params.id]
-      );
-      res.json({ message: 'User updated successfully' });
-      return;
     }
     
     // Admins can update more fields
@@ -117,50 +147,89 @@ router.put('/:id', authenticate, async (req, res) => {
       return res.status(403).json({ error: 'Only superadmin can assign superadmin role' });
     }
     
-    // Prevent admin from demoting themselves or other admins (unless superadmin)
-    if (req.user.role === 'admin' && userRole !== 'admin' && parseInt(req.params.id) === req.user.id) {
+    // Prevent admin from demoting themselves (unless superadmin)
+    if (req.user.role === 'admin' && userRole !== 'admin' && cmsUserId === req.user.id) {
       return res.status(403).json({ error: 'Cannot demote yourself' });
     }
     
-    // Get the cms_user_iduser
-    const [userRecord] = await db.query('SELECT cms_user_id FROM users WHERE id = ?', [req.params.id]);
-    const cmsUserId = userRecord.length > 0 ? userRecord[0].cms_user_id : null;
-    user
-    // Update users table
-    let query, params;
-    if (password) {
+    // Build dynamic update query based on provided fields
+    const updateFields = [];
+    const updateValues = [];
+    
+    if (role !== undefined) {
+      updateFields.push('role = ?');
+      updateValues.push(userRole);
+    }
+    if (email !== undefined) {
+      updateFields.push('email = ?');
+      updateValues.push(email);
+    }
+    if (profile_image_url !== undefined) {
+      updateFields.push('profile_image_url = ?');
+      updateValues.push(profile_image_url);
+    }
+    if (name !== undefined) {
+      updateFields.push('name = ?');
+      updateValues.push(name);
+    }
+    if (password !== undefined) {
       const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
-      query = `UPDATE users SET name = ?, email = ?, role = ?, profile_image_url = ? WHERE id = ?`;
-      params = [name, email, userRole, profile_image_url, req.params.id];
-    } else {
-      query = `UPDATE users SET name = ?, email = ?, role = ?, profile_image_url = ? WHERE id = ?`;
-      params = [name, email, userRole, profile_image_url, req.params.id];
+      updateFields.push('password = ?');
+      updateValues.push(hashedPassword);
     }
     
-    await db.query(query, params);
+    if (updateFields.length === 0) {
+      return res.status(400).json({ error: 'No fields to update' });
+    }
     
-    // Also update cms_users table if cms_user_id exists
-    if (cmsUserId) {
-      if (password) {
-        const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
-        await db.query(
-          `UPDATE cms_users SET name = ?, email = ?, role = ?, profile_image_url = ?, password = ? WHERE id = ?`,
-          [name, email, userRole, profile_image_url, hashedPassword, cmsUserId]
-        );
-      } else {
-        await db.query(
-          `UPDATE cms_users SET name = ?, email = ?, role = ?, profile_image_url = ? WHERE id = ?`,
-          [name, email, userRole, profile_image_url, cmsUserId]
-        );
+    updateValues.push(cmsUserId);
+    
+    // Update cms_users table (primary source of truth)
+    await db.query(
+      `UPDATE cms_users SET ${updateFields.join(', ')} WHERE id = ?`,
+      updateValues
+    );
+    
+    // Also update users table if it has a corresponding entry
+    const [userRecord] = await db.query('SELECT id FROM users WHERE cms_user_id = ?', [cmsUserId]);
+    if (userRecord.length > 0) {
+      const usersTableId = userRecord[0].id;
+      const usersUpdateFields = [];
+      const usersUpdateValues = [];
+      
+      if (role !== undefined) {
+        usersUpdateFields.push('role = ?');
+        usersUpdateValues.push(userRole);
       }
+      if (email !== undefined) {
+        usersUpdateFields.push('email = ?');
+        usersUpdateValues.push(email);
+      }
+      if (profile_image_url !== undefined) {
+        usersUpdateFields.push('profile_image_url = ?');
+        usersUpdateValues.push(profile_image_url);
+      }
+      if (name !== undefined) {
+        usersUpdateFields.push('username = ?');
+        usersUpdateValues.push(name);
+      }
+      
+      usersUpdateValues.push(usersTableId);
+      
+      await db.query(
+        `UPDATE users SET ${usersUpdateFields.join(', ')} WHERE id = ?`,
+        usersUpdateValues
+      );
     }
+    
     res.json({ message: 'User updated successfully' });
   } catch (error) {
+    console.error('Update user error:', error);
     res.status(500).json({ error: error.message });
   }
 });
 
-// Delete user (superadmin only)idValidation, 
+// Delete user (superadmin only)
 router.delete('/:id', authenticate, isSuperAdmin, async (req, res) => {
   try {
     // Prevent deleting yourself

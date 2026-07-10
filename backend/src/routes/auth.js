@@ -71,12 +71,24 @@ router.post('/register', registerValidation, async (req, res) => {
 router.post('/login', loginValidation, async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log('Login attempt for email:', email);
     
-    // Find user by email
-    const [users] = await db.query(
-      'SELECT * FROM cms_users WHERE email = ?',
-      [email]
-    );
+    // Find user by email with retry logic
+    let users;
+    let retries = 3;
+    for (let i = 0; i < retries; i++) {
+      try {
+        [users] = await db.query(
+          'SELECT * FROM cms_users WHERE email = ?',
+          [email]
+        );
+        break;
+      } catch (err) {
+        console.log(`Database query attempt ${i + 1} failed:`, err.message);
+        if (i === retries - 1) throw err;
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    }
     
     if (users.length === 0) {
       return res.status(401).json({ error: 'Invalid email or password' });
@@ -119,13 +131,18 @@ router.post('/login', loginValidation, async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
-        profile_image_url: user.profile_image_url
+        status: user.status,
+        profile_image_url: user.profile_image_url,
+        last_active: user.last_active,
+        created_at: user.created_at
       },
       token
     });
   } catch (error) {
     console.error('Login error:', error);
-    res.status(500).json({ error: 'Login failed' });
+    console.error('Error details:', error.message);
+    console.error('Error stack:', error.stack);
+    res.status(500).json({ error: 'Login failed', details: error.message });
   }
 });
 
@@ -145,7 +162,7 @@ router.get('/verify', async (req, res) => {
       
       // Get fresh user data
       const [users] = await db.query(
-        'SELECT id, name, email, role, status, profile_image_url FROM cms_users WHERE id = ?',
+        'SELECT id, name, email, role, status, profile_image_url, last_active, created_at FROM cms_users WHERE id = ?',
         [decoded.userId]
       );
       

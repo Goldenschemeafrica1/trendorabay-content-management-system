@@ -42,7 +42,7 @@ app.use(xss);
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000', 'https://trendorabay-content-management-syst.vercel.app', /.+\.vercel\.app$/], // Restrict to specific origins and Vercel domains
+  origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:3000', 'https://trendorabay-content-management-syst.vercel.app', /.+\.vercel\.app$/], // Restrict to specific origins and Vercel domains
   credentials: true
 }));
 app.use(bodyParser.json({ limit: '10mb' })); // Add request size limit

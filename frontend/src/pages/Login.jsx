@@ -30,52 +30,90 @@ export default function Login() {
     <div style={{ 
       minHeight: '100vh',
       display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      padding: '20px'
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
     }}>
+      {/* Left Section */}
       <div style={{
-        width: '100%',
-        maxWidth: '420px',
-        background: 'rgba(255, 255, 255, 0.95)',
-        backdropFilter: 'blur(20px)',
-        borderRadius: '24px',
-        padding: '40px',
-        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-        border: '1px solid rgba(255, 255, 255, 0.2)'
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: '60px',
+        background: 'rgba(255, 255, 255, 0.1)',
+        backdropFilter: 'blur(10px)'
       }}>
-        {/* Logo/Header */}
-        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <div style={{
-            width: '64px',
-            height: '64px',
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            borderRadius: '16px',
-            margin: '0 auto 16px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
+        <div style={{
+          maxWidth: '500px',
+          textAlign: 'center'
+        }}>
+          <h1 style={{
+            fontSize: '48px',
+            fontWeight: 'bold',
+            color: 'white',
+            marginBottom: '20px'
           }}>
-            <Lock style={{ width: '32px', height: '32px', color: 'white' }} />
-          </div>
-          <h1 style={{ 
-            fontSize: '28px', 
-            fontWeight: 'bold', 
-            color: '#1a1a2e',
-            margin: 0
-          }}>
-            Welcome Back
+            Trendorabay
           </h1>
-          <p style={{ 
-            fontSize: '14px', 
-            color: '#64748b',
-            marginTop: '8px',
-            margin: '8px 0 0 0'
+          <p style={{
+            fontSize: '18px',
+            color: 'rgba(255, 255, 255, 0.9)',
+            lineHeight: '1.6'
           }}>
-            Sign in to your account
+            Welcome to our Content Management System. Manage your content, track analytics, and collaborate with your team efficiently.
           </p>
         </div>
+      </div>
+
+      {/* Right Section - Login Form */}
+      <div style={{
+        flex: 1,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '40px'
+      }}>
+        <div style={{
+          width: '100%',
+          maxWidth: '420px',
+          background: 'rgba(255, 255, 255, 0.95)',
+          backdropFilter: 'blur(20px)',
+          borderRadius: '24px',
+          padding: '40px',
+          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+          border: '1px solid rgba(255, 255, 255, 0.2)'
+        }}>
+          {/* Logo/Header */}
+          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+            <div style={{
+              width: '64px',
+              height: '64px',
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              borderRadius: '16px',
+              margin: '0 auto 16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <Lock style={{ width: '32px', height: '32px', color: 'white' }} />
+            </div>
+            <h1 style={{ 
+              fontSize: '28px', 
+              fontWeight: 'bold', 
+              color: '#1a1a2e',
+              margin: 0
+            }}>
+              Welcome Back
+            </h1>
+            <p style={{ 
+              fontSize: '14px', 
+              color: '#64748b',
+              marginTop: '8px',
+              margin: '8px 0 0 0'
+            }}>
+              Sign in to your account
+            </p>
+          </div>
 
         {/* Error Message */}
         {error && (
@@ -267,31 +305,6 @@ export default function Login() {
             {!loading && <ArrowRight style={{ width: '18px', height: '18px' }} />}
           </button>
         </form>
-
-        {/* Sign Up Link */}
-        <div style={{ 
-          textAlign: 'center', 
-          marginTop: '24px',
-          paddingTop: '24px',
-          borderTop: '1px solid #e5e7eb'
-        }}>
-          <p style={{ 
-            fontSize: '14px', 
-            color: '#64748b',
-            margin: 0
-          }}>
-            Don't have an account?{' '}
-            <Link 
-              to="/register"
-              style={{
-                color: '#667eea',
-                textDecoration: 'none',
-                fontWeight: '600'
-              }}
-            >
-              Sign up
-            </Link>
-          </p>
         </div>
       </div>
     </div>

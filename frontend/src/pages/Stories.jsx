@@ -206,7 +206,7 @@ export default function Stories() {
       featured: story.featured === 1,
       read_time: story.read_time || '5 min read'
     })
-    setCoverImagePreview(story.cover_image_url ? (story.cover_image_url.startsWith('http') ? story.cover_image_url : `https://trendorabay-content-management-system.onrender.com${story.cover_image_url}`) : null)
+    setCoverImagePreview(story.cover_image_url ? (story.cover_image_url.startsWith('http') ? story.cover_image_url : `http://localhost:5002${story.cover_image_url}`) : null)
     setShowEditModal(true)
   }
 
@@ -1197,7 +1197,7 @@ export default function Stories() {
                   boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
                 }}>
                   <img 
-                    src={viewingStory.featured_image_url.startsWith('http') ? viewingStory.featured_image_url : `https://trendorabay-content-management-system.onrender.com${viewingStory.featured_image_url}`} 
+                    src={viewingStory.featured_image_url.startsWith('http') ? viewingStory.featured_image_url : `http://localhost:5002${viewingStory.featured_image_url}`} 
                     alt="Featured" 
                     style={{ 
                       width: '100%', 

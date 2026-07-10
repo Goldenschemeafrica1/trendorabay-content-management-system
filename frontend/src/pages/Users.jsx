@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react'
-import { Shield, Trash2, User as UserIcon, Users as UsersIcon, Plus } from 'lucide-react'
+import { Shield, Trash2, User as UserIcon, Users as UsersIcon, Plus, Edit } from 'lucide-react'
 import api from '../services/api'
 import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
 
@@ -12,6 +12,7 @@ export default function Users() {
   const [searchTerm, setSearchTerm] = useState('')
   const [filterRole, setFilterRole] = useState('all')
   const [showCreateModal, setShowCreateModal] = useState(false)
+  const [editingUserId, setEditingUserId] = useState(null)
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -68,6 +69,24 @@ export default function Users() {
     } catch (err) {
       console.error('Failed to delete user:', err)
       alert('Failed to delete user: ' + (err.message || 'Unknown error'))
+    }
+  }
+
+  const handleRoleChange = async (userId, newRole) => {
+    try {
+      const currentUser = JSON.parse(localStorage.getItem('user'));
+      if (currentUser?.role !== 'superadmin') {
+        alert('Only superadmin can change user roles');
+        return;
+      }
+      await api.put(`/users/${userId}`, { role: newRole });
+      setUsers(users.map(user => 
+        user.cms_user_id === userId ? { ...user, role: newRole } : user
+      ));
+      setEditingUserId(null);
+    } catch (err) {
+      console.error('Failed to update user role:', err);
+      alert('Failed to update user role: ' + (err.message || 'Unknown error'));
     }
   }
 
@@ -289,7 +308,7 @@ export default function Users() {
           </thead>
           <tbody>
             {filteredUsers.map((user) => (
-              <tr key={user.id} style={{ borderBottom: '1px solid #e2e8f0', transition: 'background 0.2s ease' }}
+              <tr key={user.cms_user_id} style={{ borderBottom: '1px solid #e2e8f0', transition: 'background 0.2s ease' }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = '#f8fafc'
               }}
@@ -324,26 +343,75 @@ export default function Users() {
                     )}
                     <div>
                       <p style={{ fontWeight: '500', color: '#0f172a', fontSize: '13px' }}>
-                        {user.username || `${user.first_name || ''} ${user.last_name || ''}`.trim() || 'Unknown'}
+                        {user.username || user.name || `${user.first_name || ''} ${user.last_name || ''}`.trim() || 'Unknown'}
                       </p>
                       <p style={{ fontSize: '12px', color: '#64748b' }}>{user.email}</p>
                     </div>
                   </div>
                 </td>
                 <td style={{ padding: '12px 16px' }}>
-                  <span style={{ 
-                    padding: '3px 8px', 
-                    borderRadius: '16px', 
-                    fontSize: '11px', 
-                    fontWeight: '500',
-                    background: user.role === 'admin' ? '#f3e8ff' : '#f1f5f9',
-                    color: user.role === 'admin' ? '#9333ea' : '#475569'
-                  }}>
-                    <Shield style={{ width: '12px', height: '12px', display: 'inline', marginRight: '4px', verticalAlign: 'middle' }} />
-                    {user.role}
-                  </span>
+                  {editingUserId === user.cms_user_id ? (
+                    <select
+                      value={user.role}
+                      onChange={(e) => handleRoleChange(user.cms_user_id, e.target.value)}
+                      onBlur={() => setEditingUserId(null)}
+                      autoFocus
+                      style={{
+                        padding: '4px 8px',
+                        borderRadius: '8px',
+                        fontSize: '11px',
+                        fontWeight: '500',
+                        border: '1px solid #7c3aed',
+                        outline: 'none',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <option value="user">User</option>
+                      <option value="admin">Admin</option>
+                      <option value="contributor">Contributor</option>
+                      <option value="editor">Editor</option>
+                      <option value="superadmin">Superadmin</option>
+                    </select>
+                  ) : (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <span style={{ 
+                        padding: '3px 8px', 
+                        borderRadius: '16px', 
+                        fontSize: '11px', 
+                        fontWeight: '500',
+                        background: user.role === 'admin' || user.role === 'superadmin' ? '#f3e8ff' : '#f1f5f9',
+                        color: user.role === 'admin' || user.role === 'superadmin' ? '#9333ea' : '#475569'
+                      }}>
+                        <Shield style={{ width: '12px', height: '12px', display: 'inline', marginRight: '4px', verticalAlign: 'middle' }} />
+                        {user.role}
+                      </span>
+                      {JSON.parse(localStorage.getItem('user'))?.role === 'superadmin' && (
+                        <button
+                          onClick={() => setEditingUserId(user.cms_user_id)}
+                          style={{
+                            padding: '4px',
+                            background: 'transparent',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.background = '#f1f5f9'
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.background = 'transparent'
+                          }}
+                        >
+                          <Edit style={{ width: '12px', height: '12px', color: '#64748b' }} />
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </td>
-                <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{user.created_at?.split('T')[0]}</td>
+                <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{user.cms_created_at?.split('T')[0]}</td>
                 <td style={{ padding: '12px 16px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '6px' }}>
                     <button 
@@ -361,7 +429,7 @@ export default function Users() {
                       onMouseLeave={(e) => {
                         e.currentTarget.style.background = 'transparent'
                       }}
-                      onClick={() => handleDeleteUser(user.id)}
+                      onClick={() => handleDeleteUser(user.cms_user_id)}
                     >
                       <Trash2 style={{ width: '14px', height: '14px', color: '#dc2626' }} />
                     </button>

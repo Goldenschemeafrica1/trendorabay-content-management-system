@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://trendorabay-content-management-system.onrender.com/api';
+const API_BASE_URL = 'http://localhost:5002/api';
 
 // Simple in-memory cache with 5-minute TTL
 const cache = new Map();
@@ -29,8 +29,8 @@ class ApiService {
 
       const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
 
-      // Handle 401 Unauthorized - clear token and redirect to login
-      if (response.status === 401) {
+      // Handle 401 Unauthorized - clear token and redirect to login (but not for login endpoint)
+      if (response.status === 401 && endpoint !== '/auth/login') {
         localStorage.removeItem('auth_token');
         localStorage.removeItem('user');
         window.location.href = '/login';

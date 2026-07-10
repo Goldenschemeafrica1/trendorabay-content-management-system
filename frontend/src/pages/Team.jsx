@@ -227,7 +227,7 @@ export default function Team() {
             <div style={{ 
               aspectRatio: '1/1', 
               background: member.avatar_url 
-                ? `url(${member.avatar_url.startsWith('http') ? member.avatar_url : `https://trendorabay-content-management-system.onrender.com${member.avatar_url}`}) center/cover no-repeat`
+                ? `url(${member.avatar_url.startsWith('http') ? member.avatar_url : `http://localhost:5002${member.avatar_url}`}) center/cover no-repeat`
                 : 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)', 
               display: 'flex', 
               alignItems: 'center', 
@@ -374,7 +374,7 @@ export default function Team() {
                         overflow: 'hidden'
                       }}>
                         <img
-                          src={formData.avatar_url.startsWith('http') ? formData.avatar_url : `https://trendorabay-content-management-system.onrender.com${formData.avatar_url}`}
+                          src={formData.avatar_url.startsWith('http') ? formData.avatar_url : `http://localhost:5002${formData.avatar_url}`}
                           alt="Avatar Preview"
                           style={{
                             maxWidth: '100%',
