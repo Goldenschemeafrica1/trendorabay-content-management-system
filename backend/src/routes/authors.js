@@ -61,16 +61,14 @@ router.put('/:id', authenticate, isEditor, upload, async (req, res) => {
       return res.status(400).json({ error: 'Name is required' });
     }
     
-    const avatar_url = req.file ? (req.file.location || `/uploads/authors/${req.file.filename}`) : null;
+    // Get current author to preserve existing data
+    const [currentAuthor] = await db.query('SELECT * FROM authors WHERE id = ?', [req.params.id]);
+    
+    const avatar_url = req.file ? (req.file.location || `/uploads/authors/${req.file.filename}`) : currentAuthor[0]?.avatar_url;
     
     // Build the update query dynamically based on what fields are provided
-    let query = 'UPDATE authors SET name = ?, email = ?, bio = ?';
-    let params = [name, email, bio];
-    
-    if (avatar_url) {
-      query += ', avatar_url = ?';
-      params.push(avatar_url);
-    }
+    let query = 'UPDATE authors SET name = ?, email = ?, bio = ?, avatar_url = ?';
+    let params = [name, email, bio, avatar_url];
     
     query += ' WHERE id = ?';
     params.push(req.params.id);
