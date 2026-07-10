@@ -3,6 +3,28 @@ const router = express.Router();
 const db = require('../config/database');
 const { authenticate, optionalAuth } = require('../middleware/auth');
 const { isEditor, hasRole } = require('../middleware/authorize');
+const { uploadSingle } = require('../config/upload');
+
+// Configure upload for team member avatars
+const upload = uploadSingle('image', 'team', 5 * 1024 * 1024); // 5MB limit for team images
+
+// Upload team member avatar (editor+)
+router.post('/upload', authenticate, isEditor, upload, async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+    const file_url = req.file ? (req.file.location || `/uploads/team/${req.file.filename}`) : null;
+    res.status(201).json({
+      message: 'Image uploaded successfully',
+      file_url: file_url,
+      filename: req.file.filename
+    });
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
 
 // Get all team members (public read)
 router.get('/', optionalAuth, async (req, res) => {

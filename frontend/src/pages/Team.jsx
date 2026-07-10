@@ -97,7 +97,7 @@ export default function Team() {
     formDataUpload.append('image', file)
 
     try {
-      const response = await api.post('/advertisements/upload', formDataUpload)
+      const response = await api.post('/team/upload', formDataUpload)
       if (response.file_url) {
         setFormData(prev => ({
           ...prev,
