@@ -81,18 +81,38 @@ router.post('/', authenticate, isEditor, upload, async (req, res) => {
 });
 
 // Update podcast (editor+)
-router.put('/:id', authenticate, isEditor, async (req, res) => {
+router.put('/:id', authenticate, isEditor, upload, async (req, res) => {
   try {
-    const { title, episode_number, description, cover_art_url, audio_file_url, video_file_url, category_id, published_at, guest, duration, host, status } = req.body;
+    const { title, episode_number, description, category, guest, duration, host, status } = req.body;
+    const cover_art_url = req.files['cover_art'] ? req.files['cover_art'][0].location : req.body.cover_art_url;
+    const audio_file_url = req.files['audio_file'] ? req.files['audio_file'][0].location : req.body.audio_file_url;
+    const video_file_url = req.files['video_file'] ? req.files['video_file'][0].location : req.body.video_file_url;
     
     // Convert string values to proper types
     const episodeNumberValue = episode_number && episode_number !== 'undefined' ? parseInt(episode_number) : null;
+    
+    // Find category_id from category name
+    let category_id = null;
+    if (category) {
+      const [categoryRows] = await db.query('SELECT id FROM categories WHERE name = ?', [category]);
+      if (categoryRows.length > 0) {
+        category_id = categoryRows[0].id;
+      }
+    }
+    
+    // Get current podcast to preserve existing data if not being updated
+    const [currentPodcast] = await db.query('SELECT * FROM podcasts WHERE id = ?', [req.params.id]);
+    const final_cover_art_url = cover_art_url || currentPodcast[0]?.cover_art_url;
+    const final_audio_file_url = audio_file_url || currentPodcast[0]?.audio_file_url;
+    const final_video_file_url = video_file_url || currentPodcast[0]?.video_file_url;
+    const final_category_id = category_id || currentPodcast[0]?.category_id;
+    const final_published_at = currentPodcast[0]?.published_at;
     
     await db.query(
       `UPDATE podcasts 
        SET title = ?, episode_number = ?, description = ?, cover_art_url = ?, audio_file_url = ?, video_file_url = ?, category_id = ?, published_at = ?, guest = ?, duration = ?, host = ?, status = ? 
        WHERE id = ?`,
-      [title, episodeNumberValue, description, cover_art_url, audio_file_url, video_file_url, category_id, published_at, guest || null, duration || null, host || null, status || 'draft', req.params.id]
+      [title, episodeNumberValue, description, final_cover_art_url, final_audio_file_url, final_video_file_url, final_category_id, final_published_at, guest || null, duration || null, host || null, status || 'draft', req.params.id]
     );
     res.json({ message: 'Podcast updated successfully' });
   } catch (error) {
