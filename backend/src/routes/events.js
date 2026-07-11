@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
-const { uploadSingle } = require('../config/upload');
+const { uploadSingle, uploadFileToCloud, useCloudinary } = require('../config/upload');
 const { deleteFromS3 } = require('../config/s3');
 const { authenticate, optionalAuth } = require('../middleware/auth');
 const { isEditor, hasRole } = require('../middleware/authorize');
@@ -22,8 +22,27 @@ router.get('/', optionalAuth, async (req, res) => {
 // Create event (editor+)
 router.post('/', authenticate, isEditor, upload, async (req, res) => {
   try {
+    console.log('Event create request received');
+    console.log('File:', req.file);
+    console.log('Use Cloudinary:', useCloudinary);
+    
     const { title, description, event_date, event_time, location, event_type, category, price, attendees, type, status } = req.body;
-    const image_url = req.file ? (req.file.location || `/uploads/events/${req.file.filename}`) : null;
+    
+    let image_url;
+    if (req.file) {
+      if (useCloudinary) {
+        console.log('Uploading to Cloudinary...');
+        image_url = await uploadFileToCloud(req.file, 'events');
+        console.log('Cloudinary upload result:', image_url);
+      } else {
+        console.log('Using local storage');
+        image_url = req.file.location || `/uploads/events/${req.file.filename}`;
+      }
+    } else {
+      image_url = null;
+    }
+    
+    console.log('Final image_url:', image_url);
     
     // Auto-determine status based on event date
     let autoStatus = 'upcoming';
@@ -47,6 +66,7 @@ router.post('/', authenticate, isEditor, upload, async (req, res) => {
     );
     res.status(201).json({ id: result.insertId, message: 'Event created successfully' });
   } catch (error) {
+    console.error('Error creating event:', error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -54,8 +74,27 @@ router.post('/', authenticate, isEditor, upload, async (req, res) => {
 // Update event (editor+)
 router.put('/:id', authenticate, isEditor, upload, async (req, res) => {
   try {
+    console.log('Event update request received');
+    console.log('File:', req.file);
+    console.log('Use Cloudinary:', useCloudinary);
+    
     const { title, description, event_date, event_time, location, event_type, category, price, attendees, type, status } = req.body;
-    const image_url = req.file ? (req.file.location || `/uploads/events/${req.file.filename}`) : null;
+    
+    let image_url;
+    if (req.file) {
+      if (useCloudinary) {
+        console.log('Uploading to Cloudinary...');
+        image_url = await uploadFileToCloud(req.file, 'events');
+        console.log('Cloudinary upload result:', image_url);
+      } else {
+        console.log('Using local storage');
+        image_url = req.file.location || `/uploads/events/${req.file.filename}`;
+      }
+    } else {
+      image_url = null;
+    }
+    
+    console.log('Final image_url:', image_url);
     
     // Auto-determine status based on event date
     let autoStatus = status;
@@ -89,6 +128,7 @@ router.put('/:id', authenticate, isEditor, upload, async (req, res) => {
     await db.query(query, params);
     res.json({ message: 'Event updated successfully' });
   } catch (error) {
+    console.error('Error updating event:', error);
     res.status(500).json({ error: error.message });
   }
 });
