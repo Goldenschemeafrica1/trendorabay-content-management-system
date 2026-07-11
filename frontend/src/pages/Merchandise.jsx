@@ -74,8 +74,10 @@ export default function Merchandise() {
       if (imageFile) {
         const formDataUpload = new FormData()
         formDataUpload.append('image', imageFile)
+        const token = localStorage.getItem('auth_token')
         const uploadResponse = await fetch(`${API_BASE_URL}/api/products/upload`, {
           method: 'POST',
+          headers: token ? { 'Authorization': `Bearer ${token}` } : {},
           body: formDataUpload
         })
         const uploadData = await uploadResponse.json()
@@ -130,8 +132,10 @@ export default function Merchandise() {
       if (imageFile) {
         const formDataUpload = new FormData()
         formDataUpload.append('image', imageFile)
+        const token = localStorage.getItem('auth_token')
         const uploadResponse = await fetch(`${API_BASE_URL}/api/products/upload`, {
           method: 'POST',
+          headers: token ? { 'Authorization': `Bearer ${token}` } : {},
           body: formDataUpload
         })
         const uploadData = await uploadResponse.json()
