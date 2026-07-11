@@ -100,6 +100,11 @@ export default function Merchandise() {
 
   const handleEditProduct = (product) => {
     setEditingProduct(product)
+    const imageUrl = product.image_url 
+      ? (product.image_url.startsWith('http') 
+          ? product.image_url 
+          : `${API_BASE_URL}${product.image_url}`)
+      : null
     setFormData({
       name: product.name,
       description: product.description || '',
@@ -109,7 +114,7 @@ export default function Merchandise() {
       status: product.status || 'active',
       image_url: product.image_url || ''
     })
-    setImagePreview(product.image_url || null)
+    setImagePreview(imageUrl)
     setShowEditModal(true)
   }
 
