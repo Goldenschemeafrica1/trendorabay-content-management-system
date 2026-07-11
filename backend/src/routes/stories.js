@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
-const { uploadSingle } = require('../config/upload');
+const { uploadSingle, uploadFileToCloud, useCloudinary } = require('../config/upload');
 const { deleteFromS3 } = require('../config/s3');
 const { authenticate, optionalAuth } = require('../middleware/auth');
 const { isEditor, hasRole } = require('../middleware/authorize');
@@ -64,11 +64,29 @@ router.get('/:id', optionalAuth, async (req, res) => {
 // Create story (editor+)
 router.post('/', authenticate, isEditor, upload, storyValidation, async (req, res) => {
   try {
+    console.log('Story create request received');
+    console.log('File:', req.file);
+    console.log('Use Cloudinary:', useCloudinary);
+    
     const { title, author_id, category, content, status, featured, read_time } = req.body;
     
     console.log('Creating story with data:', { title, author_id, category, contentLength: content?.length, status, featured, read_time });
     
-    const featured_image_url = req.file ? (req.file.location || `/uploads/stories/${req.file.filename}`) : null;
+    let featured_image_url;
+    if (req.file) {
+      if (useCloudinary) {
+        console.log('Uploading to Cloudinary...');
+        featured_image_url = await uploadFileToCloud(req.file, 'stories');
+        console.log('Cloudinary upload result:', featured_image_url);
+      } else {
+        console.log('Using local storage');
+        featured_image_url = req.file.location || `/uploads/stories/${req.file.filename}`;
+      }
+    } else {
+      featured_image_url = null;
+    }
+    
+    console.log('Final featured_image_url:', featured_image_url);
     
     // Find category_id from category name
     let category_id = null;
@@ -105,8 +123,27 @@ router.post('/', authenticate, isEditor, upload, storyValidation, async (req, re
 // Update story (editor+)
 router.put('/:id', authenticate, isEditor, storyIdValidation, upload, storyValidation, async (req, res) => {
   try {
+    console.log('Story update request received');
+    console.log('File:', req.file);
+    console.log('Use Cloudinary:', useCloudinary);
+    
     const { title, author_id, category, content, status, featured, read_time } = req.body;
-    const featured_image_url = req.file ? (req.file.location || `/uploads/stories/${req.file.filename}`) : null;
+    
+    let featured_image_url;
+    if (req.file) {
+      if (useCloudinary) {
+        console.log('Uploading to Cloudinary...');
+        featured_image_url = await uploadFileToCloud(req.file, 'stories');
+        console.log('Cloudinary upload result:', featured_image_url);
+      } else {
+        console.log('Using local storage');
+        featured_image_url = req.file.location || `/uploads/stories/${req.file.filename}`;
+      }
+    } else {
+      featured_image_url = null;
+    }
+    
+    console.log('Final featured_image_url:', featured_image_url);
     
     // Get current story to preserve existing image if no new one is uploaded
     const [currentStory] = await db.query('SELECT featured_image_url, published_at FROM stories WHERE id = ?', [req.params.id]);
