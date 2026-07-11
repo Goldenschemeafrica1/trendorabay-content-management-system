@@ -3,6 +3,8 @@ import { Plus, Search, Edit, Trash2, Image, Calendar, DollarSign, TrendingUp, Ey
 import api from '../services/api'
 import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
 
+const API_BASE_URL = 'https://trendorabay-content-management-system.onrender.com'
+
 export default function Advertisements() {
   const { setHideHeader } = useContext(HeaderVisibilityContext)
   const { setHideSidebar } = useContext(SidebarVisibilityContext)
@@ -757,7 +759,7 @@ export default function Advertisements() {
                         overflow: 'hidden'
                       }}>
                         <img
-                          src={formData.image_url.startsWith('http') ? formData.image_url : `http://localhost:5002${formData.image_url}`}
+                          src={formData.image_url.startsWith('http') ? formData.image_url : `${API_BASE_URL}${formData.image_url}`}
                           alt="Desktop Preview"
                           style={{
                             maxWidth: '100%',
@@ -800,7 +802,7 @@ export default function Advertisements() {
                         overflow: 'hidden'
                       }}>
                         <img
-                          src={formData.mobile_image_url.startsWith('http') ? formData.mobile_image_url : `http://localhost:5002${formData.mobile_image_url}`}
+                          src={formData.mobile_image_url.startsWith('http') ? formData.mobile_image_url : `${API_BASE_URL}${formData.mobile_image_url}`}
                           alt="Mobile Preview"
                           style={{
                             maxWidth: '100%',
