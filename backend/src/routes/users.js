@@ -161,14 +161,14 @@ router.put('/:id', authenticate, async (req, res) => {
       return res.status(403).json({ error: 'Access denied' });
     }
     
+    // Only superadmin can change user roles
+    if (role !== undefined && req.user.role !== 'superadmin') {
+      return res.status(403).json({ error: 'Only superadmin can change user roles' });
+    }
+    
     // Admins can update more fields
     const validRoles = ['admin', 'user', 'contributor', 'superadmin', 'editor'];
     const userRole = validRoles.includes(role) ? role : 'user';
-    
-    // Only superadmin can assign superadmin role
-    if (userRole === 'superadmin' && req.user.role !== 'superadmin') {
-      return res.status(403).json({ error: 'Only superadmin can assign superadmin role' });
-    }
     
     // Prevent admin from demoting themselves (unless superadmin)
     if (req.user.role === 'admin' && userRole !== 'admin' && cmsUserId === req.user.id) {
