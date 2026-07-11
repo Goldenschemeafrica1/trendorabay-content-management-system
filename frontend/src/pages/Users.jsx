@@ -416,7 +416,8 @@ export default function Users() {
                 <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{user.cms_created_at?.split('T')[0]}</td>
                 <td style={{ padding: '12px 16px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '6px' }}>
-                    <button 
+                    {currentUser?.role === 'superadmin' && (
+                      <button 
                       style={{
                         padding: '6px',
                         background: 'transparent',
@@ -435,6 +436,7 @@ export default function Users() {
                     >
                       <Trash2 style={{ width: '14px', height: '14px', color: '#dc2626' }} />
                     </button>
+                    )}
                   </div>
                 </td>
               </tr>

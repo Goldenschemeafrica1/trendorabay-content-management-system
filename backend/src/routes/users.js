@@ -252,8 +252,8 @@ router.put('/:id', authenticate, async (req, res) => {
   }
 });
 
-// Delete user (admin+)
-router.delete('/:id', authenticate, isAdmin, async (req, res) => {
+// Delete user (superadmin only)
+router.delete('/:id', authenticate, isSuperAdmin, async (req, res) => {
   try {
     console.log('Delete user request for ID:', req.params.id);
     
