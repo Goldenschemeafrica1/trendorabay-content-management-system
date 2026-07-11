@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
-const { uploadSingle } = require('../config/upload');
+const { uploadSingle, uploadFileToCloud, useCloudinary } = require('../config/upload');
 const { deleteFromS3 } = require('../config/s3');
 const { authenticate } = require('../middleware/auth');
 const { isAdmin } = require('../middleware/authorize');
@@ -138,10 +138,26 @@ router.delete('/:id', authenticate, isAdmin, async (req, res) => {
 // Upload advertisement image (admin+)
 router.post('/upload', authenticate, isAdmin, upload, async (req, res) => {
   try {
+    console.log('Advertisement upload request received');
+    console.log('File:', req.file);
+    console.log('Use Cloudinary:', useCloudinary);
+    
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
-    const file_url = req.file ? (req.file.location || `/uploads/advertisements/${req.file.filename}`) : null;
+    
+    let file_url;
+    if (useCloudinary) {
+      console.log('Uploading to Cloudinary...');
+      file_url = await uploadFileToCloud(req.file, 'advertisements');
+      console.log('Cloudinary upload result:', file_url);
+    } else {
+      console.log('Using local storage');
+      file_url = req.file ? (req.file.location || `/uploads/advertisements/${req.file.filename}`) : null;
+    }
+    
+    console.log('Final file_url:', file_url);
+    
     res.status(201).json({
       message: 'Image uploaded successfully',
       file_url: file_url,
