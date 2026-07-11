@@ -30,7 +30,30 @@ router.get('/', authenticate, isAdmin, async (req, res) => {
         u.updated_at as users_updated_at
       FROM cms_users c
       LEFT JOIN users u ON c.id = u.cms_user_id
-      ORDER BY c.created_at DESC
+      
+      UNION ALL
+      
+      SELECT 
+        c.id as cms_user_id,
+        c.name,
+        c.email,
+        c.role,
+        c.status,
+        c.profile_image_url,
+        c.last_active,
+        c.created_at as cms_created_at,
+        c.updated_at as cms_updated_at,
+        u.id as users_table_id,
+        u.username,
+        u.first_name,
+        u.last_name,
+        u.created_at as users_created_at,
+        u.updated_at as users_updated_at
+      FROM users u
+      LEFT JOIN cms_users c ON u.cms_user_id = c.id
+      WHERE c.id IS NULL
+      
+      ORDER BY cms_created_at DESC, users_created_at DESC
     `);
     res.json(rows);
   } catch (error) {
