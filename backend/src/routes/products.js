@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
-const { uploadSingle } = require('../config/upload');
+const { uploadSingle, uploadFileToCloud, useCloudinary } = require('../config/upload');
 const { deleteFromS3 } = require('../config/s3');
 const { authenticate, optionalAuth } = require('../middleware/auth');
 const { isEditor, hasRole } = require('../middleware/authorize');
@@ -10,14 +10,31 @@ const { isEditor, hasRole } = require('../middleware/authorize');
 const upload = uploadSingle('image', 'products', 5 * 1024 * 1024); // 5MB limit for product images
 
 // Upload product image (editor+)
-router.post('/upload', authenticate, isEditor, upload, (req, res) => {
+router.post('/upload', authenticate, isEditor, upload, async (req, res) => {
   try {
+    console.log('Product upload request received');
+    console.log('File:', req.file);
+    console.log('Use Cloudinary:', useCloudinary);
+    
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
-    const imageUrl = req.file ? (req.file.location || `/uploads/products/${req.file.filename}`) : null;
+    
+    let imageUrl;
+    if (useCloudinary) {
+      console.log('Uploading to Cloudinary...');
+      imageUrl = await uploadFileToCloud(req.file, 'products');
+      console.log('Cloudinary upload result:', imageUrl);
+    } else {
+      console.log('Using local storage');
+      imageUrl = req.file ? (req.file.location || `/uploads/products/${req.file.filename}`) : null;
+    }
+    
+    console.log('Final imageUrl:', imageUrl);
+    
     res.json({ imageUrl });
   } catch (error) {
+    console.error('Error uploading image:', error);
     res.status(500).json({ error: error.message });
   }
 });
