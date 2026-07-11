@@ -21,6 +21,7 @@ export default function Users() {
     last_name: '',
     role: 'user'
   })
+  const currentUser = JSON.parse(localStorage.getItem('user'))
 
   useEffect(() => {
     fetchUsers()
@@ -351,7 +352,7 @@ export default function Users() {
                   </div>
                 </td>
                 <td style={{ padding: '12px 16px' }}>
-                  {editingUserId === user.cms_user_id ? (
+                  {currentUser?.role === 'superadmin' && editingUserId === user.cms_user_id ? (
                     <select
                       value={user.role}
                       onChange={(e) => handleRoleChange(user.cms_user_id, e.target.value)}
@@ -386,7 +387,7 @@ export default function Users() {
                         <Shield style={{ width: '12px', height: '12px', display: 'inline', marginRight: '4px', verticalAlign: 'middle' }} />
                         {user.role}
                       </span>
-                      {JSON.parse(localStorage.getItem('user'))?.role === 'superadmin' && (
+                      {currentUser?.role === 'superadmin' && (
                         <button
                           onClick={() => setEditingUserId(user.cms_user_id)}
                           style={{
