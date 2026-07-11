@@ -15,7 +15,7 @@ router.get('/', authenticate, isAdmin, async (req, res) => {
       SELECT 
         c.id as cms_user_id,
         c.name,
-        c.email,
+        COALESCE(c.email, u.email) as email,
         c.role,
         c.status,
         c.profile_image_url,
@@ -36,7 +36,7 @@ router.get('/', authenticate, isAdmin, async (req, res) => {
       SELECT 
         c.id as cms_user_id,
         c.name,
-        c.email,
+        COALESCE(c.email, u.email) as email,
         c.role,
         c.status,
         c.profile_image_url,
