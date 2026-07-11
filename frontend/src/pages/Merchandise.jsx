@@ -3,6 +3,8 @@ import { Plus, Search, Edit, Trash2, Package, DollarSign, TrendingUp, Upload } f
 import api from '../services/api'
 import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
 
+const API_BASE_URL = 'https://trendorabay-content-management-system.onrender.com'
+
 export default function Merchandise() {
   const { setHideHeader } = useContext(HeaderVisibilityContext)
   const { setHideSidebar } = useContext(SidebarVisibilityContext)
@@ -72,7 +74,7 @@ export default function Merchandise() {
       if (imageFile) {
         const formDataUpload = new FormData()
         formDataUpload.append('image', imageFile)
-        const uploadResponse = await fetch('http://localhost:5002/api/products/upload', {
+        const uploadResponse = await fetch(`${API_BASE_URL}/api/products/upload`, {
           method: 'POST',
           body: formDataUpload
         })
@@ -123,7 +125,7 @@ export default function Merchandise() {
       if (imageFile) {
         const formDataUpload = new FormData()
         formDataUpload.append('image', imageFile)
-        const uploadResponse = await fetch('http://localhost:5002/api/products/upload', {
+        const uploadResponse = await fetch(`${API_BASE_URL}/api/products/upload`, {
           method: 'POST',
           body: formDataUpload
         })
