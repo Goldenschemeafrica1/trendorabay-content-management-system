@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { Save, Eye, Type, Image, Layout, Settings, Plus, Trash2, ShoppingBag, DollarSign, Package, TrendingUp } from 'lucide-react'
 import api from '../services/api'
 
+const API_BASE_URL = 'https://trendorabay-content-management-system.onrender.com'
+
 export default function StorePage() {
   const [storeTitle, setStoreTitle] = useState('Our Store')
   const [storeDescription, setStoreDescription] = useState('Browse our exclusive merchandise and support our podcast.')
@@ -24,7 +26,7 @@ export default function StorePage() {
         const imageUrl = product.image_url 
           ? (product.image_url.startsWith('http') 
               ? product.image_url 
-              : `http://localhost:5002${product.image_url}`)
+              : `${API_BASE_URL}${product.image_url}`)
           : ''
         
         return {
@@ -44,7 +46,7 @@ export default function StorePage() {
         const imageUrl = product.image_url 
           ? (product.image_url.startsWith('http') 
               ? product.image_url 
-              : `http://localhost:5002${product.image_url}`)
+              : `${API_BASE_URL}${product.image_url}`)
           : ''
         
         return {
