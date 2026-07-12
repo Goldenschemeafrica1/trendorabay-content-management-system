@@ -88,7 +88,7 @@ export default function Partners() {
 
   const filteredPartners = partners.filter(partner => {
     const matchesSearch = partner.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         partner.website.toLowerCase().includes(searchTerm.toLowerCase())
+                         (partner.website && partner.website.toLowerCase().includes(searchTerm.toLowerCase()))
     const matchesStatus = filterStatus === 'all' || partner.status === filterStatus
     return matchesSearch && matchesStatus
   })
