@@ -1,8 +1,8 @@
 const API_BASE_URL = 'https://trendorabay-content-management-system.onrender.com/api';
 
-// Simple in-memory cache with 5-minute TTL
+// Simple in-memory cache with 1-minute TTL (reduced from 5 minutes)
 const cache = new Map();
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+const CACHE_TTL = 1 * 60 * 1000; // 1 minute
 
 class ApiService {
   getAuthHeaders() {
@@ -55,12 +55,14 @@ class ApiService {
     }
   }
 
-  async get(endpoint) {
-    // Check cache for GET requests
+  async get(endpoint, forceRefresh = false) {
+    // Check cache for GET requests (unless forceRefresh is true)
     const cacheKey = `GET:${endpoint}`;
-    const cached = cache.get(cacheKey);
-    if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
-      return cached.data;
+    if (!forceRefresh) {
+      const cached = cache.get(cacheKey);
+      if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+        return cached.data;
+      }
     }
 
     const result = await this.request('GET', endpoint);
@@ -72,6 +74,12 @@ class ApiService {
     });
 
     return result;
+  }
+
+  // Clear specific cache entry
+  clearCache(endpoint) {
+    const cacheKey = `GET:${endpoint}`;
+    cache.delete(cacheKey);
   }
 
   async post(endpoint, data) {

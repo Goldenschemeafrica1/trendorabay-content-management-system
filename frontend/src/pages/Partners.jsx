@@ -22,7 +22,8 @@ export default function Partners() {
   useEffect(() => {
     const fetchPartners = async () => {
       try {
-        const data = await api.get('/partners')
+        // Force refresh to bypass cache
+        const data = await api.get('/partners', true)
         setPartners(data)
       } catch (error) {
         console.error('Failed to fetch partners:', error)
@@ -46,20 +47,20 @@ export default function Partners() {
 
   const handleCreatePartner = async () => {
     console.log('Creating partner:', formData)
-    
+
     if (!formData.name || formData.name.trim() === '') {
       alert('Please fill in the company name field')
       return
     }
-    
+
     try {
       const response = await api.post('/partners', formData)
       console.log('Response:', response)
-      
+
       setShowCreateModal(false)
       setFormData({ name: '', website: '', contact: '', status: 'pending' })
-      // Refresh partners list
-      const data = await api.get('/partners')
+      // Refresh partners list with force refresh
+      const data = await api.get('/partners', true)
       setPartners(data)
       alert('Partner created successfully!')
     } catch (error) {
@@ -72,11 +73,11 @@ export default function Partners() {
     if (!confirm('Are you sure you want to delete this partner?')) {
       return
     }
-    
+
     try {
       await api.delete(`/partners/${partnerId}`)
-      // Refresh partners list
-      const data = await api.get('/partners')
+      // Refresh partners list with force refresh
+      const data = await api.get('/partners', true)
       setPartners(data)
       alert('Partner deleted successfully!')
     } catch (error) {
