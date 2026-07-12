@@ -380,7 +380,7 @@ export default function Layout() {
               return false
             }
             // Hide Advertisers section for contributors and users
-            if ((item.name === 'Partners' || item.name === 'Sponsorships' || item.name === 'Advertisements' || item.name === 'Ad Inquiries' || item.section === 'Advertisers') && (!userRole || userRole === 'contributor' || userRole === 'user')) {
+            if ((item.name === 'Partners' || item.name === 'Partners Inquiry' || item.name === 'Sponsorships' || item.name === 'Advertisements' || item.name === 'Ad Inquiries' || item.section === 'Advertisers') && (!userRole || userRole === 'contributor' || userRole === 'user')) {
               return false
             }
             // Hide Subscriptions section for contributors and users

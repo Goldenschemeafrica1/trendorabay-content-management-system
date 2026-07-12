@@ -27,6 +27,7 @@ import StorePage from './pages/StorePage'
 import Mission from './pages/Mission'
 import Team from './pages/Team'
 import Partners from './pages/Partners'
+import PartnershipInquiries from './pages/PartnershipInquiries'
 import Sponsorships from './pages/Sponsorships'
 import Advertisements from './pages/Advertisements'
 import AdvertisementInquiries from './pages/AdvertisementInquiries'
@@ -152,6 +153,11 @@ function App() {
           <Route path="partners" element={
             <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
               <Partners />
+            </ProtectedRoute>
+          } />
+          <Route path="partnership-inquiries" element={
+            <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
+              <PartnershipInquiries />
             </ProtectedRoute>
           } />
           <Route path="sponsorships" element={
