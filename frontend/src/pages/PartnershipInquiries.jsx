@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react'
-import { Search, Edit, Trash2, Mail, Phone, Building2, Calendar, CheckCircle, XCircle, Clock, Globe } from 'lucide-react'
+import { Search, Edit, Trash2, Mail, Phone, Building2, Calendar, CheckCircle, XCircle, Clock } from 'lucide-react'
 import api from '../services/api'
 import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
 
@@ -13,15 +13,13 @@ export default function PartnershipInquiries() {
   const [editingInquiry, setEditingInquiry] = useState(null)
   const [showEditModal, setShowEditModal] = useState(false)
   const [formData, setFormData] = useState({
-    contact_name: '',
-    contact_email: '',
-    contact_phone: '',
     company_name: '',
-    website_url: '',
-    message: '',
+    contact_person: '',
+    email: '',
+    phone: '',
     partnership_type: '',
-    status: 'pending',
-    admin_notes: ''
+    message: '',
+    status: 'pending'
   })
   
   useEffect(() => {
@@ -53,15 +51,13 @@ export default function PartnershipInquiries() {
   const handleEditInquiry = (inquiry) => {
     setEditingInquiry(inquiry)
     setFormData({
-      contact_name: inquiry.contact_name || inquiry.name || '',
-      contact_email: inquiry.contact_email || inquiry.email || '',
-      contact_phone: inquiry.contact_phone || inquiry.phone || '',
       company_name: inquiry.company_name || inquiry.company || '',
-      website_url: inquiry.website_url || inquiry.website || '',
-      message: inquiry.message || '',
+      contact_person: inquiry.contact_person || inquiry.name || '',
+      email: inquiry.email || '',
+      phone: inquiry.phone || '',
       partnership_type: inquiry.partnership_type || '',
-      status: inquiry.status || 'pending',
-      admin_notes: inquiry.admin_notes || ''
+      message: inquiry.message || '',
+      status: inquiry.status || 'pending'
     })
     setShowEditModal(true)
   }
@@ -72,15 +68,13 @@ export default function PartnershipInquiries() {
       setShowEditModal(false)
       setEditingInquiry(null)
       setFormData({
-        contact_name: '',
-        contact_email: '',
-        contact_phone: '',
         company_name: '',
-        website_url: '',
-        message: '',
+        contact_person: '',
+        email: '',
+        phone: '',
         partnership_type: '',
-        status: 'pending',
-        admin_notes: ''
+        message: '',
+        status: 'pending'
       })
       fetchInquiries()
       alert('Partnership inquiry updated successfully!')
@@ -106,24 +100,24 @@ export default function PartnershipInquiries() {
   }
 
   const filteredInquiries = inquiries.filter(inquiry => {
-    const matchesSearch = (inquiry.contact_name || inquiry.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const matchesSearch = (inquiry.contact_person || inquiry.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
                          (inquiry.company_name || inquiry.company || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         (inquiry.contact_email || inquiry.email || '').toLowerCase().includes(searchTerm.toLowerCase())
+                         (inquiry.email || '').toLowerCase().includes(searchTerm.toLowerCase())
     const matchesStatus = filterStatus === 'all' || inquiry.status === filterStatus
     return matchesSearch && matchesStatus
   })
 
   const totalInquiries = inquiries.length
   const pendingInquiries = inquiries.filter(i => i.status === 'pending').length
-  const approvedInquiries = inquiries.filter(i => i.status === 'approved').length
+  const approvedInquiries = inquiries.filter(i => i.status === 'accepted').length
 
   const getStatusIcon = (status) => {
     switch (status) {
-      case 'approved':
+      case 'accepted':
         return <CheckCircle style={{ width: '14px', height: '14px', color: '#16a34a' }} />
       case 'rejected':
         return <XCircle style={{ width: '14px', height: '14px', color: '#dc2626' }} />
-      case 'under_review':
+      case 'reviewed':
         return <Clock style={{ width: '14px', height: '14px', color: '#ca8a04' }} />
       default:
         return <Clock style={{ width: '14px', height: '14px', color: '#64748b' }} />
@@ -268,8 +262,8 @@ export default function PartnershipInquiries() {
         >
           <option value="all">All Status</option>
           <option value="pending">Pending</option>
-          <option value="under_review">Under Review</option>
-          <option value="approved">Approved</option>
+          <option value="reviewed">Reviewed</option>
+          <option value="accepted">Accepted</option>
           <option value="rejected">Rejected</option>
         </select>
       </div>
@@ -288,7 +282,7 @@ export default function PartnershipInquiries() {
             <tr>
               <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Contact</th>
               <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Company</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Website</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Phone</th>
               <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Type</th>
               <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Date</th>
               <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Status</th>
@@ -306,22 +300,15 @@ export default function PartnershipInquiries() {
               }}>
                 <td style={{ padding: '12px 16px' }}>
                   <div>
-                    <div style={{ fontWeight: '500', color: '#0f172a', fontSize: '13px' }}>{inquiry.contact_name || inquiry.name}</div>
-                    <div style={{ color: '#64748b', fontSize: '11px', marginTop: '2px' }}>{inquiry.contact_email || inquiry.email}</div>
+                    <div style={{ fontWeight: '500', color: '#0f172a', fontSize: '13px' }}>{inquiry.contact_person || inquiry.name}</div>
+                    <div style={{ color: '#64748b', fontSize: '11px', marginTop: '2px' }}>{inquiry.email}</div>
                   </div>
                 </td>
                 <td style={{ padding: '12px 16px' }}>
                   <span style={{ fontWeight: '500', color: '#0f172a', fontSize: '13px' }}>{inquiry.company_name || inquiry.company || '-'}</span>
                 </td>
                 <td style={{ padding: '12px 16px' }}>
-                  {inquiry.website_url || inquiry.website ? (
-                    <a href={inquiry.website_url || inquiry.website} target="_blank" rel="noopener noreferrer" style={{ color: '#7c3aed', fontSize: '13px', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      <Globe style={{ width: '14px', height: '14px' }} />
-                      Visit
-                    </a>
-                  ) : (
-                    <span style={{ color: '#94a3b8', fontSize: '13px' }}>-</span>
-                  )}
+                  <span style={{ color: '#64748b', fontSize: '13px' }}>{inquiry.phone || '-'}</span>
                 </td>
                 <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{inquiry.partnership_type || '-'}</td>
                 <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{inquiry.inquiryDate || new Date(inquiry.created_at).toISOString().split('T')[0]}</td>
@@ -331,8 +318,8 @@ export default function PartnershipInquiries() {
                     borderRadius: '16px', 
                     fontSize: '11px', 
                     fontWeight: '500',
-                    background: inquiry.status === 'approved' ? '#dcfce7' : inquiry.status === 'rejected' ? '#fef2f2' : inquiry.status === 'under_review' ? '#fef3c7' : '#f1f5f9',
-                    color: inquiry.status === 'approved' ? '#166534' : inquiry.status === 'rejected' ? '#991b1b' : inquiry.status === 'under_review' ? '#92400e' : '#475569',
+                    background: inquiry.status === 'accepted' ? '#dcfce7' : inquiry.status === 'rejected' ? '#fef2f2' : inquiry.status === 'reviewed' ? '#fef3c7' : '#f1f5f9',
+                    color: inquiry.status === 'accepted' ? '#166534' : inquiry.status === 'rejected' ? '#991b1b' : inquiry.status === 'reviewed' ? '#92400e' : '#475569',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '4px',
@@ -454,87 +441,6 @@ export default function PartnershipInquiries() {
             <div style={{ padding: '20px', overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Contact Name</label>
-                  <input
-                    type="text"
-                    name="contact_name"
-                    value={formData.contact_name}
-                    onChange={handleInputChange}
-                    style={{
-                      width: '100%',
-                      padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '10px',
-                      outline: 'none',
-                      fontSize: '13px',
-                      transition: 'all 0.2s ease'
-                    }}
-                    onFocus={(e) => {
-                      e.currentTarget.style.borderColor = '#7c3aed'
-                      e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                    }}
-                    onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
-                      e.currentTarget.style.boxShadow = 'none'
-                    }}
-                  />
-                </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Contact Email</label>
-                  <input
-                    type="email"
-                    name="contact_email"
-                    value={formData.contact_email}
-                    onChange={handleInputChange}
-                    style={{
-                      width: '100%',
-                      padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '10px',
-                      outline: 'none',
-                      fontSize: '13px',
-                      transition: 'all 0.2s ease'
-                    }}
-                    onFocus={(e) => {
-                      e.currentTarget.style.borderColor = '#7c3aed'
-                      e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                    }}
-                    onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
-                      e.currentTarget.style.boxShadow = 'none'
-                    }}
-                  />
-                </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Contact Phone</label>
-                  <input
-                    type="text"
-                    name="contact_phone"
-                    value={formData.contact_phone}
-                    onChange={handleInputChange}
-                    style={{
-                      width: '100%',
-                      padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '10px',
-                      outline: 'none',
-                      fontSize: '13px',
-                      transition: 'all 0.2s ease'
-                    }}
-                    onFocus={(e) => {
-                      e.currentTarget.style.borderColor = '#7c3aed'
-                      e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                    }}
-                    onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
-                      e.currentTarget.style.boxShadow = 'none'
-                    }}
-                  />
-                </div>
-                <div>
                   <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Company Name</label>
                   <input
                     type="text"
@@ -562,11 +468,65 @@ export default function PartnershipInquiries() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Website URL</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Contact Person</label>
                   <input
-                    type="url"
-                    name="website_url"
-                    value={formData.website_url}
+                    type="text"
+                    name="contact_person"
+                    value={formData.contact_person}
+                    onChange={handleInputChange}
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      background: '#f8fafc',
+                      border: '1px solid #e2e8f0',
+                      borderRadius: '10px',
+                      outline: 'none',
+                      fontSize: '13px',
+                      transition: 'all 0.2s ease'
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.borderColor = '#7c3aed'
+                      e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.boxShadow = 'none'
+                    }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      background: '#f8fafc',
+                      border: '1px solid #e2e8f0',
+                      borderRadius: '10px',
+                      outline: 'none',
+                      fontSize: '13px',
+                      transition: 'all 0.2s ease'
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.borderColor = '#7c3aed'
+                      e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.boxShadow = 'none'
+                    }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Phone</label>
+                  <input
+                    type="text"
+                    name="phone"
+                    value={formData.phone}
                     onChange={handleInputChange}
                     style={{
                       width: '100%',
@@ -670,39 +630,10 @@ export default function PartnershipInquiries() {
                       e.currentTarget.style.boxShadow = 'none'
                     }}>
                     <option value="pending">Pending</option>
-                    <option value="under_review">Under Review</option>
-                    <option value="approved">Approved</option>
+                    <option value="reviewed">Reviewed</option>
+                    <option value="accepted">Accepted</option>
                     <option value="rejected">Rejected</option>
                   </select>
-                </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Admin Notes</label>
-                  <textarea
-                    name="admin_notes"
-                    value={formData.admin_notes}
-                    onChange={handleInputChange}
-                    rows={3}
-                    placeholder="Add internal notes..."
-                    style={{
-                      width: '100%',
-                      padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '10px',
-                      outline: 'none',
-                      fontSize: '13px',
-                      transition: 'all 0.2s ease',
-                      resize: 'vertical'
-                    }}
-                    onFocus={(e) => {
-                      e.currentTarget.style.borderColor = '#7c3aed'
-                      e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                    }}
-                    onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
-                      e.currentTarget.style.boxShadow = 'none'
-                    }}
-                  />
                 </div>
               </div>
             </div>
