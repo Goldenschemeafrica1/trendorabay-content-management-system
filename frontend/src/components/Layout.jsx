@@ -91,6 +91,7 @@ const navigation = [
   { name: 'Contact Messages', href: '/dashboard/contact-messages', icon: Inbox },
   { section: 'Advertisers' },
   { name: 'Partners', href: '/dashboard/partners', icon: Building2 },
+  { name: 'Partners Inquiry', href: '/dashboard/partnership-inquiries', icon: Mail },
   { name: 'Sponsorships', href: '/dashboard/sponsorships', icon: Award },
   { name: 'Advertisements', href: '/dashboard/advertisements', icon: ImageIcon },
   { name: 'Ad Inquiries', href: '/dashboard/advertisement-inquiries', icon: Mail },
