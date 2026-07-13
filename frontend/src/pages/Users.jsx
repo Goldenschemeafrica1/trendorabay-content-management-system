@@ -72,7 +72,7 @@ export default function Users() {
       console.log('Deleting user:', userId)
       await api.delete(`/users/${userId}`)
       console.log('User deleted successfully')
-      setUsers(users.filter(user => user.cms_user_id !== userId))
+      setUsers(users.filter(user => user.users_table_id !== userId))
     } catch (err) {
       console.error('Failed to delete user:', err)
       alert('Failed to delete user: ' + (err.message || 'Unknown error'))
@@ -437,7 +437,7 @@ export default function Users() {
                       onMouseLeave={(e) => {
                         e.currentTarget.style.background = 'transparent'
                       }}
-                      onClick={() => handleDeleteUser(user.cms_user_id)}
+                      onClick={() => handleDeleteUser(user.users_table_id)}
                     >
                       <Trash2 style={{ width: '14px', height: '14px', color: '#dc2626' }} />
                     </button>
