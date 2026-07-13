@@ -60,6 +60,11 @@ export default function Users() {
   const adminUsers = users.filter(u => u.role === 'admin').length
 
   const handleDeleteUser = async (userId) => {
+    if (!userId) {
+      console.error('Cannot delete user: Invalid user ID')
+      alert('Cannot delete user: Invalid user ID')
+      return
+    }
     if (!confirm('Are you sure you want to delete this user?')) {
       return
     }
@@ -67,7 +72,7 @@ export default function Users() {
       console.log('Deleting user:', userId)
       await api.delete(`/users/${userId}`)
       console.log('User deleted successfully')
-      setUsers(users.filter(user => user.id !== userId))
+      setUsers(users.filter(user => user.cms_user_id !== userId))
     } catch (err) {
       console.error('Failed to delete user:', err)
       alert('Failed to delete user: ' + (err.message || 'Unknown error'))
