@@ -52,11 +52,11 @@ export default function Users() {
     const matchesSearch = displayName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          user.email.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesRole = filterRole === 'all' || user.role === filterRole
-    const isNotSuperadmin = user.role !== 'superadmin'
+    const isNotSuperadmin = user.role !== 'superadmin' || currentUser?.role === 'superadmin'
     return matchesSearch && matchesRole && isNotSuperadmin
   })
 
-  const totalUsers = users.filter(u => u.role !== 'superadmin').length
+  const totalUsers = currentUser?.role === 'superadmin' ? users.length : users.filter(u => u.role !== 'superadmin').length
   const adminUsers = users.filter(u => u.role === 'admin').length
 
   const handleDeleteUser = async (userId) => {
@@ -292,6 +292,7 @@ export default function Users() {
           <option value="admin">Admin</option>
           <option value="contributor">Contributor</option>
           <option value="user">User</option>
+          {currentUser?.role === 'superadmin' && <option value="superadmin">Superadmin</option>}
         </select>
       </div>
 
