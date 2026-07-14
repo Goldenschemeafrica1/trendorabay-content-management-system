@@ -4,10 +4,55 @@ const API_BASE_URL = 'https://trendorabay-content-management-system.onrender.com
 const cache = new Map();
 const CACHE_TTL = 1 * 60 * 1000; // 1 minute
 
+// Track if a token refresh is in progress
+let isRefreshing = false;
+let refreshSubscribers = [];
+
 class ApiService {
   getAuthHeaders() {
     const token = localStorage.getItem('auth_token');
     return token ? { 'Authorization': `Bearer ${token}` } : {};
+  }
+
+  // Add subscriber to wait for token refresh
+  addRefreshSubscriber(callback) {
+    refreshSubscribers.push(callback);
+  }
+
+  // Notify all subscribers that token is refreshed
+  onRefreshed(token) {
+    refreshSubscribers.forEach(callback => callback(token));
+    refreshSubscribers = [];
+  }
+
+  // Refresh the access token
+  async refreshAccessToken() {
+    const refreshToken = localStorage.getItem('refresh_token');
+    if (!refreshToken) {
+      throw new Error('No refresh token available');
+    }
+
+    const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refreshToken })
+    });
+
+    if (!response.ok) {
+      // Refresh failed, clear tokens and redirect to login
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('refresh_token');
+      localStorage.removeItem('user');
+      window.location.href = '/login';
+      throw new Error('Token refresh failed');
+    }
+
+    const data = await response.json();
+    localStorage.setItem('auth_token', data.token);
+    localStorage.setItem('refresh_token', data.refreshToken);
+    localStorage.setItem('user', JSON.stringify(data.user));
+    
+    return data.token;
   }
 
   async request(method, endpoint, data = null) {
@@ -29,12 +74,32 @@ class ApiService {
 
       const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
 
-      // Handle 401 Unauthorized - clear token and redirect to login (but not for login endpoint)
-      if (response.status === 401 && endpoint !== '/auth/login') {
-        localStorage.removeItem('auth_token');
-        localStorage.removeItem('user');
-        window.location.href = '/login';
-        throw new Error('Authentication required');
+      // Handle 401 Unauthorized - try to refresh token (but not for login or refresh endpoints)
+      if (response.status === 401 && endpoint !== '/auth/login' && endpoint !== '/auth/refresh') {
+        if (!isRefreshing) {
+          isRefreshing = true;
+          try {
+            const newToken = await this.refreshAccessToken();
+            isRefreshing = false;
+            this.onRefreshed(newToken);
+            // Retry the original request with new token
+            return this.request(method, endpoint, data);
+          } catch (refreshError) {
+            isRefreshing = false;
+            throw refreshError;
+          }
+        } else {
+          // Wait for the in-progress refresh to complete
+          return new Promise((resolve, reject) => {
+            this.addRefreshSubscriber((token) => {
+              try {
+                resolve(this.request(method, endpoint, data));
+              } catch (error) {
+                reject(error);
+              }
+            });
+          });
+        }
       }
 
       // Handle 403 Forbidden
@@ -121,6 +186,7 @@ class ApiService {
     const response = await this.post('/auth/login', { email, password });
     if (response.token) {
       localStorage.setItem('auth_token', response.token);
+      localStorage.setItem('refresh_token', response.refreshToken);
       localStorage.setItem('user', JSON.stringify(response.user));
     }
     return response;
@@ -130,6 +196,7 @@ class ApiService {
     const response = await this.post('/auth/register', { name, email, password, role });
     if (response.token) {
       localStorage.setItem('auth_token', response.token);
+      localStorage.setItem('refresh_token', response.refreshToken);
       localStorage.setItem('user', JSON.stringify(response.user));
     }
     return response;
@@ -137,6 +204,7 @@ class ApiService {
 
   logout() {
     localStorage.removeItem('auth_token');
+    localStorage.removeItem('refresh_token');
     localStorage.removeItem('user');
     window.location.href = '/login';
   }

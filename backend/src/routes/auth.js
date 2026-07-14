@@ -57,9 +57,24 @@ router.post('/register', registerValidation, async (req, res) => {
       { expiresIn: '24h' }
     );
     
+    // Generate refresh token (7 days)
+    const refreshToken = jwt.sign(
+      { userId: newUser[0].id, type: 'refresh' },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+    
+    // Store refresh token in database
+    const refreshExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+    await db.query(
+      'UPDATE cms_users SET refresh_token = ?, refresh_token_expires_at = ? WHERE id = ?',
+      [refreshToken, refreshExpiresAt, newUser[0].id]
+    );
+    
     res.status(201).json({ 
       user: newUser[0],
-      token
+      token,
+      refreshToken
     });
   } catch (error) {
     console.error('Registration error:', error);
@@ -125,6 +140,20 @@ router.post('/login', loginValidation, async (req, res) => {
       { expiresIn: '24h' }
     );
     
+    // Generate refresh token (7 days)
+    const refreshToken = jwt.sign(
+      { userId: user.id, type: 'refresh' },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+    
+    // Store refresh token in database
+    const refreshExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+    await db.query(
+      'UPDATE cms_users SET refresh_token = ?, refresh_token_expires_at = ? WHERE id = ?',
+      [refreshToken, refreshExpiresAt, user.id]
+    );
+    
     res.json({ 
       user: {
         id: user.id,
@@ -136,7 +165,8 @@ router.post('/login', loginValidation, async (req, res) => {
         last_active: user.last_active,
         created_at: user.created_at
       },
-      token
+      token,
+      refreshToken
     });
   } catch (error) {
     console.error('Login error:', error);
@@ -183,6 +213,75 @@ router.get('/verify', async (req, res) => {
   } catch (error) {
     console.error('Token verification error:', error);
     res.status(500).json({ error: 'Verification failed' });
+  }
+});
+
+// Refresh token endpoint
+router.post('/refresh', async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+    
+    if (!refreshToken) {
+      return res.status(400).json({ error: 'Refresh token required' });
+    }
+    
+    // Find user with this refresh token
+    const [users] = await db.query(
+      'SELECT id, name, email, role, status, refresh_token_expires_at FROM cms_users WHERE refresh_token = ?',
+      [refreshToken]
+    );
+    
+    if (users.length === 0) {
+      return res.status(401).json({ error: 'Invalid refresh token' });
+    }
+    
+    const user = users[0];
+    
+    // Check if refresh token is expired
+    if (user.refresh_token_expires_at && new Date(user.refresh_token_expires_at) < new Date()) {
+      return res.status(401).json({ error: 'Refresh token expired' });
+    }
+    
+    // Check if user is banned
+    if (user.status === 'banned') {
+      return res.status(403).json({ error: 'Account is banned' });
+    }
+    
+    // Generate new access token
+    const newToken = jwt.sign(
+      { userId: user.id, role: user.role },
+      JWT_SECRET,
+      { expiresIn: '24h' }
+    );
+    
+    // Generate new refresh token (7 days)
+    const newRefreshToken = jwt.sign(
+      { userId: user.id, type: 'refresh' },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+    
+    // Update refresh token in database
+    const refreshExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+    await db.query(
+      'UPDATE cms_users SET refresh_token = ?, refresh_token_expires_at = ? WHERE id = ?',
+      [newRefreshToken, refreshExpiresAt, user.id]
+    );
+    
+    res.json({ 
+      token: newToken,
+      refreshToken: newRefreshToken,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        status: user.status
+      }
+    });
+  } catch (error) {
+    console.error('Refresh token error:', error);
+    res.status(500).json({ error: 'Token refresh failed' });
   }
 });
 
