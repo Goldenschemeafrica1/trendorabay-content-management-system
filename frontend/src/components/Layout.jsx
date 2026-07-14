@@ -42,6 +42,9 @@ import {
   Inbox
 } from 'lucide-react'
 import { useState, useEffect, useRef, createContext, useContext } from 'react'
+import { useIdleTimeout } from '../hooks/useIdleTimeout'
+import SessionTimeoutModal from './SessionTimeoutModal'
+import api from '../services/api'
 
 // Create context for header visibility control
 export const HeaderVisibilityContext = createContext({
@@ -285,10 +288,18 @@ export default function Layout() {
   const userRole = user?.role || 'user'
 
   const handleLogout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
-    navigate('/login')
+    api.logout()
   }
+
+  // Handle idle timeout
+  const handleTimeout = () => {
+    handleLogout()
+  }
+
+  const { showWarning, timeRemaining, extendSession } = useIdleTimeout(
+    handleTimeout,
+    () => console.log('Session timeout warning triggered')
+  )
 
   const toggleSection = (section) => {
     setExpandedSections(prev => ({
@@ -313,6 +324,15 @@ export default function Layout() {
 
   return (
     <div style={{ display: 'flex', height: '100vh', background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)' }}>
+      {/* Session Timeout Modal */}
+      {showWarning && (
+        <SessionTimeoutModal
+          timeRemaining={timeRemaining}
+          onExtend={extendSession}
+          onLogout={handleLogout}
+        />
+      )}
+
       {/* Sidebar */}
       {!hideSidebar && (
       <aside 
