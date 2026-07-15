@@ -167,7 +167,7 @@ router.delete('/:id', authenticate, async (req, res) => {
 });
 
 // Proxy route to serve pitch attachments (handles both local and S3 URLs)
-router.get('/attachment/:filename', authenticate, isEditor, async (req, res) => {
+router.get('/attachment/:filename', optionalAuth, async (req, res) => {
   try {
     const { filename } = req.params;
     const path = require('path');
