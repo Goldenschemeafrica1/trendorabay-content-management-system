@@ -58,22 +58,11 @@ if (!fs.existsSync(uploadsPath)) {
   fs.mkdirSync(uploadsPath, { recursive: true });
 }
 
-// Serve static files with CORS and fallback to proxy route
+// Serve static files with CORS
 app.use('/uploads', (req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
-
-  // Check if file exists before serving
-  const filePath = path.join(uploadsPath, req.path);
-  if (!fs.existsSync(filePath)) {
-    // File doesn't exist, redirect to proxy route for pitch attachments
-    if (req.path.startsWith('/pitches/')) {
-      const filename = req.path.split('/').pop();
-      return res.redirect(`/api/pitch-submissions/attachment/${filename}`);
-    }
-    // For other missing files, continue to static middleware (will return 404)
-  }
   next();
 }, express.static(uploadsPath));
 
