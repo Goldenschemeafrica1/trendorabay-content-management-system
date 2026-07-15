@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
-const { uploadSingle } = require('../config/upload');
+const { uploadSingle, uploadFileToCloud, useS3 } = require('../config/upload');
 const { deleteFromS3 } = require('../config/s3');
 const { authenticate, optionalAuth } = require('../middleware/auth');
 const { isEditor, hasRole } = require('../middleware/authorize');
@@ -35,39 +35,46 @@ router.get('/:id', authenticate, isEditor, async (req, res) => {
 // Create pitch submission (public - for external submissions)
 router.post('/', upload, optionalAuth, async (req, res) => {
   try {
-    const { 
-      full_name, 
-      email, 
-      phone, 
-      topic, 
-      pitch_title, 
-      pitch_description, 
-      author_bio, 
-      social_media, 
-      topics_of_interest, 
-      previous_publications, 
+    const {
+      full_name,
+      email,
+      phone,
+      topic,
+      pitch_title,
+      pitch_description,
+      author_bio,
+      social_media,
+      topics_of_interest,
+      previous_publications,
       experience,
-      status 
+      status
     } = req.body;
-    
-    const article_attachment = req.file ? (req.file.location || `/uploads/pitches/${req.file.filename}`) : null;
-    
+
+    let article_attachment = null;
+    if (req.file) {
+      if (useS3) {
+        article_attachment = await uploadFileToCloud(req.file, 'pitches');
+      } else {
+        article_attachment = `/uploads/pitches/${req.file.filename}`;
+      }
+    }
+
     const [result] = await db.query(
-      `INSERT INTO pitch_submissions 
-       (full_name, email, phone, topic, pitch_title, pitch_description, author_bio, social_media, topics_of_interest, previous_publications, experience, article_attachment, status) 
+      `INSERT INTO pitch_submissions
+       (full_name, email, phone, topic, pitch_title, pitch_description, author_bio, social_media, topics_of_interest, previous_publications, experience, article_attachment, status)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
-        full_name, 
-        email, 
-        phone || null, 
-        topic || null, 
-        pitch_title, 
-        pitch_description, 
-        author_bio || null, 
-        social_media || null, 
-        topics_of_interest || null, 
-        previous_publications || null, 
-        experience || null, 
+        full_name,
+        email,
+        phone || null,
+        topic || null,
+        pitch_title,
+        pitch_description,
+        author_bio || null,
+        social_media || null,
+        topics_of_interest || null,
+        previous_publications || null,
+        experience || null,
         article_attachment,
         status || 'pending'
       ]
@@ -82,43 +89,50 @@ router.post('/', upload, optionalAuth, async (req, res) => {
 // Update pitch submission (editor+)
 router.put('/:id', upload, authenticate, isEditor, async (req, res) => {
   try {
-    const { 
-      full_name, 
-      email, 
-      phone, 
-      topic, 
-      pitch_title, 
-      pitch_description, 
-      author_bio, 
-      social_media, 
-      topics_of_interest, 
-      previous_publications, 
+    const {
+      full_name,
+      email,
+      phone,
+      topic,
+      pitch_title,
+      pitch_description,
+      author_bio,
+      social_media,
+      topics_of_interest,
+      previous_publications,
       experience,
-      status 
+      status
     } = req.body;
-    
-    const article_attachment = req.file ? `/uploads/pitches/${req.file.filename}` : req.body.article_attachment || null;
-    
+
+    let article_attachment = req.body.article_attachment || null;
+    if (req.file) {
+      if (useS3) {
+        article_attachment = await uploadFileToCloud(req.file, 'pitches');
+      } else {
+        article_attachment = `/uploads/pitches/${req.file.filename}`;
+      }
+    }
+
     await db.query(
-      `UPDATE pitch_submissions 
-       SET full_name = ?, email = ?, phone = ?, topic = ?, pitch_title = ?, pitch_description = ?, 
-           author_bio = ?, social_media = ?, topics_of_interest = ?, previous_publications = ?, 
-           experience = ?, article_attachment = ?, status = ? 
+      `UPDATE pitch_submissions
+       SET full_name = ?, email = ?, phone = ?, topic = ?, pitch_title = ?, pitch_description = ?,
+           author_bio = ?, social_media = ?, topics_of_interest = ?, previous_publications = ?,
+           experience = ?, article_attachment = ?, status = ?
        WHERE id = ?`,
       [
-        full_name, 
-        email, 
-        phone || null, 
-        topic || null, 
-        pitch_title, 
-        pitch_description, 
-        author_bio || null, 
-        social_media || null, 
-        topics_of_interest || null, 
-        previous_publications || null, 
-        experience || null, 
+        full_name,
+        email,
+        phone || null,
+        topic || null,
+        pitch_title,
+        pitch_description,
+        author_bio || null,
+        social_media || null,
+        topics_of_interest || null,
+        previous_publications || null,
+        experience || null,
         article_attachment,
-        status, 
+        status,
         req.params.id
       ]
     );
@@ -148,6 +162,40 @@ router.delete('/:id', authenticate, async (req, res) => {
     await db.query('DELETE FROM pitch_submissions WHERE id = ?', [req.params.id]);
     res.json({ message: 'Pitch submission deleted successfully' });
   } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Proxy route to serve pitch attachments (handles both local and S3 URLs)
+router.get('/attachment/:filename', authenticate, isEditor, async (req, res) => {
+  try {
+    const { filename } = req.params;
+    const path = require('path');
+    const fs = require('fs');
+
+    // Check if it's a local file
+    const localPath = path.join(process.cwd(), 'uploads', 'pitches', filename);
+
+    if (fs.existsSync(localPath)) {
+      // Serve local file
+      res.sendFile(localPath);
+    } else {
+      // If file doesn't exist locally, check if it's an S3 URL in the database
+      const [rows] = await db.query(
+        'SELECT article_attachment FROM pitch_submissions WHERE article_attachment LIKE ?',
+        [`%${filename}%`]
+      );
+
+      if (rows.length > 0 && rows[0].article_attachment) {
+        // Redirect to S3 URL
+        return res.redirect(rows[0].article_attachment);
+      }
+
+      // File not found
+      res.status(404).json({ error: 'File not found' });
+    }
+  } catch (error) {
+    console.error('Error serving attachment:', error);
     res.status(500).json({ error: error.message });
   }
 });

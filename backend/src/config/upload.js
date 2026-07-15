@@ -1,5 +1,6 @@
 const multer = require('multer');
 const { uploadToCloudinary } = require('./cloudinary');
+const { uploadToS3 } = require('./s3');
 const cloudinary = require('cloudinary').v2;
 require('dotenv').config();
 
@@ -57,6 +58,7 @@ const localStorage = multer.diskStorage({
 
 // Determine which storage to use based on environment
 const useCloudinary = !!(process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET);
+const useS3 = !!(process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY && process.env.AWS_S3_BUCKET);
 
 // Choose storage based on configuration
 const storage = useCloudinary ? cloudinaryStorage : localStorage;
@@ -100,10 +102,13 @@ const uploadFields = (fields, folder = 'uploads', maxSize = 100 * 1024 * 1024) =
   }).fields(fields);
 };
 
-// Helper function to upload file to cloud storage (Cloudinary)
+// Helper function to upload file to cloud storage (Cloudinary or S3)
 const uploadFileToCloud = async (file, folder = 'uploads') => {
   if (useCloudinary) {
     return await uploadToCloudinary(file, folder);
+  }
+  if (useS3) {
+    return await uploadToS3(file, folder);
   }
   return null;
 };
@@ -114,6 +119,7 @@ module.exports = {
   uploadMultiple,
   uploadFields,
   useCloudinary,
+  useS3,
   uploadFileToCloud,
   ALLOWED_FILE_TYPES,
 };

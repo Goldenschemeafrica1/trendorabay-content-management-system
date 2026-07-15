@@ -273,11 +273,18 @@ export default function PitchSubmissionsPage() {
                         {new Date(submission.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                       </span>
                       {submission.article_attachment && (
-                        <span 
+                        <span
                           onClick={(e) => {
                             e.stopPropagation()
-                            const API_BASE_URL = 'https://trendorabay-content-management-system.onrender.com'
-                            window.open(`${API_BASE_URL}${submission.article_attachment}`, '_blank')
+                            const API_BASE_URL = 'https://trendorabay-content-management-system.onrender.com/api'
+                            // If it's already a full URL (S3), use it directly
+                            if (submission.article_attachment.startsWith('http')) {
+                              window.open(submission.article_attachment, '_blank')
+                            } else {
+                              // Use the proxy route for local files
+                              const filename = submission.article_attachment.split('/').pop()
+                              window.open(`${API_BASE_URL}/pitch-submissions/attachment/${filename}`, '_blank')
+                            }
                           }}
                           style={{ 
                             fontSize: '12px', 
@@ -601,8 +608,15 @@ export default function PitchSubmissionsPage() {
                     <label style={{ fontSize: '12px', fontWeight: '500', color: '#64748b', display: 'block', marginBottom: '8px' }}>Article Attachment</label>
                     <button
                       onClick={() => {
-                        const API_BASE_URL = 'https://trendorabay-content-management-system.onrender.com'
-                        window.open(`${API_BASE_URL}${selectedSubmission.article_attachment}`, '_blank')
+                        const API_BASE_URL = 'https://trendorabay-content-management-system.onrender.com/api'
+                        // If it's already a full URL (S3), use it directly
+                        if (selectedSubmission.article_attachment.startsWith('http')) {
+                          window.open(selectedSubmission.article_attachment, '_blank')
+                        } else {
+                          // Use the proxy route for local files
+                          const filename = selectedSubmission.article_attachment.split('/').pop()
+                          window.open(`${API_BASE_URL}/pitch-submissions/attachment/${filename}`, '_blank')
+                        }
                       }}
                       style={{
                         display: 'flex',
