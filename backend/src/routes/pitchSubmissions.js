@@ -187,16 +187,30 @@ router.get('/attachment/:filename', optionalAuth, async (req, res) => {
       );
 
       if (rows.length > 0 && rows[0].article_attachment) {
-        // Redirect to S3 URL
-        return res.redirect(rows[0].article_attachment);
-      }
+        const attachmentUrl = rows[0].article_attachment;
 
-      // File not found
-      res.status(404).json({ error: 'File not found' });
+        // If it's an S3 URL, redirect to it
+        if (attachmentUrl.startsWith('http')) {
+          return res.redirect(attachmentUrl);
+        }
+
+        // If it's a local path but file doesn't exist, return error
+        res.status(404).json({
+          error: 'File not found on server',
+          message: 'The attachment file is not available. This may be because the file was stored locally on a previous deployment and is no longer available.',
+          suggestion: 'Please ask the submitter to provide the file again.'
+        });
+      } else {
+        // No matching record found
+        res.status(404).json({
+          error: 'Attachment not found',
+          message: 'No attachment record found with this filename.'
+        });
+      }
     }
   } catch (error) {
     console.error('Error serving attachment:', error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: 'Server error while serving attachment' });
   }
 });
 
