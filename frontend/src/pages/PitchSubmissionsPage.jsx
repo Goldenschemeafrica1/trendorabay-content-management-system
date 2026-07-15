@@ -11,6 +11,7 @@ export default function PitchSubmissionsPage() {
   const [filterStatus, setFilterStatus] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [showPreview, setShowPreview] = useState(false)
+  const [attachmentError, setAttachmentError] = useState(null)
   const { setHideHeader } = useContext(HeaderVisibilityContext)
 
   useEffect(() => {
@@ -120,6 +121,24 @@ export default function PitchSubmissionsPage() {
           </button>
         </div>
       </div>
+
+      {/* Error notification */}
+      {attachmentError && (
+        <div style={{
+          background: '#fef2f2',
+          border: '1px solid #fecaca',
+          borderRadius: '10px',
+          padding: '12px 16px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          color: '#dc2626',
+          fontSize: '13px'
+        }}>
+          <X style={{ width: '16px', height: '16px', cursor: 'pointer' }} onClick={() => setAttachmentError(null)} />
+          <span>{attachmentError}</span>
+        </div>
+      )}
 
       {/* Filters */}
       <div style={{
@@ -274,16 +293,28 @@ export default function PitchSubmissionsPage() {
                       </span>
                       {submission.article_attachment && (
                         <span
-                          onClick={(e) => {
+                          onClick={async (e) => {
                             e.stopPropagation()
+                            setAttachmentError(null)
                             const API_BASE_URL = 'https://trendorabay-content-management-system.onrender.com/api'
-                            // If it's already a full URL (S3), use it directly
-                            if (submission.article_attachment.startsWith('http')) {
-                              window.open(submission.article_attachment, '_blank')
-                            } else {
-                              // Use the proxy route for local files
-                              const filename = submission.article_attachment.split('/').pop()
-                              window.open(`${API_BASE_URL}/pitch-submissions/attachment/${filename}`, '_blank')
+                            try {
+                              // If it's already a full URL (S3), use it directly
+                              if (submission.article_attachment.startsWith('http')) {
+                                window.open(submission.article_attachment, '_blank')
+                              } else {
+                                // Use the proxy route for local files
+                                const filename = submission.article_attachment.split('/').pop()
+                                const response = await fetch(`${API_BASE_URL}/pitch-submissions/attachment/${filename}`)
+                                if (!response.ok) {
+                                  const errorData = await response.json()
+                                  throw new Error(errorData.message || 'Failed to open attachment')
+                                }
+                                const blob = await response.blob()
+                                const url = window.URL.createObjectURL(blob)
+                                window.open(url, '_blank')
+                              }
+                            } catch (error) {
+                              setAttachmentError(error.message || 'Failed to open attachment')
                             }
                           }}
                           style={{ 
@@ -607,15 +638,27 @@ export default function PitchSubmissionsPage() {
                   <div>
                     <label style={{ fontSize: '12px', fontWeight: '500', color: '#64748b', display: 'block', marginBottom: '8px' }}>Article Attachment</label>
                     <button
-                      onClick={() => {
+                      onClick={async () => {
+                        setAttachmentError(null)
                         const API_BASE_URL = 'https://trendorabay-content-management-system.onrender.com/api'
-                        // If it's already a full URL (S3), use it directly
-                        if (selectedSubmission.article_attachment.startsWith('http')) {
-                          window.open(selectedSubmission.article_attachment, '_blank')
-                        } else {
-                          // Use the proxy route for local files
-                          const filename = selectedSubmission.article_attachment.split('/').pop()
-                          window.open(`${API_BASE_URL}/pitch-submissions/attachment/${filename}`, '_blank')
+                        try {
+                          // If it's already a full URL (S3), use it directly
+                          if (selectedSubmission.article_attachment.startsWith('http')) {
+                            window.open(selectedSubmission.article_attachment, '_blank')
+                          } else {
+                            // Use the proxy route for local files
+                            const filename = selectedSubmission.article_attachment.split('/').pop()
+                            const response = await fetch(`${API_BASE_URL}/pitch-submissions/attachment/${filename}`)
+                            if (!response.ok) {
+                              const errorData = await response.json()
+                              throw new Error(errorData.message || 'Failed to open attachment')
+                            }
+                            const blob = await response.blob()
+                            const url = window.URL.createObjectURL(blob)
+                            window.open(url, '_blank')
+                          }
+                        } catch (error) {
+                          setAttachmentError(error.message || 'Failed to open attachment')
                         }
                       }}
                       style={{
