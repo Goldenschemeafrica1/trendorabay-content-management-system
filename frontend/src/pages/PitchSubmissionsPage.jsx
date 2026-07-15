@@ -276,7 +276,7 @@ export default function PitchSubmissionsPage() {
                         <span 
                           onClick={(e) => {
                             e.stopPropagation()
-                            const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5002'
+                            const API_BASE_URL = 'https://trendorabay-content-management-system.onrender.com'
                             window.open(`${API_BASE_URL}${submission.article_attachment}`, '_blank')
                           }}
                           style={{ 
@@ -601,7 +601,7 @@ export default function PitchSubmissionsPage() {
                     <label style={{ fontSize: '12px', fontWeight: '500', color: '#64748b', display: 'block', marginBottom: '8px' }}>Article Attachment</label>
                     <button
                       onClick={() => {
-                        const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5002'
+                        const API_BASE_URL = 'https://trendorabay-content-management-system.onrender.com'
                         window.open(`${API_BASE_URL}${selectedSubmission.article_attachment}`, '_blank')
                       }}
                       style={{
