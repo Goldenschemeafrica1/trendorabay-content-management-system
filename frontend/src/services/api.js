@@ -10,11 +10,6 @@ const BASE_URL = import.meta.env.VITE_API_URL?.replace('/api', '') ||
     ? 'http://localhost:5002' 
     : 'https://trendorabay-content-management-system.onrender.com');
 
-// Debug logging to check which URL is being used
-console.log('API_BASE_URL:', API_BASE_URL);
-console.log('BASE_URL:', BASE_URL);
-console.log('Hostname:', window.location.hostname);
-
 export { BASE_URL };
 
 // Simple in-memory cache with 1-minute TTL (reduced from 5 minutes)
