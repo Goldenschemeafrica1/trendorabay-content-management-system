@@ -1,4 +1,14 @@
-const API_BASE_URL = 'http://localhost:5002/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+    ? 'http://localhost:5002/api' 
+    : 'https://trendorabay-cms-backend.vercel.app/api');
+
+const BASE_URL = import.meta.env.VITE_API_URL || 
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+    ? 'http://localhost:5002' 
+    : 'https://trendorabay-cms-backend.vercel.app');
+
+export { BASE_URL };
 
 // Simple in-memory cache with 1-minute TTL (reduced from 5 minutes)
 const cache = new Map();

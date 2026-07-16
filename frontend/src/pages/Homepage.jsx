@@ -26,7 +26,7 @@ import {
   List,
   ChevronDown
 } from 'lucide-react'
-import api from '../services/api'
+import api, { BASE_URL } from '../services/api'
 
 export default function Homepage() {
   const [activeTab, setActiveTab] = useState('featured')
@@ -443,7 +443,7 @@ export default function Homepage() {
                       </span>
                       {mainCoverStory.featured_image_url && (
                         <img 
-                          src={mainCoverStory.featured_image_url.startsWith('http') ? mainCoverStory.featured_image_url : `http://localhost:5002${mainCoverStory.featured_image_url}`}
+                          src={mainCoverStory.featured_image_url.startsWith('http') ? mainCoverStory.featured_image_url : `${BASE_URL}${mainCoverStory.featured_image_url}`}
                           alt="Cover"
                           style={{ 
                             width: '100%', 
@@ -781,7 +781,7 @@ export default function Homepage() {
                     <input type="checkbox" style={{ width: '16px', height: '16px' }} />
                     {magazine.cover_image_url && (
                       <img 
-                        src={magazine.cover_image_url.startsWith('http') ? magazine.cover_image_url : `http://localhost:5002${magazine.cover_image_url}`}
+                        src={magazine.cover_image_url.startsWith('http') ? magazine.cover_image_url : `${BASE_URL}${magazine.cover_image_url}`}
                         alt={magazine.title}
                         style={{ 
                           width: '50px', 
@@ -919,7 +919,7 @@ export default function Homepage() {
                     }}>
                       {magazine.cover_image_url ? (
                         <img 
-                          src={magazine.cover_image_url.startsWith('http') ? magazine.cover_image_url : `http://localhost:5002${magazine.cover_image_url}`}
+                          src={magazine.cover_image_url.startsWith('http') ? magazine.cover_image_url : `${BASE_URL}${magazine.cover_image_url}`}
                           alt={magazine.title}
                           style={{ 
                             width: '100%', 

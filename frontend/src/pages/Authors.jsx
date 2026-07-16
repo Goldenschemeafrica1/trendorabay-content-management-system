@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react'
 import { Plus, Search, Edit, Trash2, Mail, User as UserIcon, Upload, Calendar } from 'lucide-react'
-import api from '../services/api'
+import api, { BASE_URL } from '../services/api'
 import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
 
 export default function Authors() {
@@ -101,7 +101,7 @@ export default function Authors() {
     email: author.email || '',
     bio: author.bio || ''
   })
-  setAvatarPreview(author.avatar_url ? (author.avatar_url.startsWith('http') ? author.avatar_url : `http://localhost:5002${author.avatar_url}`) : null)
+  setAvatarPreview(author.avatar_url ? (author.avatar_url.startsWith('http') ? author.avatar_url : `${BASE_URL}${author.avatar_url}`) : null)
   setShowEditModal(true)
 }
 
@@ -309,7 +309,7 @@ const handleUpdateAuthor = async () => {
                     }}>
                       {author.avatar_url ? (
                         <img 
-                          src={author.avatar_url.startsWith('http') ? author.avatar_url : `http://localhost:5002${author.avatar_url}`}
+                          src={author.avatar_url.startsWith('http') ? author.avatar_url : `${BASE_URL}${author.avatar_url}`}
                           alt={author.name}
                           style={{ 
                             width: '100%', 

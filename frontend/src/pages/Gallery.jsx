@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Plus, Search, Filter, Grid, List, Image as ImageIcon, Trash2, Edit, Loader2 } from 'lucide-react'
-import api from '../services/api'
+import api, { BASE_URL } from '../services/api'
 
 export default function Gallery() {
   const [galleryItems, setGalleryItems] = useState([])
@@ -55,7 +55,7 @@ export default function Gallery() {
       formData.append('file', file)
       formData.append('folder', 'gallery')
 
-      const response = await fetch('http://localhost:5002/api/media', {
+      const response = await fetch(`${BASE_URL}/api/media`, {
         method: 'POST',
         body: formData
       })

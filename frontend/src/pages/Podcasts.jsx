@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react'
 import { Plus, Search, Edit, Trash2, Play, Upload, Clock } from 'lucide-react'
-import api from '../services/api'
+import api, { BASE_URL } from '../services/api'
 import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
 
 export default function Podcasts() {
@@ -177,7 +177,7 @@ export default function Podcasts() {
       category: podcast.category_name || podcast.category,
       description: podcast.description || ''
     })
-    setCoverArtPreview(podcast.cover_art_url ? (podcast.cover_art_url.startsWith('http') ? podcast.cover_art_url : `http://localhost:5002${podcast.cover_art_url}`) : null)
+    setCoverArtPreview(podcast.cover_art_url ? (podcast.cover_art_url.startsWith('http') ? podcast.cover_art_url : `${BASE_URL}${podcast.cover_art_url}`) : null)
     setShowEditModal(true)
   }
 
@@ -245,7 +245,7 @@ export default function Podcasts() {
       }
 
       // Play new audio
-      const audio = new Audio(podcast.audio_file_url.startsWith('http') ? podcast.audio_file_url : `http://localhost:5002${podcast.audio_file_url}`)
+      const audio = new Audio(podcast.audio_file_url.startsWith('http') ? podcast.audio_file_url : `${BASE_URL}${podcast.audio_file_url}`)
       audio.play()
       setAudioRef(audio)
       setPlayingAudio(podcast.id)
@@ -361,7 +361,7 @@ export default function Podcasts() {
             <div style={{ 
               aspectRatio: '16/9', 
               background: podcast.cover_art_url 
-                ? `url(${podcast.cover_art_url.startsWith('http') ? podcast.cover_art_url : `http://localhost:5002${podcast.cover_art_url}`}) center/cover no-repeat` 
+                ? `url(${podcast.cover_art_url.startsWith('http') ? podcast.cover_art_url : `${BASE_URL}${podcast.cover_art_url}`}) center/cover no-repeat` 
                 : 'linear-gradient(135deg, #a855f7 0%, #ec4899 100)', 
               display: 'flex', 
               alignItems: 'center', 

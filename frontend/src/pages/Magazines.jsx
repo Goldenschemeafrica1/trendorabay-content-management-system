@@ -1,9 +1,7 @@
 import { useState, useEffect, useContext } from 'react'
 import { Plus, Search, Filter, Edit, Trash2, Eye, Upload } from 'lucide-react'
-import api from '../services/api'
+import api, { BASE_URL } from '../services/api'
 import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
-
-const API_BASE_URL = 'http://localhost:5002'
 
 export default function Magazines() {
   const { setHideHeader } = useContext(HeaderVisibilityContext)
@@ -221,7 +219,7 @@ export default function Magazines() {
       preview_pages: magazine.preview_pages || ''
     })
     setCoverImagePreview(magazine.cover_image_url 
-      ? (magazine.cover_image_url.startsWith('http') ? magazine.cover_image_url : `${API_BASE_URL}${magazine.cover_image_url}`)
+      ? (magazine.cover_image_url.startsWith('http') ? magazine.cover_image_url : `${BASE_URL}${magazine.cover_image_url}`)
       : null)
     setShowEditModal(true)
   }
@@ -408,7 +406,7 @@ export default function Magazines() {
             }}>
               {magazine.cover_image_url ? (
                 <img 
-                  src={magazine.cover_image_url.startsWith('http') ? magazine.cover_image_url : `${API_BASE_URL}${magazine.cover_image_url}`} 
+                  src={magazine.cover_image_url.startsWith('http') ? magazine.cover_image_url : `${BASE_URL}${magazine.cover_image_url}`} 
                   alt={magazine.title}
                   style={{ 
                     width: '100%', 
@@ -417,7 +415,7 @@ export default function Magazines() {
                   }}
                   onError={(e) => {
                     console.error('Image load error:', e)
-                    console.error('Image URL:', magazine.cover_image_url.startsWith('http') ? magazine.cover_image_url : `${API_BASE_URL}${magazine.cover_image_url}`)
+                    console.error('Image URL:', magazine.cover_image_url.startsWith('http') ? magazine.cover_image_url : `${BASE_URL}${magazine.cover_image_url}`)
                     console.error('Magazine data:', magazine)
                     e.currentTarget.style.display = 'none'
                   }}

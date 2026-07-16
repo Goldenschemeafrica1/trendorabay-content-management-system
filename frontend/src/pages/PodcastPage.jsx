@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Save, Eye, Type, Image, Layout, Settings, Plus, Trash2, Mic, Play, Clock, Users, Calendar, Star, User, FileText, Award, Radio } from 'lucide-react'
-import api from '../services/api'
+import api, { BASE_URL } from '../services/api'
 
 export default function PodcastPage() {
   const [podcastTitle, setPodcastTitle] = useState('Our Podcasts')
@@ -43,7 +43,7 @@ export default function PodcastPage() {
         const imageUrl = podcast.cover_art_url 
           ? (podcast.cover_art_url.startsWith('http') 
               ? podcast.cover_art_url 
-              : `http://localhost:5002${podcast.cover_art_url}`)
+              : `${BASE_URL}${podcast.cover_art_url}`)
           : ''
         
         return {
@@ -71,7 +71,7 @@ export default function PodcastPage() {
         const imageUrl = host.photo_url 
           ? (host.photo_url.startsWith('http') 
               ? host.photo_url 
-              : `http://localhost:5002${host.photo_url}`)
+              : `${BASE_URL}${host.photo_url}`)
           : ''
         
         return {
@@ -94,7 +94,7 @@ export default function PodcastPage() {
         const imageUrl = guest.avatar_url 
           ? (guest.avatar_url.startsWith('http') 
               ? guest.avatar_url 
-              : `http://localhost:5002${guest.avatar_url}`)
+              : `${BASE_URL}${guest.avatar_url}`)
           : ''
         
         return {
