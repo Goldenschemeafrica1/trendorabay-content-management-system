@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
-const { uploadSingle, uploadFileToCloud, useS3 } = require('../config/upload');
+const { uploadSingle, uploadFileToCloud, useS3, useCloudinary } = require('../config/upload');
 const { deleteFromS3 } = require('../config/s3');
 const { authenticate, optionalAuth } = require('../middleware/auth');
 const { isEditor, hasRole } = require('../middleware/authorize');
@@ -101,7 +101,7 @@ router.post('/', upload, optionalAuth, async (req, res) => {
 
     let article_attachment = null;
     if (req.file) {
-      if (useS3) {
+      if (useS3 || useCloudinary) {
         article_attachment = await uploadFileToCloud(req.file, 'pitches');
       } else {
         article_attachment = `/uploads/pitches/${req.file.filename}`;
@@ -155,7 +155,7 @@ router.put('/:id', upload, authenticate, isEditor, async (req, res) => {
 
     let article_attachment = req.body.article_attachment || null;
     if (req.file) {
-      if (useS3) {
+      if (useS3 || useCloudinary) {
         article_attachment = await uploadFileToCloud(req.file, 'pitches');
       } else {
         article_attachment = `/uploads/pitches/${req.file.filename}`;
