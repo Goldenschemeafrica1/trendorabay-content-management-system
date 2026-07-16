@@ -225,9 +225,9 @@ export default function Homepage() {
           { id: 'ads', label: 'Advertisements', icon: ImageIcon },
           { id: 'layout', label: 'Layout', icon: LayoutGrid },
           { id: 'content', label: 'Content', icon: Settings }
-        ].map(tab => (
+        ].map((tab, index) => (
           <button
-            key={tab.id}
+            key={tab.id || `tab-${index}`}
             onClick={() => setActiveTab(tab.id)}
             style={{
               padding: '10px 16px',
@@ -337,8 +337,8 @@ export default function Homepage() {
                 {allStories.filter(s => 
                   (selectedCategory === 'all' || s.category === selectedCategory) &&
                   (s.title?.toLowerCase().includes(searchQuery.toLowerCase()) || s.content?.toLowerCase().includes(searchQuery.toLowerCase()))
-                ).slice(0, 5).map((story) => (
-                  <div key={story.id} style={{
+                ).slice(0, 5).map((story, index) => (
+                  <div key={story.id || `story-select-${index}`} style={{
                     background: '#f8fafc',
                     borderRadius: '10px',
                     padding: '12px 16px',
@@ -396,7 +396,7 @@ export default function Homepage() {
                   </h4>
                   <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     {featuredStories.slice(0, 4).map((story, index) => (
-                      <div key={story.id} style={{
+                      <div key={story.id || `featured-story-${index}`} style={{
                         background: 'white',
                         borderRadius: '8px',
                         padding: '10px',
@@ -495,7 +495,7 @@ export default function Homepage() {
                   </h4>
                   <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     {trendingStories.slice(0, 4).map((story, index) => (
-                      <div key={story.id} style={{
+                      <div key={story.id || `trending-story-${index}`} style={{
                         background: 'white',
                         borderRadius: '8px',
                         padding: '10px',
@@ -535,8 +535,8 @@ export default function Homepage() {
                   gap: '12px',
                   overflowX: 'auto'
                 }}>
-                  {moreToExplore.slice(0, 6).map((story) => (
-                    <div key={story.id} style={{
+                  {moreToExplore.slice(0, 6).map((story, index) => (
+                    <div key={story.id || `explore-story-${index}`} style={{
                       minWidth: '200px',
                       background: 'white',
                       borderRadius: '8px',
@@ -565,7 +565,7 @@ export default function Homepage() {
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 {featuredStories.map((story, index) => (
-                  <div key={story.id} style={{
+                  <div key={story.id || `secondary-story-${index}`} style={{
                     background: '#f8fafc',
                     borderRadius: '12px',
                     padding: '16px',
@@ -768,8 +768,8 @@ export default function Homepage() {
               
               {/* Magazines List */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '12px' }}>
-                {allMagazines.slice(0, 6).map((magazine) => (
-                  <div key={magazine.id} style={{
+                {allMagazines.slice(0, 6).map((magazine, index) => (
+                  <div key={magazine.id || `magazine-${index}`} style={{
                     background: '#f8fafc',
                     borderRadius: '10px',
                     padding: '12px',
@@ -898,8 +898,8 @@ export default function Homepage() {
                 Featured Magazines Preview
               </h3>
               <div style={{ display: 'grid', gridTemplateColumns: magazinesLayout === 'grid' ? 'repeat(auto-fit, minmax(250px, 1fr))' : 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px' }}>
-                {featuredMagazines.map((magazine) => (
-                  <div key={magazine.id} style={{
+                {featuredMagazines.map((magazine, index) => (
+                  <div key={magazine.id || `featured-magazine-${index}`} style={{
                     background: '#f8fafc',
                     borderRadius: '12px',
                     padding: '16px',
@@ -1207,8 +1207,8 @@ export default function Homepage() {
                 Preview
               </h3>
               <div style={{ display: exploreDisplayMode === 'grid' ? 'grid' : 'flex', gridTemplateColumns: exploreDisplayMode === 'grid' ? 'repeat(auto-fit, minmax(250px, 1fr))' : '1fr', flexDirection: exploreDisplayMode === 'list' ? 'column' : 'row', gap: '12px' }}>
-                {moreToExplore.slice(0, exploreLimit).map((story) => (
-                  <div key={story.id} style={{
+                {moreToExplore.slice(0, exploreLimit).map((story, index) => (
+                  <div key={story.id || `explore-preview-${index}`} style={{
                     background: '#f8fafc',
                     borderRadius: '10px',
                     padding: exploreDisplayMode === 'grid' ? '16px' : '12px',
@@ -1257,8 +1257,8 @@ export default function Homepage() {
                 Homepage Ad Locations
               </h4>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '12px' }}>
-                {adLocations.map((ad) => (
-                  <div key={ad.id} style={{
+                {adLocations.map((ad, index) => (
+                  <div key={ad.id || `ad-location-${index}`} style={{
                     background: '#f8fafc',
                     borderRadius: '12px',
                     padding: '16px',
@@ -1511,8 +1511,8 @@ export default function Homepage() {
                 Section Visibility
               </h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
-                {sections.map((section) => (
-                  <label key={section.id} style={{
+                {sections.map((section, index) => (
+                  <label key={section.id || `section-${index}`} style={{
                     display: 'flex',
                     alignItems: 'center',
                     gap: '12px',
@@ -1543,7 +1543,7 @@ export default function Homepage() {
               <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '12px' }}>Drag-and-drop to reorder sections</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {sections.map((section, index) => (
-                  <div key={section.id} style={{
+                  <div key={section.id || `section-order-${index}`} style={{
                     background: '#f8fafc',
                     borderRadius: '10px',
                     padding: '12px 16px',
@@ -1596,8 +1596,8 @@ export default function Homepage() {
                 Section Titles
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {sections.map((section) => (
-                  <div key={section.id} style={{
+                {sections.map((section, index) => (
+                  <div key={section.id || `section-title-${index}`} style={{
                     background: '#f8fafc',
                     borderRadius: '10px',
                     padding: '12px 16px',

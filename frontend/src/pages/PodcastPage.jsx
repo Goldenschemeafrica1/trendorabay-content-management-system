@@ -216,8 +216,8 @@ export default function PodcastPage() {
           </button>
         </h3>
         <div style={{ display: 'flex', flexDirection: 'row', gap: '12px', flexWrap: 'wrap' }}>
-          {featuredEpisodes.map((episode) => (
-            <div key={episode.id} style={{
+          {featuredEpisodes.map((episode, index) => (
+            <div key={episode.id || `featured-episode-${index}`} style={{
               background: '#f8fafc',
               borderRadius: '10px',
               padding: '12px',
@@ -458,8 +458,8 @@ export default function PodcastPage() {
           </button>
         </h3>
         <div style={{ display: 'flex', flexDirection: 'row', gap: '12px', flexWrap: 'wrap' }}>
-          {latestEpisodes.map((episode) => (
-            <div key={episode.id} style={{
+          {latestEpisodes.map((episode, index) => (
+            <div key={episode.id || `latest-episode-${index}`} style={{
               background: '#f8fafc',
               borderRadius: '10px',
               padding: '12px',
@@ -565,8 +565,8 @@ export default function PodcastPage() {
           </button>
         </h3>
         <div style={{ display: 'flex', flexDirection: 'row', gap: '12px', flexWrap: 'wrap' }}>
-          {podcastHosts.map((host) => (
-            <div key={host.id} style={{
+          {podcastHosts.map((host, index) => (
+            <div key={host.id || `host-${index}`} style={{
               background: '#f8fafc',
               borderRadius: '10px',
               padding: '12px 16px',
@@ -641,8 +641,8 @@ export default function PodcastPage() {
           </button>
         </h3>
         <div style={{ display: 'flex', flexDirection: 'row', gap: '12px', flexWrap: 'wrap' }}>
-          {blogPosts.map((post) => (
-            <div key={post.id} style={{
+          {blogPosts.map((post, index) => (
+            <div key={post.id || `post-${index}`} style={{
               background: '#f8fafc',
               borderRadius: '10px',
               padding: '12px',
@@ -747,8 +747,8 @@ export default function PodcastPage() {
           </button>
         </h3>
         <div style={{ display: 'flex', flexDirection: 'row', gap: '16px', justifyContent: 'space-between' }}>
-          {featuredGuests.map((guest) => (
-            <div key={guest.id} style={{
+          {featuredGuests.map((guest, index) => (
+            <div key={guest.id || `guest-${index}`} style={{
               background: '#f8fafc',
               borderRadius: '10px',
               padding: '12px 16px',
@@ -847,8 +847,8 @@ export default function PodcastPage() {
               <h1 style={{ fontSize: '32px', fontWeight: 'bold', color: '#0f172a', marginBottom: '16px' }}>{podcastTitle}</h1>
               <p style={{ fontSize: '16px', color: '#64748b', lineHeight: '1.6', marginBottom: '32px' }}>{podcastContent}</p>
               <h3 style={{ fontSize: '20px', fontWeight: '600', color: '#0f172a', marginBottom: '16px' }}>Featured Episodes</h3>
-              {featuredEpisodes.map((episode) => (
-                <div key={episode.id} style={{
+              {featuredEpisodes.map((episode, index) => (
+                <div key={episode.id || `featured-episode-view-${index}`} style={{
                   background: '#f8fafc',
                   borderRadius: '10px',
                   padding: '16px',

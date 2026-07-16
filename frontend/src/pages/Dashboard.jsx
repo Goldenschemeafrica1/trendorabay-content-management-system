@@ -317,7 +317,7 @@ export default function Dashboard() {
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {topStories.map((story, index) => (
-                <div key={story.id} style={{ padding: '12px', background: '#f8fafc', borderRadius: '10px', border: '1px solid rgba(226, 232, 240, 0.8)' }}>
+                <div key={story.id || `story-${index}`} style={{ padding: '12px', background: '#f8fafc', borderRadius: '10px', border: '1px solid rgba(226, 232, 240, 0.8)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
                     <span style={{ 
                       fontSize: '11px', 
@@ -362,7 +362,7 @@ export default function Dashboard() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
             {popularCategories.length > 0 ? (
               popularCategories.map((category, index) => (
-                <div key={index} style={{ 
+                <div key={`category-${index}-${category.name || 'unknown'}`} style={{ 
                   display: 'flex', 
                   alignItems: 'center', 
                   justifyContent: 'space-between',
@@ -393,7 +393,7 @@ export default function Dashboard() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
             {mostReadArticles.length > 0 ? (
               mostReadArticles.map((article, index) => (
-                <div key={article.id} style={{ 
+                <div key={article.id || `article-${index}`} style={{ 
                   display: 'flex', 
                   alignItems: 'flex-start', 
                   gap: '10px',
@@ -437,8 +437,8 @@ export default function Dashboard() {
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
             {latestSubscribers.length > 0 ? (
-              latestSubscribers.map((subscriber) => (
-                <div key={subscriber.id} style={{ 
+              latestSubscribers.map((subscriber, index) => (
+                <div key={subscriber.id || `subscriber-${index}`} style={{ 
                   display: 'flex', 
                   alignItems: 'center', 
                   gap: '12px', 
@@ -497,9 +497,9 @@ export default function Dashboard() {
             <ArrowUpRight style={{ width: '18px', height: '18px', color: '#94a3b8' }} />
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
-            {quickActions.map((action) => (
+            {quickActions.map((action, index) => (
               <a
-                key={action.name}
+                key={action.name || `action-${index}`}
                 href={action.href}
                 style={{
                   display: 'flex',
@@ -587,8 +587,8 @@ export default function Dashboard() {
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {recentActivity.length > 0 ? (
-              recentActivity.map((activity) => (
-                <div key={activity.id} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', padding: '12px', background: '#f8fafc', borderRadius: '10px', transition: 'background 0.2s ease', border: '1px solid rgba(226, 232, 240, 0.8)' }}
+              recentActivity.map((activity, index) => (
+                <div key={activity.id || `activity-${index}`} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', padding: '12px', background: '#f8fafc', borderRadius: '10px', transition: 'background 0.2s ease', border: '1px solid rgba(226, 232, 240, 0.8)' }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = '#f1f5f9'
                 }}

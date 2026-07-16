@@ -38,6 +38,7 @@ import EmailTemplates from './pages/EmailTemplates'
 import GuestApplicationsPage from './pages/GuestApplicationsPage'
 import PitchSubmissionsPage from './pages/PitchSubmissionsPage'
 import ContactMessagesPage from './pages/ContactMessagesPage'
+import Gallery from './pages/Gallery'
 
 function ProtectedRoute({ children, allowedRoles = [] }) {
   const userStr = localStorage.getItem('user')
@@ -148,6 +149,11 @@ function App() {
           <Route path="team" element={
             <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
               <Team />
+            </ProtectedRoute>
+          } />
+          <Route path="gallery" element={
+            <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
+              <Gallery />
             </ProtectedRoute>
           } />
           <Route path="partners" element={

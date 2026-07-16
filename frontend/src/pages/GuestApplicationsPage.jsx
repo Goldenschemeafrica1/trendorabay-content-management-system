@@ -183,9 +183,9 @@ export default function GuestApplicationsPage() {
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              {filteredApplications.map((application) => (
+              {filteredApplications.map((application, index) => (
                 <div
-                  key={application.id}
+                  key={application.id || `application-${index}`}
                   style={{
                     background: '#f8fafc',
                     borderRadius: '12px',

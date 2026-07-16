@@ -76,8 +76,8 @@ export default function EmailTemplates() {
             </tr>
           </thead>
           <tbody>
-            {templates.map((template) => (
-              <tr key={template.id} style={{ borderBottom: '1px solid #e2e8f0', transition: 'background 0.2s ease', cursor: 'pointer' }}
+            {templates.map((template, index) => (
+              <tr key={template.id || `template-${index}`} style={{ borderBottom: '1px solid #e2e8f0', transition: 'background 0.2s ease', cursor: 'pointer' }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = '#f8fafc'
               }}

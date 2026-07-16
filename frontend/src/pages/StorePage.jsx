@@ -238,8 +238,8 @@ export default function StorePage() {
           </button>
         </h3>
         <div style={{ display: 'flex', flexDirection: 'row', gap: '16px', justifyContent: 'space-between' }}>
-          {bestSellingProducts.map((product) => (
-            <div key={product.id} style={{
+          {bestSellingProducts.map((product, index) => (
+            <div key={product.id || `best-selling-${index}`} style={{
               background: '#f8fafc',
               borderRadius: '10px',
               padding: '12px',
@@ -331,8 +331,8 @@ export default function StorePage() {
           </button>
         </h3>
         <div style={{ display: 'flex', flexDirection: 'row', gap: '16px', flexWrap: 'wrap' }}>
-          {ourCollection.map((product) => (
-            <div key={product.id} style={{
+          {ourCollection.map((product, index) => (
+            <div key={product.id || `collection-${index}`} style={{
               background: '#f8fafc',
               borderRadius: '10px',
               padding: '12px',
@@ -432,8 +432,8 @@ export default function StorePage() {
                 <p style={{ color: '#64748b', marginTop: '8px' }}>{storeDescription}</p>
               </div>
               <div style={{ display: 'flex', flexDirection: 'row', gap: '16px', flexWrap: 'wrap' }}>
-                {featuredProducts.map((product) => (
-                  <div key={product.id} style={{
+                {featuredProducts.map((product, index) => (
+                  <div key={product.id || `featured-${index}`} style={{
                     background: '#f8fafc',
                     borderRadius: '10px',
                     padding: '12px',

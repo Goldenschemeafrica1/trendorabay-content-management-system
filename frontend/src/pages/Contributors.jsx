@@ -531,8 +531,8 @@ export default function Contributors() {
                       e.currentTarget.style.borderColor = '#e2e8f0'
                       e.currentTarget.style.boxShadow = 'none'
                     }}>
-                    {roles.map(role => (
-                      <option key={role} value={role}>{role}</option>
+                    {roles.map((role, index) => (
+                      <option key={role || `role-${index}`} value={role}>{role}</option>
                     ))}
                   </select>
                 </div>
@@ -730,8 +730,8 @@ export default function Contributors() {
                       e.currentTarget.style.borderColor = '#e2e8f0'
                       e.currentTarget.style.boxShadow = 'none'
                     }}>
-                    {roles.map(role => (
-                      <option key={role} value={role}>{role}</option>
+                    {roles.map((role, index) => (
+                      <option key={role || `role-${index}`} value={role}>{role}</option>
                     ))}
                   </select>
                 </div>

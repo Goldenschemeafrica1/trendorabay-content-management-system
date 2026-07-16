@@ -290,8 +290,8 @@ export default function PartnershipInquiries() {
             </tr>
           </thead>
           <tbody>
-            {filteredInquiries.map((inquiry) => (
-              <tr key={inquiry.id} style={{ borderBottom: '1px solid #e2e8f0', transition: 'background 0.2s ease' }}
+            {filteredInquiries.map((inquiry, index) => (
+              <tr key={inquiry.id || `inquiry-${index}`} style={{ borderBottom: '1px solid #e2e8f0', transition: 'background 0.2s ease' }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = '#f8fafc'
               }}

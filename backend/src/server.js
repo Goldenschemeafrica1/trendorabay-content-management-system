@@ -105,6 +105,7 @@ const podcastGuestsRoutes = require('./routes/podcastGuests');
 const guestApplicationsRoutes = require('./routes/guestApplications');
 const pitchSubmissionsRoutes = require('./routes/pitchSubmissions');
 const contactMessagesRoutes = require('./routes/contactMessages');
+const galleryRoutes = require('./routes/gallery');
 console.log('Routes loaded successfully');
 
 // Use routes
@@ -138,6 +139,7 @@ app.use('/api/podcast-guests', podcastGuestsRoutes);
 app.use('/api/guest-applications', guestApplicationsRoutes);
 app.use('/api/pitch-submissions', pitchSubmissionsRoutes);
 app.use('/api/contact-messages', contactMessagesRoutes);
+app.use('/api/gallery', galleryRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

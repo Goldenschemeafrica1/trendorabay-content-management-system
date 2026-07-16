@@ -1,21 +1,38 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
-const { uploadMultiple, uploadFileToCloud, useCloudinary } = require('../config/upload');
+const { uploadSingle, uploadFileToCloud, useCloudinary } = require('../config/upload');
 const { deleteFromS3 } = require('../config/s3');
 const { deleteFromCloudinary } = require('../config/cloudinary');
 const { authenticate, optionalAuth } = require('../middleware/auth');
-const { isSuperAdmin, hasRole } = require('../middleware/authorize');
+const { isSuperAdmin, isEditor, hasRole } = require('../middleware/authorize');
 const { mediaIdValidation } = require('../middleware/validation');
 
-// Configure upload for media with S3 support
-const upload = uploadMultiple('files', 10, 'media', 10 * 1024 * 1024); // 10 files, 10MB each
+// Configure upload for media with single file support
+const upload = uploadSingle('file', 'media', 10 * 1024 * 1024); // Single file, 10MB
 
-// Get all media (superadmin only)
-router.get('/', authenticate, isSuperAdmin, async (req, res) => {
+// Get all media (editor and above for gallery access)
+router.get('/', authenticate, isEditor, async (req, res) => {
   try {
-    const [rows] = await db.query('SELECT * FROM media ORDER BY created_at DESC');
-    res.json(rows);
+    const { file_type, folder } = req.query;
+    let query = 'SELECT * FROM media';
+    const params = [];
+    
+    if (file_type) {
+      query += ' WHERE file_type LIKE ?';
+      params.push(`%${file_type}%`);
+    }
+    
+    if (folder) {
+      const operator = params.length > 0 ? ' AND' : ' WHERE';
+      query += `${operator} folder = ?`;
+      params.push(folder);
+    }
+    
+    query += ' ORDER BY created_at DESC';
+    
+    const [rows] = await db.query(query, params);
+    res.json({ data: rows });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -34,45 +51,29 @@ router.get('/:id', authenticate, isSuperAdmin, mediaIdValidation, async (req, re
   }
 });
 
-// Create media (superadmin only)
-router.post('/', authenticate, isSuperAdmin, upload, async (req, res) => {
+// Create media (public for gallery use)
+router.post('/', upload, async (req, res) => {
   try {
     const { folder } = req.body;
-    const files = req.files;
+    const file = req.file;
     
-    if (!files || files.length === 0) {
-      return res.status(400).json({ error: 'No files uploaded' });
+    if (!file) {
+      return res.status(400).json({ error: 'No file uploaded' });
     }
     
-    const uploadedMedia = [];
-    
-    for (const file of files) {
-      let file_url;
-      if (useCloudinary) {
-        file_url = await uploadFileToCloud(file, folder || 'media');
-      } else {
-        file_url = file.location || `/uploads/media/${file.filename}`;
-      }
-      
-      const [result] = await db.query(
-        `INSERT INTO media (filename, original_name, file_url, file_type, file_size, folder, uploaded_by) 
-         VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [file.filename || file.key, file.originalname, file_url, file.mimetype, file.size, folder || 'Blog Posts', req.user.id]
-      );
-      uploadedMedia.push({
-        id: result.insertId,
-        filename: file.filename || file.key,
-        original_name: file.originalname,
-        file_url: file_url,
-        file_type: file.mimetype,
-        file_size: file.size,
-        folder: folder || 'Blog Posts'
-      });
+    let file_url;
+    if (useCloudinary) {
+      file_url = await uploadFileToCloud(file, folder || 'media');
+    } else {
+      file_url = file.location || `/uploads/media/${file.filename}`;
     }
     
+    // Skip database insertion for now and just return the URL
     res.status(201).json({ 
-      message: 'Files uploaded successfully', 
-      media: uploadedMedia 
+      message: 'File uploaded successfully', 
+      media: {
+        file_url: file_url
+      }
     });
   } catch (error) {
     console.error('Error uploading media:', error);

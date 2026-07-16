@@ -183,9 +183,9 @@ export default function Media() {
       {/* Folders & Search */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflowX: 'auto', paddingBottom: '8px' }}>
-          {folders.map((folder) => (
+          {folders.map((folder, index) => (
             <button
-              key={folder}
+              key={folder || `folder-${index}`}
               onClick={() => setSelectedFolder(folder)}
               style={{
                 padding: '10px 16px',
@@ -259,8 +259,8 @@ export default function Media() {
         gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', 
         gap: '16px' 
       }}>
-        {filteredMedia.map((item) => (
-          <div key={item.id} style={{
+        {filteredMedia.map((item, index) => (
+          <div key={item.id || `media-${index}`} style={{
             background: 'rgba(255, 255, 255, 0.95)',
             backdropFilter: 'blur(20px)',
             borderRadius: '16px',
@@ -454,8 +454,8 @@ export default function Media() {
                       e.currentTarget.style.borderColor = '#e2e8f0'
                       e.currentTarget.style.boxShadow = 'none'
                     }}>
-                    {folders.filter(f => f !== 'All Files').map((folder) => (
-                      <option key={folder} value={folder}>{folder}</option>
+                    {folders.filter(f => f !== 'All Files').map((folder, index) => (
+                      <option key={folder || `folder-option-${index}`} value={folder}>{folder}</option>
                     ))}
                   </select>
                 </div>

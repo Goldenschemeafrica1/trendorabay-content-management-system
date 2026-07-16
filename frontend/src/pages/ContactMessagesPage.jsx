@@ -185,9 +185,9 @@ export default function ContactMessagesPage() {
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              {filteredMessages.map((message) => (
+              {filteredMessages.map((message, index) => (
                 <div
-                  key={message.id}
+                  key={message.id || `message-${index}`}
                   style={{
                     background: (message.status === 'unread' || message.status === 'pending') ? '#f0f9ff' : '#f8fafc',
                     borderRadius: '12px',

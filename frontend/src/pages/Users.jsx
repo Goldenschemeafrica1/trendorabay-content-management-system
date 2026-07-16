@@ -309,14 +309,15 @@ export default function Users() {
           <thead style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
             <tr>
               <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>User</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Name</th>
               <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Role</th>
               <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Joined</th>
               <th style={{ textAlign: 'right', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {filteredUsers.map((user) => (
-              <tr key={user.cms_user_id} style={{ borderBottom: '1px solid #e2e8f0', transition: 'background 0.2s ease' }}
+            {filteredUsers.map((user, index) => (
+              <tr key={user.cms_user_id || `user-${index}`} style={{ borderBottom: '1px solid #e2e8f0', transition: 'background 0.2s ease' }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = '#f8fafc'
               }}
@@ -335,27 +336,35 @@ export default function Users() {
                           borderRadius: '10px', 
                           objectFit: 'cover'
                         }}
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none'
+                          e.currentTarget.nextElementSibling.style.display = 'flex'
+                        }}
                       />
-                    ) : (
-                      <div style={{ 
-                        width: '40px', 
-                        height: '40px', 
-                        background: 'linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%)', 
-                        borderRadius: '10px', 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'center'
-                      }}>
-                        <UserIcon style={{ width: '20px', height: '20px', color: '#9333ea' }} />
-                      </div>
-                    )}
+                    ) : null}
+                    <div style={{ 
+                      width: '40px', 
+                      height: '40px', 
+                      background: 'linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%)', 
+                      borderRadius: '10px', 
+                      display: user.profile_image_url || user.profile_image ? 'none' : 'flex',
+                      alignItems: 'center', 
+                      justifyContent: 'center'
+                    }}>
+                      <UserIcon style={{ width: '20px', height: '20px', color: '#9333ea' }} />
+                    </div>
                     <div>
                       <p style={{ fontWeight: '500', color: '#0f172a', fontSize: '13px' }}>
-                        {user.username || user.name || `${user.first_name || ''} ${user.last_name || ''}`.trim() || 'Unknown'}
+                        {user.username || user.name || 'Unknown'}
                       </p>
                       <p style={{ fontSize: '12px', color: '#64748b' }}>{user.email}</p>
                     </div>
                   </div>
+                </td>
+                <td style={{ padding: '12px 16px' }}>
+                  <p style={{ fontWeight: '500', color: '#0f172a', fontSize: '13px' }}>
+                    {user.first_name || user.last_name ? `${user.first_name || ''} ${user.last_name || ''}`.trim() : '-'}
+                  </p>
                 </td>
                 <td style={{ padding: '12px 16px' }}>
                   {currentUser?.role === 'superadmin' && editingUserId === user.cms_user_id ? (

@@ -215,9 +215,9 @@ export default function PitchSubmissionsPage() {
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              {filteredSubmissions.map((submission) => (
+              {filteredSubmissions.map((submission, index) => (
                 <div
-                  key={submission.id}
+                  key={submission.id || `submission-${index}`}
                   style={{
                     background: 'white',
                     borderRadius: '16px',

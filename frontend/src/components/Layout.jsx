@@ -91,6 +91,7 @@ const navigation = [
   { name: 'Store', href: '/dashboard/store', icon: ShoppingBag },
   { name: 'Mission', href: '/dashboard/mission', icon: File },
   { name: 'Team', href: '/dashboard/team', icon: TeamIcon },
+  { name: 'Gallery', href: '/dashboard/gallery', icon: ImageIcon },
   { name: 'Contact Messages', href: '/dashboard/contact-messages', icon: Inbox },
   { section: 'Advertisers' },
   { name: 'Partners', href: '/dashboard/partners', icon: Building2 },
@@ -107,8 +108,6 @@ const navigation = [
 ]
 
 function HeaderContent({ userInitial, userName, userEmail, profileDropdownOpen, setProfileDropdownOpen, profileRef, handleLogout, hideHeader }) {
-  console.log('HeaderContent hideHeader:', hideHeader)
-  
   if (hideHeader) return null
   
   return (
@@ -413,13 +412,13 @@ export default function Layout() {
               return false
             }
             return true
-          }).map((item, index) => {
+          }).map((item, filteredIndex) => {
             if (item.section) {
               return (
-                <div key={`section-${index}`} style={{ 
-                  marginTop: index > 0 ? '12px' : '0',
-                  paddingTop: index > 0 ? '12px' : '0',
-                  borderTop: index > 0 ? '1px solid #e2e8f0' : 'none'
+                <div key={`section-${item.section || 'unknown'}-${filteredIndex}`} style={{ 
+                  marginTop: filteredIndex > 0 ? '12px' : '0',
+                  paddingTop: filteredIndex > 0 ? '12px' : '0',
+                  borderTop: filteredIndex > 0 ? '1px solid #e2e8f0' : 'none'
                 }}>
                   {!sidebarCollapsed && (
                     <span style={{ 
@@ -438,7 +437,7 @@ export default function Layout() {
             if (item.folder) {
               const isExpanded = expandedSections[item.folder.toLowerCase()]
               return (
-                <div key={`folder-${index}`}>
+                <div key={`folder-${item.folder || 'unknown'}-${filteredIndex}`}>
                   <button
                     onClick={() => toggleSection(item.folder.toLowerCase())}
                     style={{
@@ -482,7 +481,7 @@ export default function Layout() {
                         if (subItem.folder) {
                           const isSubExpanded = expandedSections[subItem.folder.toLowerCase()]
                           return (
-                            <div key={`subfolder-${subIndex}`}>
+                            <div key={`subfolder-${subItem.folder || 'unknown'}-${filteredIndex}-${subIndex}`}>
                               <button
                                 onClick={() => toggleSection(subItem.folder.toLowerCase())}
                                 style={{
@@ -521,7 +520,7 @@ export default function Layout() {
                                     const isNestedActive = location.pathname === nestedItem.href.split('?')[0]
                                     return (
                                       <Link
-                                        key={nestedIndex}
+                                        key={nestedItem.href || `nested-${filteredIndex}-${subIndex}-${nestedIndex}`}
                                         to={nestedItem.href}
                                         style={{
                                           display: 'flex',
@@ -566,7 +565,7 @@ export default function Layout() {
                         const isSubActive = location.pathname === subItem.href.split('?')[0]
                         return (
                           <Link
-                            key={subIndex}
+                            key={subItem.href || `sub-${filteredIndex}-${subIndex}`}
                             to={subItem.href}
                             style={{
                               display: 'flex',
@@ -611,7 +610,7 @@ export default function Layout() {
             const isActive = location.pathname === item.href
             return (
               <Link
-                key={item.name}
+                key={item.href || item.name || `nav-item-${filteredIndex}`}
                 to={item.href}
                 style={{
                   display: 'flex',
