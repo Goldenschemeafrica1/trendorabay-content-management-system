@@ -19,6 +19,55 @@ router.get('/', authenticate, isEditor, async (req, res) => {
   }
 });
 
+// Proxy route to serve pitch attachments (handles both local and S3 URLs)
+// NOTE: This route must come before /:id to avoid route conflicts
+router.get('/attachment/:filename', optionalAuth, async (req, res) => {
+  try {
+    const { filename } = req.params;
+    const path = require('path');
+    const fs = require('fs');
+
+    // Check if it's a local file
+    const localPath = path.join(process.cwd(), 'uploads', 'pitches', filename);
+
+    if (fs.existsSync(localPath)) {
+      // Serve local file
+      res.sendFile(localPath);
+    } else {
+      // If file doesn't exist locally, check if it's an S3 URL in the database
+      const [rows] = await db.query(
+        'SELECT article_attachment FROM pitch_submissions WHERE article_attachment LIKE ?',
+        [`%${filename}%`]
+      );
+
+      if (rows.length > 0 && rows[0].article_attachment) {
+        const attachmentUrl = rows[0].article_attachment;
+
+        // If it's an S3 URL, redirect to it
+        if (attachmentUrl.startsWith('http')) {
+          return res.redirect(attachmentUrl);
+        }
+
+        // If it's a local path but file doesn't exist, return error
+        res.status(404).json({
+          error: 'File not found on server',
+          message: 'The attachment file is not available. This may be because the file was stored locally on a previous deployment and is no longer available.',
+          suggestion: 'Please ask the submitter to provide the file again.'
+        });
+      } else {
+        // No matching record found
+        res.status(404).json({
+          error: 'Attachment not found',
+          message: 'No attachment record found with this filename.'
+        });
+      }
+    }
+  } catch (error) {
+    console.error('Error serving attachment:', error);
+    res.status(500).json({ error: 'Server error while serving attachment' });
+  }
+});
+
 // Get single pitch submission (editor+)
 router.get('/:id', authenticate, isEditor, async (req, res) => {
   try {
@@ -163,54 +212,6 @@ router.delete('/:id', authenticate, async (req, res) => {
     res.json({ message: 'Pitch submission deleted successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });
-  }
-});
-
-// Proxy route to serve pitch attachments (handles both local and S3 URLs)
-router.get('/attachment/:filename', optionalAuth, async (req, res) => {
-  try {
-    const { filename } = req.params;
-    const path = require('path');
-    const fs = require('fs');
-
-    // Check if it's a local file
-    const localPath = path.join(process.cwd(), 'uploads', 'pitches', filename);
-
-    if (fs.existsSync(localPath)) {
-      // Serve local file
-      res.sendFile(localPath);
-    } else {
-      // If file doesn't exist locally, check if it's an S3 URL in the database
-      const [rows] = await db.query(
-        'SELECT article_attachment FROM pitch_submissions WHERE article_attachment LIKE ?',
-        [`%${filename}%`]
-      );
-
-      if (rows.length > 0 && rows[0].article_attachment) {
-        const attachmentUrl = rows[0].article_attachment;
-
-        // If it's an S3 URL, redirect to it
-        if (attachmentUrl.startsWith('http')) {
-          return res.redirect(attachmentUrl);
-        }
-
-        // If it's a local path but file doesn't exist, return error
-        res.status(404).json({
-          error: 'File not found on server',
-          message: 'The attachment file is not available. This may be because the file was stored locally on a previous deployment and is no longer available.',
-          suggestion: 'Please ask the submitter to provide the file again.'
-        });
-      } else {
-        // No matching record found
-        res.status(404).json({
-          error: 'Attachment not found',
-          message: 'No attachment record found with this filename.'
-        });
-      }
-    }
-  } catch (error) {
-    console.error('Error serving attachment:', error);
-    res.status(500).json({ error: 'Server error while serving attachment' });
   }
 });
 
