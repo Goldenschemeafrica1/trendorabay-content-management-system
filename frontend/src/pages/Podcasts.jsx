@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext, useRef } from 'react'
 import { Plus, Search, Edit, Trash2, Play, Upload, Clock } from 'lucide-react'
 import api, { BASE_URL } from '../services/api'
 import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
@@ -31,6 +31,13 @@ export default function Podcasts() {
   const [coverArtPreview, setCoverArtPreview] = useState(null)
   const [audioFile, setAudioFile] = useState(null)
   const [videoFile, setVideoFile] = useState(null)
+  
+  // Refs for file inputs
+  const coverArtInputRef = useRef(null)
+  const audioFileInputRef = useRef(null)
+  const videoFileInputRef = useRef(null)
+  const editCoverArtInputRef = useRef(null)
+  const editAudioFileInputRef = useRef(null)
   
   // Fetch podcasts, categories, hosts, and guests from backend
   useEffect(() => {
@@ -786,10 +793,10 @@ export default function Podcasts() {
                     accept="image/*"
                     onChange={handleCoverArtChange}
                     style={{ display: 'none' }}
-                    id="cover-art-input"
+                    ref={coverArtInputRef}
                   />
                   <div 
-                    onClick={() => document.getElementById('cover-art-input').click()}
+                    onClick={() => coverArtInputRef.current?.click()}
                     style={{
                       border: '2px dashed #e2e8f0',
                       borderRadius: '12px',
@@ -828,10 +835,10 @@ export default function Podcasts() {
                     accept="audio/*"
                     onChange={handleAudioFileChange}
                     style={{ display: 'none' }}
-                    id="audio-file-input"
+                    ref={audioFileInputRef}
                   />
                   <div 
-                    onClick={() => document.getElementById('audio-file-input').click()}
+                    onClick={() => audioFileInputRef.current?.click()}
                     style={{
                       border: '2px dashed #e2e8f0',
                       borderRadius: '12px',
@@ -866,10 +873,10 @@ export default function Podcasts() {
                     accept="video/*"
                     onChange={handleVideoFileChange}
                     style={{ display: 'none' }}
-                    id="video-file-input"
+                    ref={videoFileInputRef}
                   />
                   <div 
-                    onClick={() => document.getElementById('video-file-input').click()}
+                    onClick={() => videoFileInputRef.current?.click()}
                     style={{
                       border: '2px dashed #e2e8f0',
                       borderRadius: '12px',
@@ -1282,10 +1289,10 @@ export default function Podcasts() {
                     accept="image/*"
                     onChange={handleCoverArtChange}
                     style={{ display: 'none' }}
-                    id="edit-cover-art-input"
+                    ref={editCoverArtInputRef}
                   />
                   <div 
-                    onClick={() => document.getElementById('edit-cover-art-input').click()}
+                    onClick={() => editCoverArtInputRef.current?.click()}
                     style={{
                       border: '2px dashed #e2e8f0',
                       borderRadius: '12px',
@@ -1324,10 +1331,10 @@ export default function Podcasts() {
                     accept="audio/*"
                     onChange={handleAudioFileChange}
                     style={{ display: 'none' }}
-                    id="edit-audio-file-input"
+                    ref={editAudioFileInputRef}
                   />
                   <div 
-                    onClick={() => document.getElementById('edit-audio-file-input').click()}
+                    onClick={() => editAudioFileInputRef.current?.click()}
                     style={{
                       border: '2px dashed #e2e8f0',
                       borderRadius: '12px',

@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext, useRef } from 'react'
 import { Plus, Search, Filter, Edit, Trash2, Eye, Upload } from 'lucide-react'
 import api, { BASE_URL } from '../services/api'
 import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
@@ -38,6 +38,14 @@ export default function Magazines() {
   const [previewPagesFiles, setPreviewPagesFiles] = useState([])
   const [previewPagesFileNames, setPreviewPagesFileNames] = useState([])
   const [contributors, setContributors] = useState([])
+  
+  // Refs for file inputs
+  const pdfFileInputRef = useRef(null)
+  const coverImageInputRef = useRef(null)
+  const previewPagesInputRef = useRef(null)
+  const editPdfFileInputRef = useRef(null)
+  const editCoverImageInputRef = useRef(null)
+  const editPreviewPagesInputRef = useRef(null)
   
   // Fetch magazines, categories, and contributors from backend
   useEffect(() => {
@@ -696,10 +704,10 @@ export default function Magazines() {
                     accept="application/pdf"
                     onChange={handlePdfFileChange}
                     style={{ display: 'none' }}
-                    id="pdf-file-input"
+                    ref={pdfFileInputRef}
                   />
                   <div 
-                    onClick={() => document.getElementById('pdf-file-input').click()}
+                    onClick={() => pdfFileInputRef.current?.click()}
                     style={{
                       border: '2px dashed #e2e8f0',
                       borderRadius: '12px',
@@ -1028,10 +1036,10 @@ export default function Magazines() {
                     accept="image/*"
                     onChange={handleCoverImageChange}
                     style={{ display: 'none' }}
-                    id="cover-image-input"
+                    ref={coverImageInputRef}
                   />
                   <div 
-                    onClick={() => document.getElementById('cover-image-input').click()}
+                    onClick={() => coverImageInputRef.current?.click()}
                     style={{
                       border: '2px dashed #e2e8f0',
                       borderRadius: '12px',
@@ -1071,10 +1079,10 @@ export default function Magazines() {
                     multiple
                     onChange={handlePreviewPagesFileChange}
                     style={{ display: 'none' }}
-                    id="preview-pages-input"
+                    ref={previewPagesInputRef}
                   />
                   <div 
-                    onClick={() => document.getElementById('preview-pages-input').click()}
+                    onClick={() => previewPagesInputRef.current?.click()}
                     style={{
                       border: '2px dashed #e2e8f0',
                       borderRadius: '12px',
@@ -1376,10 +1384,10 @@ export default function Magazines() {
                     accept="application/pdf"
                     onChange={handlePdfFileChange}
                     style={{ display: 'none' }}
-                    id="edit-pdf-file-input"
+                    ref={editPdfFileInputRef}
                   />
                   <div 
-                    onClick={() => document.getElementById('edit-pdf-file-input').click()}
+                    onClick={() => editPdfFileInputRef.current?.click()}
                     style={{
                       border: '2px dashed #e2e8f0',
                       borderRadius: '12px',
@@ -1736,10 +1744,10 @@ export default function Magazines() {
                     accept="image/*"
                     onChange={handleCoverImageChange}
                     style={{ display: 'none' }}
-                    id="edit-cover-image-input"
+                    ref={editCoverImageInputRef}
                   />
                   <div 
-                    onClick={() => document.getElementById('edit-cover-image-input').click()}
+                    onClick={() => editCoverImageInputRef.current?.click()}
                     style={{
                       border: '2px dashed #e2e8f0',
                       borderRadius: '12px',
@@ -1779,10 +1787,10 @@ export default function Magazines() {
                     multiple
                     onChange={handlePreviewPagesFileChange}
                     style={{ display: 'none' }}
-                    id="edit-preview-pages-input"
+                    ref={editPreviewPagesInputRef}
                   />
                   <div 
-                    onClick={() => document.getElementById('edit-preview-pages-input').click()}
+                    onClick={() => editPreviewPagesInputRef.current?.click()}
                     style={{
                       border: '2px dashed #e2e8f0',
                       borderRadius: '12px',

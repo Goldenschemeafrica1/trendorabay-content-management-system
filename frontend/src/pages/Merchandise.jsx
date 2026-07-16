@@ -1,9 +1,7 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext, useRef } from 'react'
 import { Plus, Search, Edit, Trash2, Package, DollarSign, TrendingUp, Upload } from 'lucide-react'
-import api from '../services/api'
+import api, { BASE_URL } from '../services/api'
 import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
-
-const API_BASE_URL = 'https://trendorabay-content-management-system.onrender.com'
 
 export default function Merchandise() {
   const { setHideHeader } = useContext(HeaderVisibilityContext)
@@ -26,6 +24,10 @@ export default function Merchandise() {
   })
   const [imageFile, setImageFile] = useState(null)
   const [imagePreview, setImagePreview] = useState(null)
+  
+  // Refs for file inputs
+  const productImageInputRef = useRef(null)
+  const productImageInputEditRef = useRef(null)
   
   // Fetch products from backend
   useEffect(() => {
@@ -697,14 +699,14 @@ export default function Merchandise() {
                         e.currentTarget.style.borderColor = '#e2e8f0'
                         e.currentTarget.style.background = '#f8fafc'
                       }}
-                      onClick={() => document.getElementById('product-image-input-edit').click()}
+                      onClick={() => productImageInputEditRef.current?.click()}
                     >
                       <Upload style={{ width: '32px', height: '32px', color: '#64748b', margin: '0 auto 8px' }} />
                       <p style={{ fontSize: '14px', color: '#64748b', margin: 0 }}>Click to upload image</p>
                       <p style={{ fontSize: '12px', color: '#94a3b8', margin: '4px 0 0 0' }}>PNG, JPG up to 5MB</p>
                     </div>
                     <input
-                      id="product-image-input-edit"
+                      ref={productImageInputEditRef}
                       type="file"
                       accept="image/*"
                       onChange={handleImageChange}
@@ -1027,14 +1029,14 @@ export default function Merchandise() {
                         e.currentTarget.style.borderColor = '#e2e8f0'
                         e.currentTarget.style.background = '#f8fafc'
                       }}
-                      onClick={() => document.getElementById('product-image-input-create').click()}
+                      onClick={() => productImageInputRef.current?.click()}
                     >
                       <Upload style={{ width: '32px', height: '32px', color: '#64748b', margin: '0 auto 8px' }} />
                       <p style={{ fontSize: '14px', color: '#64748b', margin: 0 }}>Click to upload image</p>
                       <p style={{ fontSize: '12px', color: '#94a3b8', margin: '4px 0 0 0' }}>PNG, JPG up to 5MB</p>
                     </div>
                     <input
-                      id="product-image-input-create"
+                      ref={productImageInputRef}
                       type="file"
                       accept="image/*"
                       onChange={handleImageChange}
