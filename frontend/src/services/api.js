@@ -1,12 +1,12 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || 
   (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
     ? 'http://localhost:5002/api' 
-    : 'https://trendorabay-cms-backend.vercel.app/api');
+    : 'https://trendorabay-content-management-system.onrender.com/api');
 
 const BASE_URL = import.meta.env.VITE_API_URL || 
   (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
     ? 'http://localhost:5002' 
-    : 'https://trendorabay-cms-backend.vercel.app');
+    : 'https://trendorabay-content-management-system.onrender.com');
 
 export { BASE_URL };
 
