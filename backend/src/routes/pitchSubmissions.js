@@ -101,9 +101,13 @@ router.post('/', upload, optionalAuth, async (req, res) => {
 
     let article_attachment = null;
     if (req.file) {
+      console.log('useS3:', useS3, 'useCloudinary:', useCloudinary);
       if (useS3 || useCloudinary) {
+        console.log('Uploading to cloud storage...');
         article_attachment = await uploadFileToCloud(req.file, 'pitches');
+        console.log('Cloud upload result:', article_attachment);
       } else {
+        console.log('Using local storage');
         article_attachment = `/uploads/pitches/${req.file.filename}`;
       }
     }
@@ -155,9 +159,13 @@ router.put('/:id', upload, authenticate, isEditor, async (req, res) => {
 
     let article_attachment = req.body.article_attachment || null;
     if (req.file) {
+      console.log('useS3:', useS3, 'useCloudinary:', useCloudinary);
       if (useS3 || useCloudinary) {
+        console.log('Uploading to cloud storage...');
         article_attachment = await uploadFileToCloud(req.file, 'pitches');
+        console.log('Cloud upload result:', article_attachment);
       } else {
+        console.log('Using local storage');
         article_attachment = `/uploads/pitches/${req.file.filename}`;
       }
     }
