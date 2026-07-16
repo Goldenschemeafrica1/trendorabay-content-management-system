@@ -3,10 +3,15 @@ const API_BASE_URL = import.meta.env.VITE_API_URL ||
     ? 'http://localhost:5002/api' 
     : 'https://trendorabay-content-management-system.onrender.com/api');
 
-const BASE_URL = import.meta.env.VITE_API_URL || 
+const BASE_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 
   (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
     ? 'http://localhost:5002' 
     : 'https://trendorabay-content-management-system.onrender.com');
+
+// Debug logging to check which URL is being used
+console.log('API_BASE_URL:', API_BASE_URL);
+console.log('BASE_URL:', BASE_URL);
+console.log('Hostname:', window.location.hostname);
 
 export { BASE_URL };
 
