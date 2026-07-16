@@ -1,7 +1,9 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 
-  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-    ? 'http://localhost:5002/api' 
-    : 'https://trendorabay-content-management-system.onrender.com/api');
+const API_BASE_URL = (import.meta.env.VITE_API_URL && !import.meta.env.VITE_API_URL.endsWith('/api'))
+  ? `${import.meta.env.VITE_API_URL}/api`
+  : import.meta.env.VITE_API_URL || 
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+      ? 'http://localhost:5002/api' 
+      : 'https://trendorabay-content-management-system.onrender.com/api');
 
 const BASE_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 
   (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
