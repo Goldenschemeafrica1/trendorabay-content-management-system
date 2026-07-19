@@ -115,10 +115,23 @@ router.post('/', upload, optionalAuth, async (req, res) => {
     let article_attachment = null;
     if (req.file) {
       console.log('useS3:', useS3, 'useCloudinary:', useCloudinary);
+      console.log('File received:', req.file.originalname);
+      console.log('File has buffer:', !!req.file.buffer);
+      console.log('File has path:', !!req.file.path);
+      console.log('File size:', req.file.size);
+      
       if (useS3 || useCloudinary) {
         console.log('Uploading to cloud storage...');
-        article_attachment = await uploadFileToCloud(req.file, 'pitches');
-        console.log('Cloud upload result:', article_attachment);
+        try {
+          article_attachment = await uploadFileToCloud(req.file, 'pitches');
+          console.log('Cloud upload result:', article_attachment);
+        } catch (error) {
+          console.error('Cloud upload failed:', error);
+          console.error('Error details:', error.message);
+          // Fallback to local storage if cloud upload fails
+          console.log('Falling back to local storage');
+          article_attachment = `/uploads/pitches/${req.file.filename}`;
+        }
       } else {
         console.log('Using local storage');
         article_attachment = `/uploads/pitches/${req.file.filename}`;
