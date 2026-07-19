@@ -10,10 +10,17 @@ const multer = require('multer');
 // Configure memory storage for Cloudinary
 const memoryStorage = multer.memoryStorage();
 
+// Debug: Log configuration
+console.log('Pitch submissions route loaded');
+console.log('useCloudinary:', useCloudinary);
+console.log('useS3:', useS3);
+
 // Configure upload for pitch submissions with Cloudinary support
 const upload = useCloudinary 
   ? multer({ storage: memoryStorage, limits: { fileSize: 10 * 1024 * 1024 } }).single('article_attachment')
   : uploadSingle('article_attachment', 'pitches', 10 * 1024 * 1024); // 10MB limit for pitch documents
+
+console.log('Upload middleware configured');
 
 // Get all pitch submissions (editor+)
 router.get('/', authenticate, isEditor, async (req, res) => {
