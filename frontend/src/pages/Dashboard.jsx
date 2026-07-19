@@ -30,6 +30,7 @@ export default function Dashboard() {
   const [topStories, setTopStories] = useState([])
   const [latestSubscribers, setLatestSubscribers] = useState([])
   const [recentActivity, setRecentActivity] = useState([])
+  const [usersCount, setUsersCount] = useState(0)
   const [originalStats, setOriginalStats] = useState([
     { name: 'Total Stories', value: '0', change: '+12%', icon: FileText, gradient: 'from-blue-500 to-cyan-500' },
     { name: 'Magazines', value: '0', change: '+5%', icon: BookOpen, gradient: 'from-emerald-500 to-teal-500' },
@@ -64,6 +65,7 @@ export default function Dashboard() {
         setDraftArticles(draft)
         setScheduledPosts(scheduled)
         setPendingReview(0) // No pending review status in current schema
+        setUsersCount(users.length)
 
         // Set top stories (most recent published - top 10)
         const latestPublished = stories.filter(s => s.status === 'published').sort((a, b) => 
@@ -178,7 +180,7 @@ export default function Dashboard() {
   }
 
   const metrics = [
-    { name: 'Users', value: users.length.toString(), icon: Users, gradient: 'from-orange-500 to-amber-500' },
+    { name: 'Users', value: usersCount.toString(), icon: Users, gradient: 'from-orange-500 to-amber-500' },
     { name: 'Published Articles', value: publishedArticles.toString(), icon: FileText, gradient: 'from-emerald-500 to-teal-500' },
   ]
 
