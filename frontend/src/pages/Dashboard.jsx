@@ -65,7 +65,7 @@ export default function Dashboard() {
         setDraftArticles(draft)
         setScheduledPosts(scheduled)
         setPendingReview(0) // No pending review status in current schema
-        setUsersCount(users.length)
+        setUsersCount(users.filter(user => user.role !== 'superadmin').length)
 
         // Set top stories (most recent published - top 10)
         const latestPublished = stories.filter(s => s.status === 'published').sort((a, b) => 
