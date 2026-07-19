@@ -5,9 +5,15 @@ const { uploadSingle, uploadFileToCloud, useS3, useCloudinary } = require('../co
 const { deleteFromS3 } = require('../config/s3');
 const { authenticate, optionalAuth } = require('../middleware/auth');
 const { isEditor, hasRole } = require('../middleware/authorize');
+const multer = require('multer');
 
-// Configure upload for pitch submissions with S3 support
-const upload = uploadSingle('article_attachment', 'pitches', 10 * 1024 * 1024); // 10MB limit for pitch documents
+// Configure memory storage for Cloudinary
+const memoryStorage = multer.memoryStorage();
+
+// Configure upload for pitch submissions with Cloudinary support
+const upload = useCloudinary 
+  ? multer({ storage: memoryStorage, limits: { fileSize: 10 * 1024 * 1024 } }).single('article_attachment')
+  : uploadSingle('article_attachment', 'pitches', 10 * 1024 * 1024); // 10MB limit for pitch documents
 
 // Get all pitch submissions (editor+)
 router.get('/', authenticate, isEditor, async (req, res) => {
