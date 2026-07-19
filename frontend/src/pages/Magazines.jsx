@@ -13,6 +13,7 @@ export default function Magazines() {
   const [magazines, setMagazines] = useState([])
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
+  const [isCreating, setIsCreating] = useState(false)
   const [formData, setFormData] = useState({
     title: '',
     issue: '',
@@ -112,6 +113,8 @@ export default function Magazines() {
   }
 
   const handleCreateMagazine = async (status) => {
+    if (isCreating) return
+    
     console.log('Creating magazine with status:', status)
     console.log('Form data:', formData)
     console.log('Cover image file:', coverImageFile)
@@ -120,6 +123,8 @@ export default function Magazines() {
       alert('Please fill in all required fields (title, issue, category)')
       return
     }
+    
+    setIsCreating(true)
     
     try {
       const formDataToSend = new FormData()
@@ -185,6 +190,8 @@ export default function Magazines() {
     } catch (error) {
       console.error('Failed to create magazine:', error)
       alert('Failed to create magazine: ' + error.message)
+    } finally {
+      setIsCreating(false)
     }
   }
 
@@ -1146,6 +1153,7 @@ export default function Magazines() {
               </button>
               <button
                 onClick={() => handleCreateMagazine('draft')}
+                disabled={isCreating}
                 style={{
                   padding: '10px 20px',
                   background: 'transparent',
@@ -1167,6 +1175,7 @@ export default function Magazines() {
               </button>
               <button
                 onClick={() => handleCreateMagazine('published')}
+                disabled={isCreating}
                 style={{
                   padding: '10px 20px',
                   background: 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)',
@@ -1187,7 +1196,7 @@ export default function Magazines() {
                 e.currentTarget.style.transform = 'translateY(0)'
                 e.currentTarget.style.boxShadow = '0 4px 12px rgba(124, 58, 237, 0.3)'
               }}>
-                Publish
+                {isCreating ? 'Creating...' : 'Publish'}
               </button>
             </div>
           </div>
