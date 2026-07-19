@@ -108,8 +108,17 @@ const navigation = [
 ]
 
 function HeaderContent({ userInitial, userName, userEmail, profileDropdownOpen, setProfileDropdownOpen, profileRef, handleLogout, hideHeader }) {
+  const [searchQuery, setSearchQuery] = useState('')
+  const navigate = useNavigate()
+
   if (hideHeader) return null
-  
+
+  const handleSearch = (e) => {
+    if (e.key === 'Enter' && searchQuery.trim()) {
+      navigate(`/dashboard/search?q=${encodeURIComponent(searchQuery.trim())}`)
+    }
+  }
+
   return (
     <header style={{
       height: '80px',
@@ -118,12 +127,56 @@ function HeaderContent({ userInitial, userName, userEmail, profileDropdownOpen, 
       borderBottom: '1px solid rgba(226, 232, 240, 0.8)',
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'flex-end',
+      justifyContent: 'space-between',
       padding: '0 32px',
       boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
       position: 'relative',
       zIndex: 100
     }}>
+      {/* Search Bar */}
+      <div style={{
+        position: 'relative',
+        width: '300px'
+      }}>
+        <Search style={{
+          position: 'absolute',
+          left: '12px',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          width: '18px',
+          height: '18px',
+          color: '#94a3b8'
+        }} />
+        <input
+          type="text"
+          placeholder="Search stories..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={handleSearch}
+          style={{
+            width: '100%',
+            padding: '10px 12px 10px 40px',
+            borderRadius: '10px',
+            border: '1px solid rgba(226, 232, 240, 0.8)',
+            background: '#f8fafc',
+            fontSize: '14px',
+            color: '#0f172a',
+            outline: 'none',
+            transition: 'all 0.2s ease'
+          }}
+          onFocus={(e) => {
+            e.currentTarget.style.borderColor = '#8b5cf6'
+            e.currentTarget.style.background = 'white'
+            e.currentTarget.style.boxShadow = '0 0 0 3px rgba(139, 92, 246, 0.1)'
+          }}
+          onBlur={(e) => {
+            e.currentTarget.style.borderColor = 'rgba(226, 232, 240, 0.8)'
+            e.currentTarget.style.background = '#f8fafc'
+            e.currentTarget.style.boxShadow = 'none'
+          }}
+        />
+      </div>
+
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
         <button style={{
           position: 'relative',
@@ -563,6 +616,11 @@ export default function Layout() {
                           )
                         }
                         const isSubActive = location.pathname === subItem.href.split('?')[0]
+                        const subIconGradient = subItem.name === 'Traffic' ? 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' :
+                                           subItem.name === 'Engagement' ? 'linear-gradient(135deg, #ec4899 0%, #f43f5e 100%)' :
+                                           subItem.name === 'Sales' ? 'linear-gradient(135deg, #10b981 0%, #14b8a6 100%)' :
+                                           subItem.name === 'Performance' ? 'linear-gradient(135deg, #f59e0b 0%, #eab308 100%)' :
+                                           'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)'
                         return (
                           <Link
                             key={subItem.href || `sub-${filteredIndex}-${subIndex}`}
@@ -592,12 +650,23 @@ export default function Layout() {
                               }
                             }}
                           >
-                            <subItem.icon style={{ 
-                              width: '16px', 
-                              height: '16px', 
+                            <div style={{
+                              width: '32px',
+                              height: '32px',
+                              borderRadius: '8px',
+                              background: subIconGradient,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
                               flexShrink: 0,
-                              color: isSubActive ? 'white' : 'inherit'
-                            }} />
+                              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+                            }}>
+                              <subItem.icon style={{ 
+                                width: '16px', 
+                                height: '16px', 
+                                color: 'white'
+                              }} />
+                            </div>
                             <span style={{ fontWeight: '500', fontSize: '12px' }}>{subItem.name}</span>
                           </Link>
                         )
@@ -608,6 +677,35 @@ export default function Layout() {
               )
             }
             const isActive = location.pathname === item.href
+            const iconGradient = item.name === 'Dashboard' ? 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)' :
+                              item.name === 'Stories' ? 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' :
+                              item.name === 'Magazines' ? 'linear-gradient(135deg, #10b981 0%, #14b8a6 100%)' :
+                              item.name === 'Podcasts' ? 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)' :
+                              item.name === 'Authors' ? 'linear-gradient(135deg, #f97316 0%, #f59e0b 100%)' :
+                              item.name === 'User Management' ? 'linear-gradient(135deg, #ef4444 0%, #f97316 100%)' :
+                              item.name === 'Media Library' ? 'linear-gradient(135deg, #ec4899 0%, #f43f5e 100%)' :
+                              item.name === 'Products' ? 'linear-gradient(135deg, #f59e0b 0%, #eab308 100%)' :
+                              item.name === 'Orders' ? 'linear-gradient(135deg, #ec4899 0%, #f43f5e 100%)' :
+                              item.name === 'Contributors' ? 'linear-gradient(135deg, #14b8a6 0%, #06b6d4 100%)' :
+                              item.name === 'Events' ? 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)' :
+                              item.name === 'Community Hub' ? 'linear-gradient(135deg, #f97316 0%, #f59e0b 100%)' :
+                              item.name === 'Homepage' ? 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' :
+                              item.name === 'PodcastPage' ? 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)' :
+                              item.name === 'Store' ? 'linear-gradient(135deg, #ec4899 0%, #f43f5e 100%)' :
+                              item.name === 'Mission' ? 'linear-gradient(135deg, #10b981 0%, #14b8a6 100%)' :
+                              item.name === 'Team' ? 'linear-gradient(135deg, #f97316 0%, #f59e0b 100%)' :
+                              item.name === 'Gallery' ? 'linear-gradient(135deg, #ec4899 0%, #f43f5e 100%)' :
+                              item.name === 'Contact Messages' ? 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' :
+                              item.name === 'Partners' ? 'linear-gradient(135deg, #10b981 0%, #14b8a6 100%)' :
+                              item.name === 'Partners Inquiry' ? 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' :
+                              item.name === 'Sponsorships' ? 'linear-gradient(135deg, #f59e0b 0%, #eab308 100%)' :
+                              item.name === 'Advertisements' ? 'linear-gradient(135deg, #ec4899 0%, #f43f5e 100%)' :
+                              item.name === 'Ad Inquiries' ? 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)' :
+                              item.name === 'Plans' ? 'linear-gradient(135deg, #10b981 0%, #14b8a6 100%)' :
+                              item.name === 'Subscribers' ? 'linear-gradient(135deg, #f97316 0%, #f59e0b 100%)' :
+                              item.name === 'Categories' ? 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)' :
+                              item.name === 'Email Templates' ? 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' :
+                              'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)'
             return (
               <Link
                 key={item.href || item.name || `nav-item-${filteredIndex}`}
@@ -638,12 +736,23 @@ export default function Layout() {
                   }
                 }}
               >
-                <item.icon style={{ 
-                  width: '18px', 
-                  height: '18px', 
+                <div style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '10px',
+                  background: iconGradient,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                   flexShrink: 0,
-                  color: isActive ? 'white' : 'inherit'
-                }} />
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+                }}>
+                  <item.icon style={{ 
+                    width: '18px', 
+                    height: '18px', 
+                    color: 'white'
+                  }} />
+                </div>
                 {!sidebarCollapsed && (
                   <span style={{ fontWeight: '500', fontSize: '13px' }}>{item.name}</span>
                 )}

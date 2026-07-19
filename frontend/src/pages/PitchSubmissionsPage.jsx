@@ -296,7 +296,10 @@ export default function PitchSubmissionsPage() {
                           onClick={async (e) => {
                             e.stopPropagation()
                             setAttachmentError(null)
-                            const API_BASE_URL = 'https://trendorabay-content-management-system.onrender.com/api'
+                            const API_BASE_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 
+                              (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+                                ? 'http://localhost:5002' 
+                                : 'https://trendorabay-content-management-system.onrender.com')
                             try {
                               // If it's already a full URL (S3), use it directly
                               if (submission.article_attachment.startsWith('http')) {
@@ -304,7 +307,7 @@ export default function PitchSubmissionsPage() {
                               } else {
                                 // Use the proxy route for local files
                                 const filename = submission.article_attachment.split('/').pop()
-                                const response = await fetch(`${API_BASE_URL}/pitch-submissions/attachment/${filename}`)
+                                const response = await fetch(`${API_BASE_URL}/api/pitch-submissions/attachment/${filename}`)
                                 if (!response.ok) {
                                   const errorData = await response.json()
                                   throw new Error(errorData.message || 'Failed to open attachment')
@@ -314,7 +317,7 @@ export default function PitchSubmissionsPage() {
                                 window.open(url, '_blank')
                               }
                             } catch (error) {
-                              setAttachmentError(error.message || 'Failed to open attachment')
+                              setAttachmentError(error.message || 'Failed to open attachment. The file may not be available on the server.')
                             }
                           }}
                           style={{ 
@@ -640,7 +643,10 @@ export default function PitchSubmissionsPage() {
                     <button
                       onClick={async () => {
                         setAttachmentError(null)
-                        const API_BASE_URL = 'https://trendorabay-content-management-system.onrender.com/api'
+                        const API_BASE_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 
+                          (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+                            ? 'http://localhost:5002' 
+                            : 'https://trendorabay-content-management-system.onrender.com')
                         try {
                           // If it's already a full URL (S3), use it directly
                           if (selectedSubmission.article_attachment.startsWith('http')) {
@@ -648,7 +654,7 @@ export default function PitchSubmissionsPage() {
                           } else {
                             // Use the proxy route for local files
                             const filename = selectedSubmission.article_attachment.split('/').pop()
-                            const response = await fetch(`${API_BASE_URL}/pitch-submissions/attachment/${filename}`)
+                            const response = await fetch(`${API_BASE_URL}/api/pitch-submissions/attachment/${filename}`)
                             if (!response.ok) {
                               const errorData = await response.json()
                               throw new Error(errorData.message || 'Failed to open attachment')
@@ -658,7 +664,7 @@ export default function PitchSubmissionsPage() {
                             window.open(url, '_blank')
                           }
                         } catch (error) {
-                          setAttachmentError(error.message || 'Failed to open attachment')
+                          setAttachmentError(error.message || 'Failed to open attachment. The file may not be available on the server.')
                         }
                       }}
                       style={{

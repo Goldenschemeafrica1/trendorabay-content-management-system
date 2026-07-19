@@ -39,6 +39,7 @@ import GuestApplicationsPage from './pages/GuestApplicationsPage'
 import PitchSubmissionsPage from './pages/PitchSubmissionsPage'
 import ContactMessagesPage from './pages/ContactMessagesPage'
 import Gallery from './pages/Gallery'
+import SearchResults from './pages/SearchResults'
 
 function ProtectedRoute({ children, allowedRoles = [] }) {
   const userStr = localStorage.getItem('user')
@@ -65,6 +66,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Layout />}>
           <Route index element={<Dashboard />} />
+          <Route path="search" element={<SearchResults />} />
           <Route path="stories" element={<Stories />} />
           <Route path="magazines" element={<Magazines />} />
           <Route path="podcasts" element={<Podcasts />} />

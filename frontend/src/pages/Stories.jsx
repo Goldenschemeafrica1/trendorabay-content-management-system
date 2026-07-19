@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from 'react'
+import { useLocation, useSearchParams } from 'react-router-dom'
 import { Plus, Search, Filter, MoreVertical, Edit, Trash2, Eye, EyeOff } from 'lucide-react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
@@ -10,6 +11,8 @@ const API_BASE_URL = 'https://trendorabay-content-management-system.onrender.com
 export default function Stories() {
   const { setHideHeader } = useContext(HeaderVisibilityContext)
   const { setHideSidebar } = useContext(SidebarVisibilityContext)
+  const [searchParams] = useSearchParams()
+  const location = useLocation()
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
   const [showViewModal, setShowViewModal] = useState(false)
@@ -31,6 +34,14 @@ export default function Stories() {
   })
   const [coverImageFile, setCoverImageFile] = useState(null)
   const [coverImagePreview, setCoverImagePreview] = useState(null)
+
+  // Handle search from URL parameter
+  useEffect(() => {
+    const searchParam = searchParams.get('search')
+    if (searchParam) {
+      setSearchTerm(searchParam)
+    }
+  }, [searchParams])
   
   // Fetch stories from backend
   useEffect(() => {

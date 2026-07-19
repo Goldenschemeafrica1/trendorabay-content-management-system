@@ -1,32 +1,59 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Users, MessageCircle, Heart, Share2, Clock, TrendingUp, Award } from 'lucide-react'
-
-const engagementData = [
-  { date: 'Jan 1', likes: 450, comments: 120, shares: 35 },
-  { date: 'Jan 2', likes: 520, comments: 145, shares: 42 },
-  { date: 'Jan 3', likes: 480, comments: 135, shares: 38 },
-  { date: 'Jan 4', likes: 590, comments: 165, shares: 55 },
-  { date: 'Jan 5', likes: 680, comments: 190, shares: 62 },
-  { date: 'Jan 6', likes: 720, comments: 210, shares: 70 },
-  { date: 'Jan 7', likes: 690, comments: 195, shares: 65 },
-]
-
-const topContent = [
-  { title: 'Latest Magazine Issue', type: 'Magazine', likes: 2850, comments: 420, shares: 180 },
-  { title: 'Podcast Episode #45', type: 'Podcast', likes: 1920, comments: 310, shares: 145 },
-  { title: 'Breaking News Story', type: 'Story', likes: 1650, comments: 280, shares: 120 },
-  { title: 'Author Interview', type: 'Story', likes: 1420, comments: 195, shares: 98 },
-  { title: 'Community Event Post', type: 'Post', likes: 980, comments: 165, shares: 75 },
-]
+import api from '../services/api'
 
 export default function Engagement() {
   const [timeRange, setTimeRange] = useState('7d')
   const [selectedTab, setSelectedTab] = useState('overview')
+  const [loading, setLoading] = useState(true)
+  const [engagementData, setEngagementData] = useState([])
+  const [topContent, setTopContent] = useState([])
+  const [topUsers, setTopUsers] = useState([])
+  const [totalLikes, setTotalLikes] = useState(0)
+  const [totalComments, setTotalComments] = useState(0)
+  const [totalShares, setTotalShares] = useState(0)
+  const [engagementRate, setEngagementRate] = useState(0)
 
-  const totalLikes = engagementData.reduce((sum, d) => sum + d.likes, 0)
-  const totalComments = engagementData.reduce((sum, d) => sum + d.comments, 0)
-  const totalShares = engagementData.reduce((sum, d) => sum + d.shares, 0)
-  const engagementRate = 8.5
+  useEffect(() => {
+    const fetchEngagement = async () => {
+      try {
+        const data = await api.get(`/analytics/engagement?range=${timeRange}`, true)
+        setEngagementData(data.engagementData || [])
+        setTopContent(data.topContent || [])
+        setTopUsers(data.topUsers || [])
+        setTotalLikes(data.totalLikes || 0)
+        setTotalComments(data.totalComments || 0)
+        setTotalShares(data.totalShares || 0)
+        setEngagementRate(data.engagementRate || 0)
+      } catch (error) {
+        console.error('Failed to fetch engagement data:', error)
+        // Fallback to mock data
+        setEngagementData([
+          { date: 'Jan 1', likes: 450, comments: 120, shares: 35 },
+          { date: 'Jan 2', likes: 520, comments: 145, shares: 42 },
+          { date: 'Jan 3', likes: 480, comments: 135, shares: 38 },
+          { date: 'Jan 4', likes: 590, comments: 165, shares: 55 },
+          { date: 'Jan 5', likes: 680, comments: 190, shares: 62 },
+          { date: 'Jan 6', likes: 720, comments: 210, shares: 70 },
+          { date: 'Jan 7', likes: 690, comments: 195, shares: 65 },
+        ])
+        setTopContent([
+          { title: 'Latest Magazine Issue', type: 'Magazine', likes: 2850, comments: 420, shares: 180 },
+          { title: 'Podcast Episode #45', type: 'Podcast', likes: 1920, comments: 310, shares: 145 },
+          { title: 'Breaking News Story', type: 'Story', likes: 1650, comments: 280, shares: 120 },
+          { title: 'Author Interview', type: 'Story', likes: 1420, comments: 195, shares: 98 },
+          { title: 'Community Event Post', type: 'Post', likes: 980, comments: 165, shares: 75 },
+        ])
+        setTotalLikes(4130)
+        setTotalComments(1155)
+        setTotalShares(367)
+        setEngagementRate(8.5)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchEngagement()
+  }, [timeRange])
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -65,7 +92,7 @@ export default function Engagement() {
       </div>
 
       {/* Stats Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' }}>
         <div style={{
           background: 'rgba(255, 255, 255, 0.95)',
           backdropFilter: 'blur(20px)',
@@ -258,6 +285,32 @@ export default function Engagement() {
         >
           Top Content
         </button>
+        <button
+          onClick={() => setSelectedTab('users')}
+          style={{
+            padding: '8px 16px',
+            background: selectedTab === 'users' ? '#7c3aed' : 'transparent',
+            border: 'none',
+            borderRadius: '10px 10px 0 0',
+            cursor: 'pointer',
+            fontSize: '13px',
+            fontWeight: '500',
+            color: selectedTab === 'users' ? 'white' : '#64748b',
+            transition: 'all 0.2s ease'
+          }}
+          onMouseEnter={(e) => {
+            if (selectedTab !== 'users') {
+              e.currentTarget.style.background = '#f1f5f9'
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (selectedTab !== 'users') {
+              e.currentTarget.style.background = 'transparent'
+            }
+          }}
+        >
+          Top Users
+        </button>
       </div>
 
       {/* Content */}
@@ -342,6 +395,85 @@ export default function Engagement() {
                   <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{content.shares.toLocaleString()}</td>
                 </tr>
               ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {selectedTab === 'users' && (
+        <div style={{
+          background: 'rgba(255, 255, 255, 0.95)',
+          backdropFilter: 'blur(20px)',
+          borderRadius: '16px',
+          border: '1px solid rgba(226, 232, 240, 0.8)',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+          overflow: 'hidden'
+        }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+              <tr>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>User</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Email</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Likes</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Comments</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Shares</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {topUsers.length > 0 ? (
+                topUsers.map((user, index) => (
+                  <tr key={index} style={{ borderBottom: '1px solid #e2e8f0', transition: 'background 0.2s ease' }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = '#f8fafc'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'transparent'
+                  }}>
+                    <td style={{ padding: '12px 16px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <div style={{ 
+                          width: '32px', 
+                          height: '32px', 
+                          borderRadius: '50%', 
+                          background: 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)', 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'center',
+                          color: 'white',
+                          fontSize: '12px',
+                          fontWeight: '600'
+                        }}>
+                          {user.name.charAt(0).toUpperCase()}
+                        </div>
+                        <span style={{ fontWeight: '500', color: '#0f172a', fontSize: '13px' }}>{user.name}</span>
+                      </div>
+                    </td>
+                    <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{user.email}</td>
+                    <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{user.likes.toLocaleString()}</td>
+                    <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{user.comments.toLocaleString()}</td>
+                    <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{user.shares.toLocaleString()}</td>
+                    <td style={{ padding: '12px 16px' }}>
+                      <span style={{ 
+                        padding: '3px 8px', 
+                        borderRadius: '16px', 
+                        fontSize: '11px', 
+                        fontWeight: '600',
+                        background: '#dcfce7',
+                        color: '#166534'
+                      }}>
+                        {user.total.toLocaleString()}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6" style={{ padding: '40px', textAlign: 'center', color: '#64748b', fontSize: '13px' }}>
+                    No user engagement data yet
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

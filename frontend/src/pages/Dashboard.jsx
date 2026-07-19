@@ -9,7 +9,8 @@ import {
   MessageSquare,
   ArrowUpRight,
   Calendar,
-  UserPlus
+  UserPlus,
+  Plus
 } from 'lucide-react'
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
 import api from '../services/api'
@@ -37,20 +38,21 @@ export default function Dashboard() {
     { name: 'Orders', value: '0', change: '+3%', icon: ShoppingBag, gradient: 'from-pink-500 to-rose-500' },
   ])
   // New analytics metrics
-  const [popularCategories, setPopularCategories] = useState([])
-  const [mostReadArticles, setMostReadArticles] = useState([])
+  const [latestUsers, setLatestUsers] = useState([])
+  const [upcomingEvents, setUpcomingEvents] = useState([])
   
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
         // Fetch all data in parallel for better performance
-        const [stories, magazines, podcasts, orders, authors, subscribers] = await Promise.all([
+        const [stories, magazines, podcasts, orders, users, subscribers, events] = await Promise.all([
           api.get('/stories').catch(() => []),
           api.get('/magazines').catch(() => []),
           api.get('/podcasts').catch(() => []),
           isEditorOrHigher ? api.get('/orders').catch(() => []) : Promise.resolve([]),
-          isEditorOrHigher ? api.get('/authors').catch(() => []) : Promise.resolve([]),
-          isAdminOrHigher ? api.get('/subscribers').catch(() => []) : Promise.resolve([])
+          isAdminOrHigher ? api.get('/users').catch(() => []) : Promise.resolve([]),
+          isAdminOrHigher ? api.get('/subscribers').catch(() => []) : Promise.resolve([]),
+          api.get('/events').catch(() => [])
         ])
         
         // Calculate article metrics
@@ -63,10 +65,10 @@ export default function Dashboard() {
         setScheduledPosts(scheduled)
         setPendingReview(0) // No pending review status in current schema
 
-        // Set top stories (most recent published - top 3)
+        // Set top stories (most recent published - top 10)
         const latestPublished = stories.filter(s => s.status === 'published').sort((a, b) => 
           new Date(b.published_at) - new Date(a.published_at)
-        ).slice(0, 3)
+        ).slice(0, 10)
         setTopStories(latestPublished || [])
 
         // Update original stats with real data
@@ -74,7 +76,7 @@ export default function Dashboard() {
           { name: 'Total Stories', value: stories.length.toString(), change: '+12%', icon: FileText, gradient: 'from-blue-500 to-cyan-500' },
           { name: 'Magazines', value: magazines.length.toString(), change: '+5%', icon: BookOpen, gradient: 'from-emerald-500 to-teal-500' },
           { name: 'Podcasts', value: podcasts.length.toString(), change: '+8%', icon: Mic, gradient: 'from-violet-500 to-purple-500' },
-          { name: 'Users', value: authors.length.toString(), change: '+15%', icon: Users, gradient: 'from-orange-500 to-amber-500' },
+          { name: 'Users', value: users.length.toString(), change: '+15%', icon: Users, gradient: 'from-orange-500 to-amber-500' },
           { name: 'Orders', value: orders.length.toString(), change: '+3%', icon: ShoppingBag, gradient: 'from-pink-500 to-rose-500' },
         ])
         
@@ -128,29 +130,31 @@ export default function Dashboard() {
         setRecentActivity(activity.slice(0, 5))
         setLatestSubscribers(subscribers.slice(0, 5))
 
-        // Popular categories from stories
-        const categories = {}
-        stories.forEach(story => {
-          if (story.category) {
-            categories[story.category] = (categories[story.category] || 0) + 1
-          }
-        })
-        const sortedCategories = Object.entries(categories)
-          .sort((a, b) => b[1] - a[1])
+        // Latest users from User Management
+        const sortedUsers = users
+          .sort((a, b) => new Date(b.cms_created_at || 0) - new Date(a.cms_created_at || 0))
           .slice(0, 5)
-          .map(([name, count]) => ({ name, count }))
-        setPopularCategories(sortedCategories.length > 0 ? sortedCategories : [
-          { name: 'Technology', count: 0 },
-          { name: 'Business', count: 0 },
-          { name: 'Lifestyle', count: 0 }
-        ])
+          .map(user => ({
+            id: user.cms_user_id,
+            name: user.name || user.username || `${user.first_name || ''} ${user.last_name || ''}`.trim() || 'Unknown',
+            email: user.email || 'No email',
+            role: user.role || 'user',
+            joined_at: user.cms_created_at || new Date().toISOString()
+          }))
+        setLatestUsers(sortedUsers.length > 0 ? sortedUsers : [])
 
-        // Most read articles (sorted by views if available, otherwise by publish date)
-        const publishedStories = stories.filter(s => s.status === 'published')
-        const sortedStories = publishedStories
-          .sort((a, b) => (b.view_count || 0) - (a.view_count || 0))
+        // Upcoming events (filter for events with status 'upcoming' or event_date >= today)
+        const today = new Date()
+        today.setHours(0, 0, 0, 0)
+        const upcoming = events
+          .filter(event => {
+            const eventDate = new Date(event.event_date)
+            eventDate.setHours(0, 0, 0, 0)
+            return event.status === 'upcoming' || eventDate >= today
+          })
+          .sort((a, b) => new Date(a.event_date) - new Date(b.event_date))
           .slice(0, 3)
-        setMostReadArticles(sortedStories.length > 0 ? sortedStories : [])
+        setUpcomingEvents(upcoming.length > 0 ? upcoming : [])
 
         setLoading(false)
       } catch (error) {
@@ -176,132 +180,244 @@ export default function Dashboard() {
 
   const metrics = [
     { name: 'Published Articles', value: publishedArticles.toString(), icon: FileText, gradient: 'from-emerald-500 to-teal-500' },
-    { name: 'Draft Articles', value: draftArticles.toString(), icon: FileText, gradient: 'from-yellow-500 to-orange-500' },
-    { name: 'Scheduled Posts', value: scheduledPosts.toString(), icon: Calendar, gradient: 'from-violet-500 to-purple-500' },
   ]
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-      {/* Welcome Section */}
-      <div style={{
-        background: 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)',
-        borderRadius: '24px',
-        padding: '20px 32px',
-        color: 'white',
-        boxShadow: '0 25px 50px -12px rgba(124, 58, 237, 0.25)',
-        width: 'fit-content',
-        maxWidth: '600px'
-      }}>
-        <h1 style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '4px' }}>Welcome back, Admin! 👋</h1>
-        <p style={{ color: 'rgba(255, 255, 255, 0.8)' }}>Here's what's happening with your content today.</p>
-      </div>
-
-      {/* Stats Cards */}
-      <div style={{ 
-        position: 'relative', 
-        overflow: 'hidden',
-        width: '100%'
-      }}>
-        <div style={{ 
-          display: 'flex', 
-          gap: '16px',
-          animation: 'marquee 60s linear infinite',
-          animationPlayState: 'running',
-          width: 'fit-content'
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.animationPlayState = 'paused'
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.animationPlayState = 'running'
-        }}>
-          {[...metrics, ...originalStats, ...metrics, ...originalStats].map((stat, index) => (
-            <div key={`stat-${index}`} style={{
-              background: 'rgba(255, 255, 255, 0.95)',
-              backdropFilter: 'blur(20px)',
-              borderRadius: '20px',
-              padding: '12px',
-              border: '1px solid rgba(226, 232, 240, 0.8)',
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-              transition: 'all 0.3s ease',
-              minHeight: '110px',
-              minWidth: '140px',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              flexShrink: 0
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-4px)'
-              e.currentTarget.style.boxShadow = '0 12px 40px rgba(0, 0, 0, 0.12)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)'
-              e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.08)'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <div style={{ 
-                  width: '32px', 
-                  height: '32px', 
-                  background: stat.gradient === 'from-blue-500 to-cyan-500' ? 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' :
-                            stat.gradient === 'from-emerald-500 to-teal-500' ? 'linear-gradient(135deg, #10b981 0%, #14b8a6 100%)' :
-                            stat.gradient === 'from-violet-500 to-purple-500' ? 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)' :
-                            stat.gradient === 'from-orange-500 to-amber-500' ? 'linear-gradient(135deg, #f97316 0%, #f59e0b 100%)' :
-                            stat.gradient === 'from-yellow-500 to-orange-500' ? 'linear-gradient(135deg, #eab308 0%, #f97316 100%)' :
-                            stat.gradient === 'from-orange-500 to-red-500' ? 'linear-gradient(135deg, #f97316 0%, #ef4444 100%)' :
-                            'linear-gradient(135deg, #ec4899 0%, #f43f5e 100',
-                  borderRadius: '10px', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                  flexShrink: 0
-                }}>
-                  <stat.icon style={{ width: '16px', height: '16px', color: 'white' }} />
-                </div>
-                {stat.change && (
-                  <span style={{ 
-                    fontSize: '10px', 
-                    fontWeight: '600', 
-                    color: '#059669', 
-                    background: '#ecfdf5', 
-                    padding: '3px 6px', 
+      {/* Main Layout - Left: Stats + Users + Events, Right: Top Stories */}
+      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px', width: '100%' }}>
+        {/* Left Column */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          {/* Stats Cards - 3x2 Grid */}
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(3, 1fr)', 
+            gap: '16px'
+          }}>
+            {[...metrics, ...originalStats].map((stat, index) => (
+              <div key={`stat-${index}`} style={{
+                background: stat.gradient === 'from-blue-500 to-cyan-500' ? 'rgba(59, 130, 246, 0.08)' :
+                          stat.gradient === 'from-emerald-500 to-teal-500' ? 'rgba(16, 185, 129, 0.08)' :
+                          stat.gradient === 'from-violet-500 to-purple-500' ? 'rgba(139, 92, 246, 0.08)' :
+                          stat.gradient === 'from-orange-500 to-amber-500' ? 'rgba(249, 115, 22, 0.08)' :
+                          stat.gradient === 'from-yellow-500 to-orange-500' ? 'rgba(234, 179, 8, 0.08)' :
+                          stat.gradient === 'from-orange-500 to-red-500' ? 'rgba(249, 115, 22, 0.08)' :
+                          stat.gradient === 'from-pink-500 to-rose-500' ? 'rgba(236, 72, 153, 0.08)' :
+                          'rgba(255, 255, 255, 0.95)',
+                backdropFilter: 'blur(20px)',
+                borderRadius: '20px',
+                padding: '16px',
+                border: stat.gradient === 'from-blue-500 to-cyan-500' ? '1px solid rgba(59, 130, 246, 0.2)' :
+                          stat.gradient === 'from-emerald-500 to-teal-500' ? '1px solid rgba(16, 185, 129, 0.2)' :
+                          stat.gradient === 'from-violet-500 to-purple-500' ? '1px solid rgba(139, 92, 246, 0.2)' :
+                          stat.gradient === 'from-orange-500 to-amber-500' ? '1px solid rgba(249, 115, 22, 0.2)' :
+                          stat.gradient === 'from-yellow-500 to-orange-500' ? '1px solid rgba(234, 179, 8, 0.2)' :
+                          stat.gradient === 'from-orange-500 to-red-500' ? '1px solid rgba(249, 115, 22, 0.2)' :
+                          stat.gradient === 'from-pink-500 to-rose-500' ? '1px solid rgba(236, 72, 153, 0.2)' :
+                          '1px solid rgba(226, 232, 240, 0.8)',
+                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+                transition: 'all 0.3s ease',
+                minHeight: '120px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-4px)'
+                e.currentTarget.style.boxShadow = '0 12px 40px rgba(0, 0, 0, 0.12)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)'
+                e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.08)'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+                  <div style={{ 
+                    width: '36px', 
+                    height: '36px', 
+                    background: stat.gradient === 'from-blue-500 to-cyan-500' ? 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' :
+                              stat.gradient === 'from-emerald-500 to-teal-500' ? 'linear-gradient(135deg, #10b981 0%, #14b8a6 100%)' :
+                              stat.gradient === 'from-violet-500 to-purple-500' ? 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)' :
+                              stat.gradient === 'from-orange-500 to-amber-500' ? 'linear-gradient(135deg, #f97316 0%, #f59e0b 100%)' :
+                              stat.gradient === 'from-yellow-500 to-orange-500' ? 'linear-gradient(135deg, #eab308 0%, #f97316 100%)' :
+                              stat.gradient === 'from-orange-500 to-red-500' ? 'linear-gradient(135deg, #f97316 0%, #ef4444 100%)' :
+                              stat.gradient === 'from-pink-500 to-rose-500' ? 'linear-gradient(135deg, #ec4899 0%, #f43f5e 100%)' :
+                              'linear-gradient(135deg, #ec4899 0%, #f43f5e 100%)',
                     borderRadius: '12px', 
                     display: 'flex', 
                     alignItems: 'center', 
-                    gap: '2px',
-                    whiteSpace: 'nowrap'
+                    justifyContent: 'center',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                    flexShrink: 0
                   }}>
-                    <TrendingUp style={{ width: '8px', height: '8px' }} />
-                    {stat.change}
-                  </span>
+                    <stat.icon style={{ width: '18px', height: '18px', color: 'white' }} />
+                  </div>
+                  <p style={{ fontSize: '12px', color: '#64748b', fontWeight: '600', lineHeight: 1.2 }}>{stat.name}</p>
+                </div>
+                <div style={{ textAlign: 'center', marginBottom: '12px' }}>
+                  <h3 style={{ fontSize: '32px', fontWeight: 'bold', color: '#0f172a', lineHeight: 1 }}>{stat.value}</h3>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                  <div style={{ 
+                    width: '28px', 
+                    height: '28px', 
+                    borderRadius: '50%', 
+                    background: '#f1f5f9', 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = '#e2e8f0'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = '#f1f5f9'
+                  }}>
+                    <Plus style={{ width: '16px', height: '16px', color: '#64748b' }} />
+                  </div>
+                  <button style={{
+                    fontSize: '10px', 
+                    fontWeight: '600', 
+                    color: '#8b5cf6', 
+                    background: '#f5f3ff', 
+                    padding: '5px 10px', 
+                    borderRadius: '10px', 
+                    border: 'none',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    whiteSpace: 'nowrap'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = '#ede9fe'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = '#f5f3ff'
+                  }}>
+                    View All
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Latest Users and Upcoming Events */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px' }}>
+            {/* Latest Users */}
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.95)',
+              backdropFilter: 'blur(20px)',
+              borderRadius: '24px',
+              padding: '16px',
+              border: '1px solid rgba(226, 232, 240, 0.8)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#0f172a' }}>Recent Users</h3>
+                <Users style={{ width: '16px', height: '16px', color: '#f97316' }} />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                {latestUsers.length > 0 ? (
+                  latestUsers.map((user, index) => (
+                    <div key={`user-${user.id || index}`} style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: '12px',
+                      padding: '10px 12px', 
+                      background: '#f8fafc', 
+                      borderRadius: '10px'
+                    }}>
+                      <div style={{ 
+                        width: '32px', 
+                        height: '32px', 
+                        borderRadius: '50%', 
+                        background: 'linear-gradient(135deg, #f97316 0%, #f59e0b 100%)', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        color: 'white',
+                        fontSize: '12px',
+                        fontWeight: '600'
+                      }}>
+                        {user.name.charAt(0).toUpperCase()}
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <p style={{ fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>{user.name}</p>
+                        <p style={{ fontSize: '11px', color: '#64748b' }}>{user.email}</p>
+                      </div>
+                      <span style={{ 
+                        padding: '3px 8px', 
+                        background: '#fef3c7', 
+                        color: '#92400e', 
+                        borderRadius: '12px', 
+                        fontSize: '10px', 
+                        fontWeight: '500',
+                        textTransform: 'capitalize'
+                      }}>
+                        {user.role}
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <p style={{ fontSize: '13px', color: '#64748b', textAlign: 'center', padding: '20px' }}>No users yet</p>
                 )}
               </div>
-              <div>
-                <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a', lineHeight: 1.2 }}>{stat.value}</h3>
-                <p style={{ fontSize: '10px', color: '#64748b', marginTop: '4px', fontWeight: '500', lineHeight: 1.2 }}>{stat.name}</p>
+            </div>
+
+            {/* Upcoming Events */}
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.95)',
+              backdropFilter: 'blur(20px)',
+              borderRadius: '24px',
+              padding: '16px',
+              border: '1px solid rgba(226, 232, 240, 0.8)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#0f172a' }}>Upcoming Events</h3>
+                <Calendar style={{ width: '16px', height: '16px', color: '#8b5cf6' }} />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                {upcomingEvents.length > 0 ? (
+                  upcomingEvents.map((event, index) => (
+                    <div key={event.id || `event-${index}`} style={{ 
+                      display: 'flex', 
+                      alignItems: 'flex-start', 
+                      gap: '10px',
+                      padding: '10px 12px', 
+                      background: '#f8fafc', 
+                      borderRadius: '10px'
+                    }}>
+                      <div style={{ 
+                        width: '32px', 
+                        height: '32px', 
+                        borderRadius: '8px', 
+                        background: 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        color: 'white',
+                        fontSize: '11px',
+                        fontWeight: '600',
+                        flexShrink: 0
+                      }}>
+                        {new Date(event.event_date).getDate()}
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <p style={{ fontSize: '13px', fontWeight: '500', color: '#0f172a', lineHeight: 1.3, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', maxHeight: '2.6em' }}>{event.title}</p>
+                        <p style={{ fontSize: '11px', color: '#64748b', marginTop: '2px' }}>{event.location || 'TBD'}</p>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p style={{ fontSize: '13px', color: '#64748b', textAlign: 'center', padding: '20px' }}>No upcoming events</p>
+                )}
               </div>
             </div>
-          ))}
+          </div>
         </div>
-      </div>
 
-      <style>
-        {`
-          @keyframes marquee {
-            0% {
-              transform: translateX(0);
-            }
-            100% {
-              transform: translateX(-50%);
-            }
-          }
-        `}
-      </style>
-
-      {/* Charts Section */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px', width: '100%', minWidth: '0' }}>
-        {/* Top Stories */}
+        {/* Right Column - Top Stories (Full Height) */}
         {topStories.length > 0 && (
           <div style={{
             background: 'rgba(255, 255, 255, 0.95)',
@@ -309,7 +425,8 @@ export default function Dashboard() {
             borderRadius: '24px',
             padding: '16px',
             border: '1px solid rgba(226, 232, 240, 0.8)',
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+            height: '100%'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
               <h2 style={{ fontSize: '16px', fontWeight: 'bold', color: '#0f172a' }}>Top Stories</h2>
@@ -348,76 +465,6 @@ export default function Dashboard() {
             </div>
           </div>
         )}
-
-        {/* Popular Categories */}
-        <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
-          backdropFilter: 'blur(20px)',
-          borderRadius: '24px',
-          padding: '16px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
-        }}>
-          <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#0f172a', marginBottom: '12px' }}>Popular Categories</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            {popularCategories.length > 0 ? (
-              popularCategories.map((category, index) => (
-                <div key={`category-${index}-${category.name || 'unknown'}`} style={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'space-between',
-                  padding: '10px 12px', 
-                  background: '#f8fafc', 
-                  borderRadius: '10px'
-                }}>
-                  <span style={{ fontSize: '13px', fontWeight: '500', color: '#0f172a' }}>{category.name}</span>
-                  <span style={{ fontSize: '13px', fontWeight: '600', color: '#8b5cf6' }}>{category.count} articles</span>
-                </div>
-              ))
-            ) : (
-              <p style={{ fontSize: '13px', color: '#64748b', textAlign: 'center', padding: '20px' }}>No categories yet</p>
-            )}
-          </div>
-        </div>
-
-        {/* Most Read Articles */}
-        <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
-          backdropFilter: 'blur(20px)',
-          borderRadius: '24px',
-          padding: '16px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
-        }}>
-          <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#0f172a', marginBottom: '12px' }}>Most Read Articles</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            {mostReadArticles.length > 0 ? (
-              mostReadArticles.map((article, index) => (
-                <div key={article.id || `article-${index}`} style={{ 
-                  display: 'flex', 
-                  alignItems: 'flex-start', 
-                  gap: '10px',
-                  padding: '10px 12px', 
-                  background: '#f8fafc', 
-                  borderRadius: '10px'
-                }}>
-                  <span style={{ 
-                    fontSize: '12px', 
-                    fontWeight: 'bold', 
-                    color: '#8b5cf6', 
-                    minWidth: '20px'
-                  }}>#{index + 1}</span>
-                  <div style={{ flex: 1 }}>
-                    <p style={{ fontSize: '13px', fontWeight: '500', color: '#0f172a', lineHeight: 1.3, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', maxHeight: '2.6em' }}>{article.title}</p>
-                    <p style={{ fontSize: '11px', color: '#64748b', marginTop: '2px' }}>{article.view_count || 0} views</p>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p style={{ fontSize: '13px', color: '#64748b', textAlign: 'center', padding: '20px' }}>No articles yet</p>
-            )}
-          </div>
-        </div>
       </div>
 
       {/* Latest Subscribers, Quick Actions, Recent Activity */}
