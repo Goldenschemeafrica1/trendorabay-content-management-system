@@ -305,8 +305,15 @@ export default function PitchSubmissionsPage() {
                               const filename = submission.article_attachment.split('/').pop()
                               const response = await fetch(`${API_BASE_URL}/api/pitch-submissions/attachment/${filename}`)
                               if (!response.ok) {
-                                const errorData = await response.json()
-                                throw new Error(errorData.message || 'Failed to open attachment')
+                                let errorMessage = 'Failed to open attachment'
+                                try {
+                                  const errorData = await response.json()
+                                  errorMessage = errorData.message || errorData.error || errorMessage
+                                } catch (jsonError) {
+                                  // Response body is not JSON, use status text
+                                  errorMessage = response.statusText || errorMessage
+                                }
+                                throw new Error(errorMessage)
                               }
                               const blob = await response.blob()
                               const url = window.URL.createObjectURL(blob)
@@ -647,8 +654,15 @@ export default function PitchSubmissionsPage() {
                           const filename = selectedSubmission.article_attachment.split('/').pop()
                           const response = await fetch(`${API_BASE_URL}/api/pitch-submissions/attachment/${filename}`)
                           if (!response.ok) {
-                            const errorData = await response.json()
-                            throw new Error(errorData.message || 'Failed to open attachment')
+                            let errorMessage = 'Failed to open attachment'
+                            try {
+                              const errorData = await response.json()
+                              errorMessage = errorData.message || errorData.error || errorMessage
+                            } catch (jsonError) {
+                              // Response body is not JSON, use status text
+                              errorMessage = response.statusText || errorMessage
+                            }
+                            throw new Error(errorMessage)
                           }
                           const blob = await response.blob()
                           const url = window.URL.createObjectURL(blob)
