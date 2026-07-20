@@ -12,20 +12,31 @@ cloudinary.config({
 // Upload file to Cloudinary
 const uploadToCloudinary = async (file, folder = 'uploads') => {
   return new Promise((resolve, reject) => {
-    // Determine resource type based on file mimetype
+    // Determine resource type based on file mimetype and extension
     const isImage = file.mimetype?.startsWith('image/');
     const isVideo = file.mimetype?.startsWith('video/');
-    const isPdf = file.mimetype === 'application/pdf';
+    const isPdf = file.mimetype === 'application/pdf' || file.originalname?.toLowerCase().endsWith('.pdf');
+    const isDoc = file.originalname?.toLowerCase().endsWith('.doc') || file.originalname?.toLowerCase().endsWith('.docx');
+    
+    // Use 'raw' for PDFs, documents, and other non-media files
+    const useRaw = isPdf || isDoc || (!isImage && !isVideo);
     
     const uploadOptions = {
       folder: folder,
-      resource_type: isPdf ? 'raw' : (isVideo ? 'video' : (isImage ? 'image' : 'auto')),
+      resource_type: useRaw ? 'raw' : (isVideo ? 'video' : 'image'),
       public_id: `${Date.now()}-${file.originalname.split('.')[0]}`,
       type: 'upload', // Make files publicly accessible
       access_mode: 'public', // Ensure public access
       use_filename: true,
       unique_filename: true,
     };
+
+    console.log('Cloudinary upload options:', {
+      mimetype: file.mimetype,
+      originalname: file.originalname,
+      resource_type: uploadOptions.resource_type,
+      useRaw
+    });
 
     if (file.buffer) {
       // File has buffer (memory storage)
@@ -34,6 +45,7 @@ const uploadToCloudinary = async (file, folder = 'uploads') => {
           console.error('Error uploading to Cloudinary:', error);
           reject(error);
         } else {
+          console.log('Cloudinary upload successful:', result.secure_url);
           resolve(result.secure_url);
         }
       }).end(file.buffer);
@@ -44,6 +56,7 @@ const uploadToCloudinary = async (file, folder = 'uploads') => {
           console.error('Error uploading to Cloudinary:', error);
           reject(error);
         } else {
+          console.log('Cloudinary upload successful:', result.secure_url);
           resolve(result.secure_url);
         }
       });

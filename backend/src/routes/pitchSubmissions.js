@@ -5,7 +5,7 @@ const { uploadSingle, uploadFileToCloud, useS3, useCloudinary } = require('../co
 const { deleteFromS3 } = require('../config/s3');
 const { authenticate, optionalAuth } = require('../middleware/auth');
 const { isEditor, hasRole } = require('../middleware/authorize');
-const { cloudinary } = require('../config/cloudinary');
+const { cloudinary, getSignedUrl } = require('../config/cloudinary');
 const multer = require('multer');
 
 // Configure memory storage for Cloudinary
@@ -71,15 +71,30 @@ router.get('/attachment/:filename', async (req, res) => {
           
           // Check if it's a Cloudinary URL
           if (attachmentUrl.includes('cloudinary.com')) {
-            // For PDF files that were incorrectly uploaded as 'image' resource type,
-            // we need to change the URL to use 'raw' resource type
-            if (attachmentUrl.includes('.pdf') && attachmentUrl.includes('/image/')) {
-              attachmentUrl = attachmentUrl.replace('/image/', '/raw/');
-              console.log('Corrected PDF URL from image to raw resource type:', attachmentUrl);
+            try {
+              // Extract public ID from Cloudinary URL
+              const urlParts = attachmentUrl.split('/');
+              const versionIndex = urlParts.findIndex(part => part.startsWith('v'));
+              
+              if (versionIndex !== -1) {
+                const publicIdWithExt = urlParts.slice(versionIndex + 1).join('/');
+                console.log('Extracted public ID:', publicIdWithExt);
+                
+                // Generate a signed URL with authentication
+                const signedUrl = getSignedUrl(publicIdWithExt, {
+                  resource_type: 'auto',
+                  expires_at: Math.floor(Date.now() / 1000) + 3600 // 1 hour expiry
+                });
+                
+                console.log('Generated signed URL:', signedUrl);
+                return res.redirect(signedUrl);
+              }
+            } catch (apiError) {
+              console.error('Error generating signed URL:', apiError);
             }
           }
           
-          // Fetch the file from cloud storage and proxy it
+          // Fallback: try to fetch the file directly
           try {
             console.log('Fetching file from cloud URL:', attachmentUrl);
             const response = await fetch(attachmentUrl);
