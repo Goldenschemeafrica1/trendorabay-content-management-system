@@ -65,7 +65,7 @@ router.get('/attachment/:filename', async (req, res) => {
         const attachmentUrl = rows[0].article_attachment;
         console.log('Found attachment URL:', attachmentUrl);
 
-        // If it's a Cloudinary/S3 URL, try to serve it properly
+        // If it's a Cloudinary/S3 URL, fetch and proxy the file
         if (attachmentUrl.startsWith('http')) {
           console.log('Cloudinary URL found:', attachmentUrl);
           
@@ -74,15 +74,39 @@ router.get('/attachment/:filename', async (req, res) => {
             // For PDF files that were incorrectly uploaded as 'image' resource type,
             // we need to change the URL to use 'raw' resource type
             if (attachmentUrl.includes('.pdf') && attachmentUrl.includes('/image/')) {
-              const correctedUrl = attachmentUrl.replace('/image/', '/raw/');
-              console.log('Corrected PDF URL from image to raw resource type:', correctedUrl);
-              return res.redirect(correctedUrl);
+              attachmentUrl = attachmentUrl.replace('/image/', '/raw/');
+              console.log('Corrected PDF URL from image to raw resource type:', attachmentUrl);
             }
           }
           
-          // Fallback: redirect to original URL
-          console.log('Redirecting to original cloud URL:', attachmentUrl);
-          return res.redirect(attachmentUrl);
+          // Fetch the file from cloud storage and proxy it
+          try {
+            console.log('Fetching file from cloud URL:', attachmentUrl);
+            const response = await fetch(attachmentUrl);
+            
+            if (!response.ok) {
+              throw new Error(`Cloud storage returned ${response.status}: ${response.statusText}`);
+            }
+
+            // Get content type from the response
+            const contentType = response.headers.get('content-type') || 'application/octet-stream';
+            
+            // Set appropriate headers
+            res.setHeader('Content-Type', contentType);
+            res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+
+            // Get the array buffer and send it
+            const buffer = await response.arrayBuffer();
+            res.send(Buffer.from(buffer));
+          } catch (fetchError) {
+            console.error('Error fetching from cloud storage:', fetchError);
+            res.status(502).json({
+              error: 'Failed to fetch file from cloud storage',
+              message: 'Could not retrieve the file from cloud storage. The file may have been deleted or the URL is invalid.'
+            });
+          }
         } else {
           // If it's a local path but file doesn't exist, return error
           console.log('Attachment is not a cloud URL, returning 404');
