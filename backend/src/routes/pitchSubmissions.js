@@ -81,8 +81,10 @@ router.get('/attachment/:filename', async (req, res) => {
                 console.log('Extracted public ID:', publicIdWithExt);
                 
                 // Generate a signed URL with authentication
+                // Use 'raw' for PDFs and documents, 'auto' for others
+                const isPdf = filename.toLowerCase().endsWith('.pdf');
                 const signedUrl = getSignedUrl(publicIdWithExt, {
-                  resource_type: 'auto',
+                  resource_type: isPdf ? 'raw' : 'auto',
                   expires_at: Math.floor(Date.now() / 1000) + 3600 // 1 hour expiry
                 });
                 
