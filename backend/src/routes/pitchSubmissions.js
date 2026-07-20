@@ -41,25 +41,33 @@ router.get('/attachment/:filename', async (req, res) => {
     const path = require('path');
     const fs = require('fs');
 
+    console.log('Attachment request for filename:', filename);
+
     // Check if it's a local file
     const localPath = path.join(process.cwd(), 'uploads', 'pitches', filename);
 
     if (fs.existsSync(localPath)) {
       // Serve local file
+      console.log('Serving local file:', localPath);
       res.sendFile(localPath);
     } else {
+      console.log('Local file not found, checking database...');
       // If file doesn't exist locally, check if it's an S3 URL in the database
       const [rows] = await db.query(
         'SELECT article_attachment FROM pitch_submissions WHERE article_attachment LIKE ?',
         [`%${filename}%`]
       );
 
+      console.log('Database query result:', rows.length, 'rows found');
+
       if (rows.length > 0 && rows[0].article_attachment) {
         const attachmentUrl = rows[0].article_attachment;
+        console.log('Found attachment URL:', attachmentUrl);
 
         // If it's a Cloudinary/S3 URL, proxy the content instead of redirecting
         if (attachmentUrl.startsWith('http')) {
           try {
+            console.log('Fetching from cloud URL...');
             // Direct fetch from the cloud URL (works for both Cloudinary and S3)
             const response = await fetch(attachmentUrl);
             if (!response.ok) {
@@ -69,6 +77,7 @@ router.get('/attachment/:filename', async (req, res) => {
             const contentType = response.headers.get('content-type') || 'application/octet-stream';
             res.setHeader('Content-Type', contentType);
             res.setHeader('Content-Disposition', 'inline');
+            console.log('Successfully fetched and serving file');
             return res.send(Buffer.from(buffer));
           } catch (error) {
             console.error('Error proxying cloud file:', error);
@@ -80,6 +89,7 @@ router.get('/attachment/:filename', async (req, res) => {
         }
 
         // If it's a local path but file doesn't exist, return error
+        console.log('Attachment is not a cloud URL, returning 404');
         res.status(404).json({
           error: 'File not found on server',
           message: 'The attachment file is not available. This may be because the file was stored locally on a previous deployment and is no longer available.',
@@ -87,6 +97,7 @@ router.get('/attachment/:filename', async (req, res) => {
         });
       } else {
         // No matching record found
+        console.log('No matching record found in database');
         res.status(404).json({
           error: 'Attachment not found',
           message: 'No attachment record found with this filename.'
@@ -95,7 +106,7 @@ router.get('/attachment/:filename', async (req, res) => {
     }
   } catch (error) {
     console.error('Error serving attachment:', error);
-    res.status(500).json({ error: 'Server error while serving attachment' });
+    res.status(500).json({ error: 'Server error while serving attachment', message: error.message });
   }
 });
 
