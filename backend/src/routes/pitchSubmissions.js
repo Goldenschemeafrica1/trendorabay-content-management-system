@@ -57,9 +57,25 @@ router.get('/attachment/:filename', async (req, res) => {
       if (rows.length > 0 && rows[0].article_attachment) {
         const attachmentUrl = rows[0].article_attachment;
 
-        // If it's an S3 URL, redirect to it
+        // If it's a Cloudinary/S3 URL, proxy the content instead of redirecting
         if (attachmentUrl.startsWith('http')) {
-          return res.redirect(attachmentUrl);
+          try {
+            const response = await fetch(attachmentUrl);
+            if (!response.ok) {
+              throw new Error(`Failed to fetch from cloud: ${response.status}`);
+            }
+            const buffer = await response.arrayBuffer();
+            const contentType = response.headers.get('content-type') || 'application/octet-stream';
+            res.setHeader('Content-Type', contentType);
+            res.setHeader('Content-Disposition', 'inline');
+            return res.send(Buffer.from(buffer));
+          } catch (error) {
+            console.error('Error proxying cloud file:', error);
+            return res.status(500).json({
+              error: 'Failed to fetch file from cloud storage',
+              message: error.message
+            });
+          }
         }
 
         // If it's a local path but file doesn't exist, return error
