@@ -60,6 +60,39 @@ router.get('/attachment/:filename', async (req, res) => {
         // If it's a Cloudinary/S3 URL, proxy the content instead of redirecting
         if (attachmentUrl.startsWith('http')) {
           try {
+            // Check if it's a Cloudinary URL
+            if (attachmentUrl.includes('cloudinary.com')) {
+              const cloudinary = require('cloudinary').v2;
+              cloudinary.config({
+                cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+                api_key: process.env.CLOUDINARY_API_KEY,
+                api_secret: process.env.CLOUDINARY_API_SECRET,
+              });
+              
+              // Extract public ID from URL and use Cloudinary SDK to fetch
+              const urlParts = attachmentUrl.split('/');
+              const versionIndex = urlParts.findIndex(part => part.startsWith('v'));
+              if (versionIndex !== -1) {
+                const publicIdWithExt = urlParts.slice(versionIndex + 1).join('/');
+                const publicId = publicIdWithExt.substring(0, publicIdWithExt.lastIndexOf('.'));
+                
+                // Use Cloudinary SDK to get the resource with proper authentication
+                const resource = await cloudinary.api.resource(publicId, { resource_type: 'auto' });
+                if (resource && resource.secure_url) {
+                  const response = await fetch(resource.secure_url);
+                  if (!response.ok) {
+                    throw new Error(`Failed to fetch from Cloudinary: ${response.status}`);
+                  }
+                  const buffer = await response.arrayBuffer();
+                  const contentType = response.headers.get('content-type') || 'application/octet-stream';
+                  res.setHeader('Content-Type', contentType);
+                  res.setHeader('Content-Disposition', 'inline');
+                  return res.send(Buffer.from(buffer));
+                }
+              }
+            }
+            
+            // Fallback to direct fetch for non-Cloudinary URLs
             const response = await fetch(attachmentUrl);
             if (!response.ok) {
               throw new Error(`Failed to fetch from cloud: ${response.status}`);
