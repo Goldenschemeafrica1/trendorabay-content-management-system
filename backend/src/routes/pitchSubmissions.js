@@ -62,7 +62,7 @@ router.get('/attachment/:filename', async (req, res) => {
       console.log('Database query result:', rows.length, 'rows found');
 
       if (rows.length > 0 && rows[0].article_attachment) {
-        const attachmentUrl = rows[0].article_attachment;
+        let attachmentUrl = rows[0].article_attachment;
         console.log('Found attachment URL:', attachmentUrl);
 
         // If it's a Cloudinary/S3 URL, fetch and proxy the file
