@@ -3,7 +3,6 @@ const router = express.Router();
 const db = require('../config/database');
 const { uploadSingle, uploadFileToCloud, useS3, useCloudinary } = require('../config/upload');
 const { deleteFromS3 } = require('../config/s3');
-const { getSignedUrl } = require('../config/cloudinary');
 const { authenticate, optionalAuth } = require('../middleware/auth');
 const { isEditor, hasRole } = require('../middleware/authorize');
 const multer = require('multer');
@@ -65,46 +64,10 @@ router.get('/attachment/:filename', async (req, res) => {
         const attachmentUrl = rows[0].article_attachment;
         console.log('Found attachment URL:', attachmentUrl);
 
-        // If it's a Cloudinary/S3 URL, proxy the content instead of redirecting
+        // If it's a Cloudinary/S3 URL, redirect to it instead of proxying
         if (attachmentUrl.startsWith('http')) {
-          try {
-            console.log('Fetching from cloud URL...');
-            
-            // For Cloudinary URLs, generate a signed URL to handle authentication
-            let fetchUrl = attachmentUrl;
-            if (attachmentUrl.includes('cloudinary.com')) {
-              // Extract public ID from URL
-              const urlParts = attachmentUrl.split('/');
-              const versionIndex = urlParts.findIndex(part => part.startsWith('v'));
-              if (versionIndex !== -1) {
-                const publicIdWithExt = urlParts.slice(versionIndex + 1).join('/');
-                const publicId = publicIdWithExt.substring(0, publicIdWithExt.lastIndexOf('.'));
-                
-                console.log('Extracted public ID:', publicId);
-                
-                // Generate signed URL with authentication
-                fetchUrl = getSignedUrl(publicId);
-                console.log('Generated signed URL:', fetchUrl);
-              }
-            }
-            
-            const response = await fetch(fetchUrl);
-            if (!response.ok) {
-              throw new Error(`Failed to fetch from cloud: ${response.status}`);
-            }
-            const buffer = await response.arrayBuffer();
-            const contentType = response.headers.get('content-type') || 'application/octet-stream';
-            res.setHeader('Content-Type', contentType);
-            res.setHeader('Content-Disposition', 'inline');
-            console.log('Successfully fetched and serving file');
-            return res.send(Buffer.from(buffer));
-          } catch (error) {
-            console.error('Error proxying cloud file:', error);
-            return res.status(500).json({
-              error: 'Failed to fetch file from cloud storage',
-              message: error.message
-            });
-          }
+          console.log('Redirecting to cloud URL:', attachmentUrl);
+          return res.redirect(attachmentUrl);
         }
 
         // If it's a local path but file doesn't exist, return error

@@ -16,6 +16,8 @@ const uploadToCloudinary = async (file, folder = 'uploads') => {
       folder: folder,
       resource_type: 'auto', // auto-detect image/video
       public_id: `${Date.now()}-${file.originalname.split('.')[0]}`,
+      type: 'upload', // Make files publicly accessible
+      access_mode: 'public', // Ensure public access
     };
 
     if (file.buffer) {
