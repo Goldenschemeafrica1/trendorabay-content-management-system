@@ -65,9 +65,23 @@ router.get('/attachment/:filename', async (req, res) => {
         const attachmentUrl = rows[0].article_attachment;
         console.log('Found attachment URL:', attachmentUrl);
 
-        // If it's a Cloudinary/S3 URL, redirect to it
+        // If it's a Cloudinary/S3 URL, try to serve it properly
         if (attachmentUrl.startsWith('http')) {
-          console.log('Redirecting to cloud URL:', attachmentUrl);
+          console.log('Cloudinary URL found:', attachmentUrl);
+          
+          // Check if it's a Cloudinary URL
+          if (attachmentUrl.includes('cloudinary.com')) {
+            // For PDF files that were incorrectly uploaded as 'image' resource type,
+            // we need to change the URL to use 'raw' resource type
+            if (attachmentUrl.includes('.pdf') && attachmentUrl.includes('/image/')) {
+              const correctedUrl = attachmentUrl.replace('/image/', '/raw/');
+              console.log('Corrected PDF URL from image to raw resource type:', correctedUrl);
+              return res.redirect(correctedUrl);
+            }
+          }
+          
+          // Fallback: redirect to original URL
+          console.log('Redirecting to original cloud URL:', attachmentUrl);
           return res.redirect(attachmentUrl);
         } else {
           // If it's a local path but file doesn't exist, return error
