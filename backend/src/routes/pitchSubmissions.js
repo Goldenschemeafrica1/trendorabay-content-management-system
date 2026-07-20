@@ -5,6 +5,7 @@ const { uploadSingle, uploadFileToCloud, useS3, useCloudinary } = require('../co
 const { deleteFromS3 } = require('../config/s3');
 const { authenticate, optionalAuth } = require('../middleware/auth');
 const { isEditor, hasRole } = require('../middleware/authorize');
+const { cloudinary } = require('../config/cloudinary');
 const multer = require('multer');
 
 // Configure memory storage for Cloudinary
@@ -64,35 +65,10 @@ router.get('/attachment/:filename', async (req, res) => {
         const attachmentUrl = rows[0].article_attachment;
         console.log('Found attachment URL:', attachmentUrl);
 
-        // If it's a Cloudinary/S3 URL, fetch and proxy the file
+        // If it's a Cloudinary/S3 URL, redirect to it
         if (attachmentUrl.startsWith('http')) {
-          console.log('Fetching file from cloud URL:', attachmentUrl);
-          try {
-            const response = await fetch(attachmentUrl);
-            
-            if (!response.ok) {
-              throw new Error(`Cloud storage returned ${response.status}`);
-            }
-
-            // Get content type from the response
-            const contentType = response.headers.get('content-type') || 'application/octet-stream';
-            
-            // Set appropriate headers
-            res.setHeader('Content-Type', contentType);
-            res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
-            res.setHeader('Access-Control-Allow-Origin', '*');
-            res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
-
-            // Get the array buffer and send it
-            const buffer = await response.arrayBuffer();
-            res.send(Buffer.from(buffer));
-          } catch (fetchError) {
-            console.error('Error fetching from cloud storage:', fetchError);
-            res.status(502).json({
-              error: 'Failed to fetch file from cloud storage',
-              message: 'Could not retrieve the file from cloud storage. The file may have been deleted or the URL is invalid.'
-            });
-          }
+          console.log('Redirecting to cloud URL:', attachmentUrl);
+          return res.redirect(attachmentUrl);
         } else {
           // If it's a local path but file doesn't exist, return error
           console.log('Attachment is not a cloud URL, returning 404');

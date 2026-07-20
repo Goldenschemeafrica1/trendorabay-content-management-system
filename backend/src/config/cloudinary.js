@@ -12,12 +12,19 @@ cloudinary.config({
 // Upload file to Cloudinary
 const uploadToCloudinary = async (file, folder = 'uploads') => {
   return new Promise((resolve, reject) => {
+    // Determine resource type based on file mimetype
+    const isImage = file.mimetype?.startsWith('image/');
+    const isVideo = file.mimetype?.startsWith('video/');
+    const isPdf = file.mimetype === 'application/pdf';
+    
     const uploadOptions = {
       folder: folder,
-      resource_type: 'auto', // auto-detect image/video
+      resource_type: isPdf ? 'raw' : (isVideo ? 'video' : (isImage ? 'image' : 'auto')),
       public_id: `${Date.now()}-${file.originalname.split('.')[0]}`,
       type: 'upload', // Make files publicly accessible
       access_mode: 'public', // Ensure public access
+      use_filename: true,
+      unique_filename: true,
     };
 
     if (file.buffer) {
