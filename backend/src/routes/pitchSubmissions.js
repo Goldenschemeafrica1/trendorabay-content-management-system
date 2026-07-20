@@ -3,6 +3,7 @@ const router = express.Router();
 const db = require('../config/database');
 const { uploadSingle, uploadFileToCloud, useS3, useCloudinary } = require('../config/upload');
 const { deleteFromS3 } = require('../config/s3');
+const { getSignedUrl } = require('../config/cloudinary');
 const { authenticate, optionalAuth } = require('../middleware/auth');
 const { isEditor, hasRole } = require('../middleware/authorize');
 const multer = require('multer');
@@ -69,16 +70,22 @@ router.get('/attachment/:filename', async (req, res) => {
           try {
             console.log('Fetching from cloud URL...');
             
-            // For Cloudinary URLs, add resource_type parameter to ensure proper delivery
+            // For Cloudinary URLs, generate a signed URL to handle authentication
             let fetchUrl = attachmentUrl;
             if (attachmentUrl.includes('cloudinary.com')) {
-              // Check if URL already has resource_type parameter
-              if (!attachmentUrl.includes('resource_type')) {
-                // Add resource_type=auto to handle different file types properly
-                const separator = attachmentUrl.includes('?') ? '&' : '?';
-                fetchUrl = `${attachmentUrl}${separator}resource_type=auto`;
+              // Extract public ID from URL
+              const urlParts = attachmentUrl.split('/');
+              const versionIndex = urlParts.findIndex(part => part.startsWith('v'));
+              if (versionIndex !== -1) {
+                const publicIdWithExt = urlParts.slice(versionIndex + 1).join('/');
+                const publicId = publicIdWithExt.substring(0, publicIdWithExt.lastIndexOf('.'));
+                
+                console.log('Extracted public ID:', publicId);
+                
+                // Generate signed URL with authentication
+                fetchUrl = getSignedUrl(publicId);
+                console.log('Generated signed URL:', fetchUrl);
               }
-              console.log('Modified Cloudinary URL:', fetchUrl);
             }
             
             const response = await fetch(fetchUrl);

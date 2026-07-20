@@ -68,8 +68,19 @@ const deleteFromCloudinary = async (fileUrl) => {
   }
 };
 
+// Generate signed URL for private files
+const getSignedUrl = (publicId, options = {}) => {
+  return cloudinary.url(publicId, {
+    ...options,
+    sign_url: true,
+    secure: true,
+    resource_type: 'auto'
+  });
+};
+
 module.exports = {
   cloudinary,
   uploadToCloudinary,
   deleteFromCloudinary,
+  getSignedUrl,
 };
