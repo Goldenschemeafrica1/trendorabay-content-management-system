@@ -32,7 +32,7 @@ router.get('/', authenticate, isEditor, async (req, res) => {
   }
 });
 
-// Proxy route to serve pitch attachments (handles both local and S3 URLs)
+// Proxy route to serve pitch attachments (handles both local and Cloudinary URLs)
 // NOTE: This route must come before /:id to avoid route conflicts
 // No authentication required - attachments should be publicly viewable
 router.get('/attachment/:filename', async (req, res) => {
@@ -52,7 +52,7 @@ router.get('/attachment/:filename', async (req, res) => {
       res.sendFile(localPath);
     } else {
       console.log('Local file not found, checking database...');
-      // If file doesn't exist locally, check if it's an S3 URL in the database
+      // If file doesn't exist locally, check if it's a Cloudinary URL in the database
       const [rows] = await db.query(
         'SELECT article_attachment FROM pitch_submissions WHERE article_attachment LIKE ?',
         [`%${filename}%`]
@@ -64,19 +64,44 @@ router.get('/attachment/:filename', async (req, res) => {
         const attachmentUrl = rows[0].article_attachment;
         console.log('Found attachment URL:', attachmentUrl);
 
-        // If it's a Cloudinary/S3 URL, redirect to it instead of proxying
+        // If it's a Cloudinary/S3 URL, fetch and proxy the file
         if (attachmentUrl.startsWith('http')) {
-          console.log('Redirecting to cloud URL:', attachmentUrl);
-          return res.redirect(attachmentUrl);
-        }
+          console.log('Fetching file from cloud URL:', attachmentUrl);
+          try {
+            const response = await fetch(attachmentUrl);
+            
+            if (!response.ok) {
+              throw new Error(`Cloud storage returned ${response.status}`);
+            }
 
-        // If it's a local path but file doesn't exist, return error
-        console.log('Attachment is not a cloud URL, returning 404');
-        res.status(404).json({
-          error: 'File not found on server',
-          message: 'The attachment file is not available. This may be because the file was stored locally on a previous deployment and is no longer available.',
-          suggestion: 'Please ask the submitter to provide the file again.'
-        });
+            // Get content type from the response
+            const contentType = response.headers.get('content-type') || 'application/octet-stream';
+            
+            // Set appropriate headers
+            res.setHeader('Content-Type', contentType);
+            res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+
+            // Get the array buffer and send it
+            const buffer = await response.arrayBuffer();
+            res.send(Buffer.from(buffer));
+          } catch (fetchError) {
+            console.error('Error fetching from cloud storage:', fetchError);
+            res.status(502).json({
+              error: 'Failed to fetch file from cloud storage',
+              message: 'Could not retrieve the file from cloud storage. The file may have been deleted or the URL is invalid.'
+            });
+          }
+        } else {
+          // If it's a local path but file doesn't exist, return error
+          console.log('Attachment is not a cloud URL, returning 404');
+          res.status(404).json({
+            error: 'File not found on server',
+            message: 'The attachment file is not available. This may be because the file was stored locally on a previous deployment and is no longer available.',
+            suggestion: 'Please ask the submitter to provide the file again.'
+          });
+        }
       } else {
         // No matching record found
         console.log('No matching record found in database');
