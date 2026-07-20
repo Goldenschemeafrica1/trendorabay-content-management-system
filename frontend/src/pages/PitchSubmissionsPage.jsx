@@ -301,21 +301,16 @@ export default function PitchSubmissionsPage() {
                                 ? 'http://localhost:5002' 
                                 : 'https://trendorabay-content-management-system.onrender.com')
                             try {
-                              // If it's already a full URL (S3), use it directly
-                              if (submission.article_attachment.startsWith('http')) {
-                                window.open(submission.article_attachment, '_blank')
-                              } else {
-                                // Use the proxy route for local files
-                                const filename = submission.article_attachment.split('/').pop()
-                                const response = await fetch(`${API_BASE_URL}/api/pitch-submissions/attachment/${filename}`)
-                                if (!response.ok) {
-                                  const errorData = await response.json()
-                                  throw new Error(errorData.message || 'Failed to open attachment')
-                                }
-                                const blob = await response.blob()
-                                const url = window.URL.createObjectURL(blob)
-                                window.open(url, '_blank')
+                              // Always use the proxy route for both local files and Cloudinary URLs
+                              const filename = submission.article_attachment.split('/').pop()
+                              const response = await fetch(`${API_BASE_URL}/api/pitch-submissions/attachment/${filename}`)
+                              if (!response.ok) {
+                                const errorData = await response.json()
+                                throw new Error(errorData.message || 'Failed to open attachment')
                               }
+                              const blob = await response.blob()
+                              const url = window.URL.createObjectURL(blob)
+                              window.open(url, '_blank')
                             } catch (error) {
                               setAttachmentError(error.message || 'Failed to open attachment. The file may not be available on the server.')
                             }
@@ -648,21 +643,16 @@ export default function PitchSubmissionsPage() {
                             ? 'http://localhost:5002' 
                             : 'https://trendorabay-content-management-system.onrender.com')
                         try {
-                          // If it's already a full URL (S3), use it directly
-                          if (selectedSubmission.article_attachment.startsWith('http')) {
-                            window.open(selectedSubmission.article_attachment, '_blank')
-                          } else {
-                            // Use the proxy route for local files
-                            const filename = selectedSubmission.article_attachment.split('/').pop()
-                            const response = await fetch(`${API_BASE_URL}/api/pitch-submissions/attachment/${filename}`)
-                            if (!response.ok) {
-                              const errorData = await response.json()
-                              throw new Error(errorData.message || 'Failed to open attachment')
-                            }
-                            const blob = await response.blob()
-                            const url = window.URL.createObjectURL(blob)
-                            window.open(url, '_blank')
+                          // Always use the proxy route for both local files and Cloudinary URLs
+                          const filename = selectedSubmission.article_attachment.split('/').pop()
+                          const response = await fetch(`${API_BASE_URL}/api/pitch-submissions/attachment/${filename}`)
+                          if (!response.ok) {
+                            const errorData = await response.json()
+                            throw new Error(errorData.message || 'Failed to open attachment')
                           }
+                          const blob = await response.blob()
+                          const url = window.URL.createObjectURL(blob)
+                          window.open(url, '_blank')
                         } catch (error) {
                           setAttachmentError(error.message || 'Failed to open attachment. The file may not be available on the server.')
                         }
