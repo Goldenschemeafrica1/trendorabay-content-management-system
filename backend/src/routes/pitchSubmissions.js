@@ -69,50 +69,19 @@ router.get('/attachment/:filename', async (req, res) => {
           try {
             console.log('Fetching from cloud URL...');
             
-            // Check if it's a Cloudinary URL and use SDK to generate accessible URL
+            // For Cloudinary URLs, add resource_type parameter to ensure proper delivery
+            let fetchUrl = attachmentUrl;
             if (attachmentUrl.includes('cloudinary.com')) {
-              const cloudinary = require('cloudinary').v2;
-              cloudinary.config({
-                cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-                api_key: process.env.CLOUDINARY_API_KEY,
-                api_secret: process.env.CLOUDINARY_API_SECRET,
-              });
-              
-              // Extract public ID from URL
-              const urlParts = attachmentUrl.split('/');
-              const versionIndex = urlParts.findIndex(part => part.startsWith('v'));
-              if (versionIndex !== -1) {
-                const publicIdWithExt = urlParts.slice(versionIndex + 1).join('/');
-                const publicId = publicIdWithExt.substring(0, publicIdWithExt.lastIndexOf('.'));
-                
-                console.log('Extracted public ID:', publicId);
-                
-                // Generate a URL with resource_type: auto to handle different file types
-                const accessibleUrl = cloudinary.url(publicId, {
-                  resource_type: 'auto',
-                  secure: true,
-                  transformation: [
-                    { fetch_format: 'auto' }
-                  ]
-                });
-                
-                console.log('Generated accessible URL:', accessibleUrl);
-                
-                const response = await fetch(accessibleUrl);
-                if (!response.ok) {
-                  throw new Error(`Failed to fetch from Cloudinary: ${response.status}`);
-                }
-                const buffer = await response.arrayBuffer();
-                const contentType = response.headers.get('content-type') || 'application/octet-stream';
-                res.setHeader('Content-Type', contentType);
-                res.setHeader('Content-Disposition', 'inline');
-                console.log('Successfully fetched and serving file');
-                return res.send(Buffer.from(buffer));
+              // Check if URL already has resource_type parameter
+              if (!attachmentUrl.includes('resource_type')) {
+                // Add resource_type=auto to handle different file types properly
+                const separator = attachmentUrl.includes('?') ? '&' : '?';
+                fetchUrl = `${attachmentUrl}${separator}resource_type=auto`;
               }
+              console.log('Modified Cloudinary URL:', fetchUrl);
             }
             
-            // Fallback to direct fetch for non-Cloudinary URLs
-            const response = await fetch(attachmentUrl);
+            const response = await fetch(fetchUrl);
             if (!response.ok) {
               throw new Error(`Failed to fetch from cloud: ${response.status}`);
             }
