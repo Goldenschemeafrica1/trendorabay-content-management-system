@@ -34,7 +34,8 @@ router.get('/', authenticate, isEditor, async (req, res) => {
 
 // Proxy route to serve pitch attachments (handles both local and S3 URLs)
 // NOTE: This route must come before /:id to avoid route conflicts
-router.get('/attachment/:filename', optionalAuth, async (req, res) => {
+// No authentication required - attachments should be publicly viewable
+router.get('/attachment/:filename', async (req, res) => {
   try {
     const { filename } = req.params;
     const path = require('path');
