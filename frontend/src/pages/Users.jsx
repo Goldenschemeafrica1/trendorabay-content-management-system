@@ -21,7 +21,7 @@ export default function Users() {
     last_name: '',
     role: 'user'
   })
-  const currentUser = JSON.parse(localStorage.getItem('user'))
+  const currentUser = JSON.parse(sessionStorage.getItem('user'))
 
   useEffect(() => {
     fetchUsers()
@@ -81,7 +81,7 @@ export default function Users() {
 
   const handleRoleChange = async (userId, newRole) => {
     try {
-      const currentUser = JSON.parse(localStorage.getItem('user'));
+      const currentUser = JSON.parse(sessionStorage.getItem('user'));
       if (currentUser?.role !== 'superadmin') {
         alert('Only superadmin can change user roles');
         return;

@@ -22,7 +22,7 @@ let refreshSubscribers = [];
 
 class ApiService {
   getAuthHeaders() {
-    const token = localStorage.getItem('auth_token');
+    const token = sessionStorage.getItem('auth_token');
     return token ? { 'Authorization': `Bearer ${token}` } : {};
   }
 
@@ -39,7 +39,7 @@ class ApiService {
 
   // Refresh the access token
   async refreshAccessToken() {
-    const refreshToken = localStorage.getItem('refresh_token');
+    const refreshToken = sessionStorage.getItem('refresh_token');
     if (!refreshToken) {
       throw new Error('No refresh token available');
     }
@@ -52,17 +52,17 @@ class ApiService {
 
     if (!response.ok) {
       // Refresh failed, clear tokens and redirect to login
-      localStorage.removeItem('auth_token');
-      localStorage.removeItem('refresh_token');
-      localStorage.removeItem('user');
+      sessionStorage.removeItem('auth_token');
+      sessionStorage.removeItem('refresh_token');
+      sessionStorage.removeItem('user');
       window.location.href = '/login';
       throw new Error('Token refresh failed');
     }
 
     const data = await response.json();
-    localStorage.setItem('auth_token', data.token);
-    localStorage.setItem('refresh_token', data.refreshToken);
-    localStorage.setItem('user', JSON.stringify(data.user));
+    sessionStorage.setItem('auth_token', data.token);
+    sessionStorage.setItem('refresh_token', data.refreshToken);
+    sessionStorage.setItem('user', JSON.stringify(data.user));
     
     return data.token;
   }
@@ -197,9 +197,9 @@ class ApiService {
   async login(email, password) {
     const response = await this.post('/auth/login', { email, password });
     if (response.token) {
-      localStorage.setItem('auth_token', response.token);
-      localStorage.setItem('refresh_token', response.refreshToken);
-      localStorage.setItem('user', JSON.stringify(response.user));
+      sessionStorage.setItem('auth_token', response.token);
+      sessionStorage.setItem('refresh_token', response.refreshToken);
+      sessionStorage.setItem('user', JSON.stringify(response.user));
     }
     return response;
   }
@@ -207,27 +207,27 @@ class ApiService {
   async register(name, email, password, role = 'user') {
     const response = await this.post('/auth/register', { name, email, password, role });
     if (response.token) {
-      localStorage.setItem('auth_token', response.token);
-      localStorage.setItem('refresh_token', response.refreshToken);
-      localStorage.setItem('user', JSON.stringify(response.user));
+      sessionStorage.setItem('auth_token', response.token);
+      sessionStorage.setItem('refresh_token', response.refreshToken);
+      sessionStorage.setItem('user', JSON.stringify(response.user));
     }
     return response;
   }
 
   logout() {
-    localStorage.removeItem('auth_token');
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('user');
+    sessionStorage.removeItem('auth_token');
+    sessionStorage.removeItem('refresh_token');
+    sessionStorage.removeItem('user');
     window.location.href = '/login';
   }
 
   getCurrentUser() {
-    const userStr = localStorage.getItem('user');
+    const userStr = sessionStorage.getItem('user');
     return userStr ? JSON.parse(userStr) : null;
   }
 
   isAuthenticated() {
-    return !!localStorage.getItem('auth_token');
+    return !!sessionStorage.getItem('auth_token');
   }
 }
 

@@ -42,7 +42,7 @@ import Gallery from './pages/Gallery'
 import SearchResults from './pages/SearchResults'
 
 function ProtectedRoute({ children, allowedRoles = [] }) {
-  const userStr = localStorage.getItem('user')
+  const userStr = sessionStorage.getItem('user')
   const user = userStr ? JSON.parse(userStr) : null
 
   if (!user) {

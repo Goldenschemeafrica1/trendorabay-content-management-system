@@ -16,7 +16,7 @@ import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pi
 import api from '../services/api'
 
 export default function Dashboard() {
-  const userStr = localStorage.getItem('user')
+  const userStr = sessionStorage.getItem('user')
   const user = userStr ? JSON.parse(userStr) : null
   const userRole = user?.role || 'user'
   const isAdminOrHigher = userRole === 'admin' || userRole === 'superadmin'

@@ -326,9 +326,9 @@ export default function Layout() {
   const [hideSidebar, setHideSidebar] = useState(false)
   const [currentUser, setCurrentUser] = useState(null)
 
-  // Get user data from localStorage and set state to trigger re-render
+  // Get user data from sessionStorage and set state to trigger re-render
   useEffect(() => {
-    const userStr = localStorage.getItem('user')
+    const userStr = sessionStorage.getItem('user')
     const userData = userStr ? JSON.parse(userStr) : null
     setCurrentUser(userData)
   }, [])
