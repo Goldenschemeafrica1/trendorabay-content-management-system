@@ -62,11 +62,11 @@ export default function Podcasts() {
     fetchData()
   }, [])
 
-  // Hide header and sidebar when create/edit modals are open
+  // Hide header when create/edit modals are open (keep sidebar visible)
   useEffect(() => {
     console.log('Podcasts useEffect - showCreateModal:', showCreateModal, 'showEditModal:', showEditModal)
     setHideHeader(showCreateModal || showEditModal)
-    setHideSidebar(showCreateModal || showEditModal)
+    setHideSidebar(false)
   }, [showCreateModal, showEditModal, setHideHeader, setHideSidebar])
 
   const handleInputChange = (e) => {

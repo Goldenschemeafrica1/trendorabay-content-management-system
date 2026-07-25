@@ -34,6 +34,12 @@ export default function Stories() {
   })
   const [coverImageFile, setCoverImageFile] = useState(null)
   const [coverImagePreview, setCoverImagePreview] = useState(null)
+  const [coverImageFile2, setCoverImageFile2] = useState(null)
+  const [coverImagePreview2, setCoverImagePreview2] = useState(null)
+  const [coverImageFile3, setCoverImageFile3] = useState(null)
+  const [coverImagePreview3, setCoverImagePreview3] = useState(null)
+  const [coverImageFile4, setCoverImageFile4] = useState(null)
+  const [coverImagePreview4, setCoverImagePreview4] = useState(null)
 
   // Handle search from URL parameter
   useEffect(() => {
@@ -84,10 +90,10 @@ export default function Stories() {
     fetchCategories()
   }, [])
 
-  // Hide header and sidebar when create/edit modals are open
+  // Hide header when create/edit modals are open (keep sidebar visible)
   useEffect(() => {
     setHideHeader(showCreateModal || showEditModal)
-    setHideSidebar(showCreateModal || showEditModal)
+    setHideSidebar(false)
   }, [showCreateModal, showEditModal, setHideHeader, setHideSidebar])
   
   const editor = useEditor({
@@ -116,6 +122,42 @@ export default function Stories() {
       const reader = new FileReader()
       reader.onloadend = () => {
         setCoverImagePreview(reader.result)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const handleCoverImageChange2 = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      setCoverImageFile2(file)
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setCoverImagePreview2(reader.result)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const handleCoverImageChange3 = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      setCoverImageFile3(file)
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setCoverImagePreview3(reader.result)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const handleCoverImageChange4 = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      setCoverImageFile4(file)
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setCoverImagePreview4(reader.result)
       }
       reader.readAsDataURL(file)
     }
@@ -160,6 +202,15 @@ export default function Stories() {
       if (coverImageFile) {
         formDataToSend.append('cover_image', coverImageFile)
       }
+      if (coverImageFile2) {
+        formDataToSend.append('cover_image_2', coverImageFile2)
+      }
+      if (coverImageFile3) {
+        formDataToSend.append('cover_image_3', coverImageFile3)
+      }
+      if (coverImageFile4) {
+        formDataToSend.append('cover_image_4', coverImageFile4)
+      }
       
       console.log('Sending FormData to /stories')
       const response = await api.post('/stories', formDataToSend)
@@ -180,6 +231,12 @@ export default function Stories() {
       })
       setCoverImageFile(null)
       setCoverImagePreview(null)
+      setCoverImageFile2(null)
+      setCoverImagePreview2(null)
+      setCoverImageFile3(null)
+      setCoverImagePreview3(null)
+      setCoverImageFile4(null)
+      setCoverImagePreview4(null)
       alert('Story created successfully!')
     } catch (error) {
       console.error('Failed to create story:', error)
@@ -219,7 +276,10 @@ export default function Stories() {
       featured: story.featured === 1,
       read_time: story.read_time || '5 min read'
     })
-    setCoverImagePreview(story.cover_image_url ? (story.cover_image_url.startsWith('http') ? story.cover_image_url : `${API_BASE_URL}${story.cover_image_url}`) : null)
+    setCoverImagePreview(story.featured_image_url ? (story.featured_image_url.startsWith('http') ? story.featured_image_url : `${API_BASE_URL}${story.featured_image_url}`) : null)
+    setCoverImagePreview2(story.featured_image_url_2 ? (story.featured_image_url_2.startsWith('http') ? story.featured_image_url_2 : `${API_BASE_URL}${story.featured_image_url_2}`) : null)
+    setCoverImagePreview3(story.featured_image_url_3 ? (story.featured_image_url_3.startsWith('http') ? story.featured_image_url_3 : `${API_BASE_URL}${story.featured_image_url_3}`) : null)
+    setCoverImagePreview4(story.featured_image_url_4 ? (story.featured_image_url_4.startsWith('http') ? story.featured_image_url_4 : `${API_BASE_URL}${story.featured_image_url_4}`) : null)
     setShowEditModal(true)
   }
 
@@ -253,6 +313,15 @@ export default function Stories() {
       if (coverImageFile) {
         formDataToSend.append('cover_image', coverImageFile)
       }
+      if (coverImageFile2) {
+        formDataToSend.append('cover_image_2', coverImageFile2)
+      }
+      if (coverImageFile3) {
+        formDataToSend.append('cover_image_3', coverImageFile3)
+      }
+      if (coverImageFile4) {
+        formDataToSend.append('cover_image_4', coverImageFile4)
+      }
       
       const response = await api.put(`/stories/${editingStory.id}`, formDataToSend)
       
@@ -272,6 +341,12 @@ export default function Stories() {
       })
       setCoverImageFile(null)
       setCoverImagePreview(null)
+      setCoverImageFile2(null)
+      setCoverImagePreview2(null)
+      setCoverImageFile3(null)
+      setCoverImagePreview3(null)
+      setCoverImageFile4(null)
+      setCoverImagePreview4(null)
       alert('Story updated successfully!')
     } catch (error) {
       console.error('Failed to update story:', error)
@@ -560,31 +635,62 @@ export default function Stories() {
             </div>
             <div style={{ padding: '24px', overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Title</label>
-                  <input
-                    type="text"
-                    name="title"
-                    value={formData.title}
-                    onChange={handleInputChange}
-                    style={{
-                      padding: '12px 16px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '12px',
-                      outline: 'none',
-                      fontSize: '14px',
-                      transition: 'all 0.2s ease'
-                    }}
-                    onFocus={(e) => {
-                      e.currentTarget.style.borderColor = '#7c3aed'
-                      e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                    }}
-                    onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
-                      e.currentTarget.style.boxShadow = 'none'
-                    }}
-                  />
+                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '20px' }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Title</label>
+                    <input
+                      type="text"
+                      name="title"
+                      value={formData.title}
+                      onChange={handleInputChange}
+                      style={{
+                        width: '100%',
+                        padding: '12px 16px',
+                        background: '#f8fafc',
+                        border: '1px solid #e2e8f0',
+                        borderRadius: '12px',
+                        outline: 'none',
+                        fontSize: '14px',
+                        transition: 'all 0.2s ease'
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = '#7c3aed'
+                        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.boxShadow = 'none'
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Read Time</label>
+                    <input
+                      type="text"
+                      name="read_time"
+                      value={formData.read_time}
+                      onChange={handleInputChange}
+                      placeholder="e.g., 5 min read"
+                      style={{
+                        width: '100%',
+                        padding: '12px 16px',
+                        background: '#f8fafc',
+                        border: '1px solid #e2e8f0',
+                        borderRadius: '12px',
+                        outline: 'none',
+                        fontSize: '14px',
+                        transition: 'all 0.2s ease'
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = '#7c3aed'
+                        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.boxShadow = 'none'
+                      }}
+                    />
+                  </div>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                   <div>
@@ -643,75 +749,76 @@ export default function Stories() {
                   </div>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Read Time</label>
-                  <input
-                    type="text"
-                    name="read_time"
-                    value={formData.read_time}
-                    onChange={handleInputChange}
-                    placeholder="e.g., 5 min read"
-                    style={{
-                      width: '100%',
-                      padding: '12px 16px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '12px',
-                      outline: 'none',
-                      fontSize: '14px',
-                      transition: 'all 0.2s ease'
-                    }}
-                    onFocus={(e) => {
-                      e.currentTarget.style.borderColor = '#7c3aed'
-                      e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                    }}
-                    onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
-                      e.currentTarget.style.boxShadow = 'none'
-                    }}
-                  />
-                </div>
-                <div>
                   <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Cover Image</label>
                   <input
                     type="file"
                     accept="image/*"
                     onChange={handleCoverImageChange}
-                    style={{ display: 'none' }}
-                    id="cover-image-input"
-                  />
-                  <div 
-                    onClick={() => document.getElementById('cover-image-input').click()}
                     style={{
-                      border: '2px dashed #e2e8f0',
-                      borderRadius: '12px',
-                      padding: '32px',
-                      textAlign: 'center',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease',
-                      background: '#f8fafc'
+                      width: '100%',
+                      padding: '8px 12px',
+                      background: '#f8fafc',
+                      border: '1px solid #e2e8f0',
+                      borderRadius: '8px',
+                      outline: 'none',
+                      fontSize: '13px',
+                      cursor: 'pointer'
                     }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.borderColor = '#7c3aed'
-                      e.currentTarget.style.background = '#f5f3ff'
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Featured Image 2</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleCoverImageChange2}
+                    style={{
+                      width: '100%',
+                      padding: '8px 12px',
+                      background: '#f8fafc',
+                      border: '1px solid #e2e8f0',
+                      borderRadius: '8px',
+                      outline: 'none',
+                      fontSize: '13px',
+                      cursor: 'pointer'
                     }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
-                      e.currentTarget.style.background = '#f8fafc'
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Featured Image 3</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleCoverImageChange3}
+                    style={{
+                      width: '100%',
+                      padding: '8px 12px',
+                      background: '#f8fafc',
+                      border: '1px solid #e2e8f0',
+                      borderRadius: '8px',
+                      outline: 'none',
+                      fontSize: '13px',
+                      cursor: 'pointer'
                     }}
-                  >
-                    {coverImagePreview ? (
-                      <img 
-                        src={coverImagePreview} 
-                        alt="Cover preview" 
-                        style={{ maxWidth: '100%', maxHeight: '200px', objectFit: 'contain' }}
-                      />
-                    ) : (
-                      <>
-                        <Plus style={{ width: '32px', height: '32px', color: '#94a3b8', margin: '0 auto 8px' }} />
-                        <p style={{ fontSize: '14px', color: '#64748b' }}>Click to upload cover image</p>
-                      </>
-                    )}
-                  </div>
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Featured Image 4</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleCoverImageChange4}
+                    style={{
+                      width: '100%',
+                      padding: '8px 12px',
+                      background: '#f8fafc',
+                      border: '1px solid #e2e8f0',
+                      borderRadius: '8px',
+                      outline: 'none',
+                      fontSize: '13px',
+                      cursor: 'pointer'
+                    }}
+                  />
                 </div>
                 <div>
                   <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Content</label>
@@ -868,31 +975,62 @@ export default function Stories() {
             </div>
             <div style={{ padding: '24px', overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Title</label>
-                  <input
-                    type="text"
-                    name="title"
-                    value={formData.title}
-                    onChange={handleInputChange}
-                    style={{
-                      padding: '12px 16px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '12px',
-                      outline: 'none',
-                      fontSize: '14px',
-                      transition: 'all 0.2s ease'
-                    }}
-                    onFocus={(e) => {
-                      e.currentTarget.style.borderColor = '#7c3aed'
-                      e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                    }}
-                    onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
-                      e.currentTarget.style.boxShadow = 'none'
-                    }}
-                  />
+                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '20px' }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Title</label>
+                    <input
+                      type="text"
+                      name="title"
+                      value={formData.title}
+                      onChange={handleInputChange}
+                      style={{
+                        width: '100%',
+                        padding: '12px 16px',
+                        background: '#f8fafc',
+                        border: '1px solid #e2e8f0',
+                        borderRadius: '12px',
+                        outline: 'none',
+                        fontSize: '14px',
+                        transition: 'all 0.2s ease'
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = '#7c3aed'
+                        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.boxShadow = 'none'
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Read Time</label>
+                    <input
+                      type="text"
+                      name="read_time"
+                      value={formData.read_time}
+                      onChange={handleInputChange}
+                      placeholder="e.g., 5 min read"
+                      style={{
+                        width: '100%',
+                        padding: '12px 16px',
+                        background: '#f8fafc',
+                        border: '1px solid #e2e8f0',
+                        borderRadius: '12px',
+                        outline: 'none',
+                        fontSize: '14px',
+                        transition: 'all 0.2s ease'
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = '#7c3aed'
+                        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.boxShadow = 'none'
+                      }}
+                    />
+                  </div>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                   <div>
@@ -950,50 +1088,20 @@ export default function Stories() {
                     </select>
                   </div>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Read Time</label>
-                    <input
-                      type="text"
-                      name="read_time"
-                      value={formData.read_time}
-                      onChange={handleInputChange}
-                      placeholder="e.g., 5 min read"
-                      style={{
-                        width: '100%',
-                        padding: '12px 16px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '12px',
-                        outline: 'none',
-                        fontSize: '14px',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onFocus={(e) => {
-                        e.currentTarget.style.borderColor = '#7c3aed'
-                        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
-                        e.currentTarget.style.boxShadow = 'none'
-                      }}
-                    />
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', paddingTop: '32px' }}>
-                    <input
-                      type="checkbox"
-                      name="featured"
-                      checked={formData.featured}
-                      onChange={(e) => setFormData(prev => ({ ...prev, featured: e.target.checked }))}
-                      style={{
-                        width: '20px',
-                        height: '20px',
-                        cursor: 'pointer',
-                        accentColor: '#7c3aed'
-                      }}
-                    />
-                    <label style={{ fontSize: '14px', fontWeight: '500', color: '#374151', cursor: 'pointer' }}>Featured Story</label>
-                  </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <input
+                    type="checkbox"
+                    name="featured"
+                    checked={formData.featured}
+                    onChange={(e) => setFormData(prev => ({ ...prev, featured: e.target.checked }))}
+                    style={{
+                      width: '20px',
+                      height: '20px',
+                      cursor: 'pointer',
+                      accentColor: '#7c3aed'
+                    }}
+                  />
+                  <label style={{ fontSize: '14px', fontWeight: '500', color: '#374151', cursor: 'pointer' }}>Featured Story</label>
                 </div>
                 <div>
                   <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Cover Image</label>
@@ -1001,42 +1109,71 @@ export default function Stories() {
                     type="file"
                     accept="image/*"
                     onChange={handleCoverImageChange}
-                    style={{ display: 'none' }}
-                    id="edit-cover-image-input"
-                  />
-                  <div 
-                    onClick={() => document.getElementById('edit-cover-image-input').click()}
                     style={{
-                      border: '2px dashed #e2e8f0',
-                      borderRadius: '12px',
-                      padding: '32px',
-                      textAlign: 'center',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease',
-                      background: '#f8fafc'
+                      width: '100%',
+                      padding: '8px 12px',
+                      background: '#f8fafc',
+                      border: '1px solid #e2e8f0',
+                      borderRadius: '8px',
+                      outline: 'none',
+                      fontSize: '13px',
+                      cursor: 'pointer'
                     }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.borderColor = '#7c3aed'
-                      e.currentTarget.style.background = '#f5f3ff'
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Featured Image 2</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleCoverImageChange2}
+                    style={{
+                      width: '100%',
+                      padding: '8px 12px',
+                      background: '#f8fafc',
+                      border: '1px solid #e2e8f0',
+                      borderRadius: '8px',
+                      outline: 'none',
+                      fontSize: '13px',
+                      cursor: 'pointer'
                     }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
-                      e.currentTarget.style.background = '#f8fafc'
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Featured Image 3</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleCoverImageChange3}
+                    style={{
+                      width: '100%',
+                      padding: '8px 12px',
+                      background: '#f8fafc',
+                      border: '1px solid #e2e8f0',
+                      borderRadius: '8px',
+                      outline: 'none',
+                      fontSize: '13px',
+                      cursor: 'pointer'
                     }}
-                  >
-                    {coverImagePreview ? (
-                      <img 
-                        src={coverImagePreview} 
-                        alt="Cover preview" 
-                        style={{ maxWidth: '100%', maxHeight: '200px', objectFit: 'contain' }}
-                      />
-                    ) : (
-                      <>
-                        <Plus style={{ width: '32px', height: '32px', color: '#94a3b8', margin: '0 auto 8px' }} />
-                        <p style={{ fontSize: '14px', color: '#64748b' }}>Click to upload cover image</p>
-                      </>
-                    )}
-                  </div>
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Featured Image 4</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleCoverImageChange4}
+                    style={{
+                      width: '100%',
+                      padding: '8px 12px',
+                      background: '#f8fafc',
+                      border: '1px solid #e2e8f0',
+                      borderRadius: '8px',
+                      outline: 'none',
+                      fontSize: '13px',
+                      cursor: 'pointer'
+                    }}
+                  />
                 </div>
                 <div>
                   <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Content</label>

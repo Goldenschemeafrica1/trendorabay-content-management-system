@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { Plus, Search, Edit, Trash2, User, Mail, Calendar, CreditCard, Ban, CheckCircle } from 'lucide-react'
+import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
 
 const subscribers = [
   { id: 1, name: 'John Smith', email: 'john@example.com', plan: 'Premium', status: 'active', joined: '2023-01-15', nextBilling: '2024-02-15' },
@@ -10,9 +11,17 @@ const subscribers = [
 ]
 
 export default function Subscribers() {
+  const { setHideHeader } = useContext(HeaderVisibilityContext)
+  const { setHideSidebar } = useContext(SidebarVisibilityContext)
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [filterStatus, setFilterStatus] = useState('all')
+
+  // Hide header when create modal is open (keep sidebar visible)
+  useEffect(() => {
+    setHideHeader(showCreateModal)
+    setHideSidebar(false)
+  }, [showCreateModal, setHideHeader, setHideSidebar])
 
   const filteredSubscribers = subscribers.filter(subscriber => {
     const matchesSearch = subscriber.name.toLowerCase().includes(searchTerm.toLowerCase()) ||

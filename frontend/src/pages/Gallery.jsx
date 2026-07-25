@@ -1,8 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { Plus, Search, Filter, Grid, List, Image as ImageIcon, Trash2, Edit, Loader2 } from 'lucide-react'
 import api, { BASE_URL } from '../services/api'
+import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
 
 export default function Gallery() {
+  const { setHideHeader } = useContext(HeaderVisibilityContext)
+  const { setHideSidebar } = useContext(SidebarVisibilityContext)
   const [galleryItems, setGalleryItems] = useState([])
   const [filteredItems, setFilteredItems] = useState([])
   const [loading, setLoading] = useState(true)
@@ -12,6 +15,12 @@ export default function Gallery() {
   const [showAddModal, setShowAddModal] = useState(false)
   const [imagePreview, setImagePreview] = useState('')
   const [uploadingFile, setUploadingFile] = useState(false)
+
+  // Hide header when add modal is open (keep sidebar visible)
+  useEffect(() => {
+    setHideHeader(showAddModal)
+    setHideSidebar(false)
+  }, [showAddModal, setHideHeader, setHideSidebar])
 
   // Fetch gallery items from database
   useEffect(() => {

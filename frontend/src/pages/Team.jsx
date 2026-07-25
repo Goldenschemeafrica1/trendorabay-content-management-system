@@ -36,10 +36,10 @@ export default function Team() {
     fetchTeamMembers()
   }, [])
 
-  // Hide header and sidebar when create/edit modal is open
+  // Hide header when create/edit modal is open (keep sidebar visible)
   useEffect(() => {
     setHideHeader(showCreateModal || !!editingMember)
-    setHideSidebar(showCreateModal || !!editingMember)
+    setHideSidebar(false)
   }, [showCreateModal, editingMember, setHideHeader, setHideSidebar])
 
   const handleInputChange = (e) => {

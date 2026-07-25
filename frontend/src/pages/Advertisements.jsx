@@ -34,10 +34,10 @@ export default function Advertisements() {
     fetchAdvertisements()
   }, [])
 
-  // Hide header and sidebar when create/edit modals are open
+  // Hide header when create/edit modals are open (keep sidebar visible)
   useEffect(() => {
     setHideHeader(showCreateModal || !!editingAd)
-    setHideSidebar(showCreateModal || !!editingAd)
+    setHideSidebar(false)
   }, [showCreateModal, editingAd, setHideHeader, setHideSidebar])
 
   const fetchAdvertisements = async () => {

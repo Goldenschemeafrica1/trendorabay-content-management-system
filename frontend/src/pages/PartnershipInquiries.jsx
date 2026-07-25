@@ -26,10 +26,10 @@ export default function PartnershipInquiries() {
     fetchInquiries()
   }, [])
 
-  // Hide header and sidebar when edit modal is open
+  // Hide header when edit modal is open (keep sidebar visible)
   useEffect(() => {
     setHideHeader(showEditModal)
-    setHideSidebar(showEditModal)
+    setHideSidebar(false)
   }, [showEditModal, setHideHeader, setHideSidebar])
 
   const fetchInquiries = async () => {

@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { Plus, Search, Edit, Trash2, CreditCard, Users, TrendingUp, Crown, Star, Zap } from 'lucide-react'
+import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
 
 const plans = [
   { id: 1, name: 'Basic', price: 9.99, period: 'month', features: ['Access to stories', 'Basic podcasts', 'Community access'], subscribers: 245, status: 'active' },
@@ -8,8 +9,16 @@ const plans = [
 ]
 
 export default function Plans() {
+  const { setHideHeader } = useContext(HeaderVisibilityContext)
+  const { setHideSidebar } = useContext(SidebarVisibilityContext)
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
+
+  // Hide header when create modal is open (keep sidebar visible)
+  useEffect(() => {
+    setHideHeader(showCreateModal)
+    setHideSidebar(false)
+  }, [showCreateModal, setHideHeader, setHideSidebar])
 
   const filteredPlans = plans.filter(plan => {
     const matchesSearch = plan.name.toLowerCase().includes(searchTerm.toLowerCase())

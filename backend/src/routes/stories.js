@@ -1,14 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
-const { uploadSingle, uploadFileToCloud, useCloudinary } = require('../config/upload');
+const { uploadSingle, uploadFields, uploadFileToCloud, useCloudinary } = require('../config/upload');
 const { deleteFromS3 } = require('../config/s3');
 const { authenticate, optionalAuth } = require('../middleware/auth');
 const { isEditor, hasRole } = require('../middleware/authorize');
 const { storyValidation, storyIdValidation } = require('../middleware/validation');
 
-// Configure upload for stories with S3 support
-const upload = uploadSingle('cover_image', 'stories', 5 * 1024 * 1024); // 5MB limit for images
+// Configure upload for stories with multiple image support
+const upload = uploadFields([
+  { name: 'cover_image', maxCount: 1 },
+  { name: 'cover_image_2', maxCount: 1 },
+  { name: 'cover_image_3', maxCount: 1 },
+  { name: 'cover_image_4', maxCount: 1 }
+], 'stories', 5 * 1024 * 1024); // 5MB limit for images
 
 // Get all stories (public read, editor+ for full access)
 router.get('/', optionalAuth, async (req, res) => {
@@ -65,28 +70,34 @@ router.get('/:id', optionalAuth, async (req, res) => {
 router.post('/', authenticate, isEditor, upload, storyValidation, async (req, res) => {
   try {
     console.log('Story create request received');
-    console.log('File:', req.file);
+    console.log('Files:', req.files);
     console.log('Use Cloudinary:', useCloudinary);
     
     const { title, author_id, category, content, status, featured, read_time } = req.body;
     
     console.log('Creating story with data:', { title, author_id, category, contentLength: content?.length, status, featured, read_time });
     
-    let featured_image_url;
-    if (req.file) {
-      if (useCloudinary) {
-        console.log('Uploading to Cloudinary...');
-        featured_image_url = await uploadFileToCloud(req.file, 'stories');
-        console.log('Cloudinary upload result:', featured_image_url);
+    // Handle multiple image uploads
+    const imageFields = ['cover_image', 'cover_image_2', 'cover_image_3', 'cover_image_4'];
+    const imageUrls = {};
+    
+    for (const fieldName of imageFields) {
+      const file = req.files?.[fieldName]?.[0];
+      if (file) {
+        if (useCloudinary) {
+          console.log(`Uploading ${fieldName} to Cloudinary...`);
+          imageUrls[fieldName] = await uploadFileToCloud(file, 'stories');
+          console.log(`Cloudinary upload result for ${fieldName}:`, imageUrls[fieldName]);
+        } else {
+          console.log(`Using local storage for ${fieldName}`);
+          imageUrls[fieldName] = file.location || `/uploads/stories/${file.filename}`;
+        }
       } else {
-        console.log('Using local storage');
-        featured_image_url = req.file.location || `/uploads/stories/${req.file.filename}`;
+        imageUrls[fieldName] = null;
       }
-    } else {
-      featured_image_url = null;
     }
     
-    console.log('Final featured_image_url:', featured_image_url);
+    console.log('Final image URLs:', imageUrls);
     
     // Find category_id from category name
     let category_id = null;
@@ -106,9 +117,9 @@ router.post('/', authenticate, isEditor, upload, storyValidation, async (req, re
     console.log('Inserting story with:', { title, category_id, author_id, status, featuredValue, read_time });
     
     const [result] = await db.query(
-      `INSERT INTO stories (title, content, featured_image_url, author_id, category_id, status, featured, published_at, read_time, views) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [title, content, featured_image_url, author_id, category_id, status, featuredValue, published_at, read_time || '5 min read', 0]
+      `INSERT INTO stories (title, content, featured_image_url, featured_image_url_2, featured_image_url_3, featured_image_url_4, author_id, category_id, status, featured, published_at, read_time, views) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [title, content, imageUrls.cover_image, imageUrls.cover_image_2, imageUrls.cover_image_3, imageUrls.cover_image_4, author_id, category_id, status, featuredValue, published_at, read_time || '5 min read', 0]
     );
     
     console.log('Story created successfully with ID:', result.insertId);
@@ -124,30 +135,40 @@ router.post('/', authenticate, isEditor, upload, storyValidation, async (req, re
 router.put('/:id', authenticate, isEditor, storyIdValidation, upload, storyValidation, async (req, res) => {
   try {
     console.log('Story update request received');
-    console.log('File:', req.file);
+    console.log('Files:', req.files);
     console.log('Use Cloudinary:', useCloudinary);
     
     const { title, author_id, category, content, status, featured, read_time } = req.body;
     
-    let featured_image_url;
-    if (req.file) {
-      if (useCloudinary) {
-        console.log('Uploading to Cloudinary...');
-        featured_image_url = await uploadFileToCloud(req.file, 'stories');
-        console.log('Cloudinary upload result:', featured_image_url);
+    // Handle multiple image uploads
+    const imageFields = ['cover_image', 'cover_image_2', 'cover_image_3', 'cover_image_4'];
+    const imageUrls = {};
+    
+    for (const fieldName of imageFields) {
+      const file = req.files?.[fieldName]?.[0];
+      if (file) {
+        if (useCloudinary) {
+          console.log(`Uploading ${fieldName} to Cloudinary...`);
+          imageUrls[fieldName] = await uploadFileToCloud(file, 'stories');
+          console.log(`Cloudinary upload result for ${fieldName}:`, imageUrls[fieldName]);
+        } else {
+          console.log(`Using local storage for ${fieldName}`);
+          imageUrls[fieldName] = file.location || `/uploads/stories/${file.filename}`;
+        }
       } else {
-        console.log('Using local storage');
-        featured_image_url = req.file.location || `/uploads/stories/${req.file.filename}`;
+        imageUrls[fieldName] = null;
       }
-    } else {
-      featured_image_url = null;
     }
     
-    console.log('Final featured_image_url:', featured_image_url);
+    console.log('Final image URLs:', imageUrls);
     
-    // Get current story to preserve existing image if no new one is uploaded
-    const [currentStory] = await db.query('SELECT featured_image_url, published_at FROM stories WHERE id = ?', [req.params.id]);
-    const final_image_url = featured_image_url || currentStory[0]?.featured_image_url;
+    // Get current story to preserve existing images if no new ones are uploaded
+    const [currentStory] = await db.query('SELECT featured_image_url, featured_image_url_2, featured_image_url_3, featured_image_url_4, published_at FROM stories WHERE id = ?', [req.params.id]);
+    
+    const final_image_url = imageUrls.cover_image || currentStory[0]?.featured_image_url;
+    const final_image_url_2 = imageUrls.cover_image_2 || currentStory[0]?.featured_image_url_2;
+    const final_image_url_3 = imageUrls.cover_image_3 || currentStory[0]?.featured_image_url_3;
+    const final_image_url_4 = imageUrls.cover_image_4 || currentStory[0]?.featured_image_url_4;
     
     // Find category_id from category name
     let category_id = null;
@@ -167,15 +188,9 @@ router.put('/:id', authenticate, isEditor, storyIdValidation, upload, storyValid
     // Convert featured to boolean
     const featuredValue = featured === 'true' || featured === true ? 1 : 0;
     
-    // Build update query dynamically based on whether image is being updated
-    let query, params;
-    if (featured_image_url) {
-      query = `UPDATE stories SET title = ?, content = ?, featured_image_url = ?, author_id = ?, category_id = ?, status = ?, featured = ?, published_at = ?, read_time = ? WHERE id = ?`;
-      params = [title, content, final_image_url, author_id, category_id, status, featuredValue, published_at, read_time || '5 min read', req.params.id];
-    } else {
-      query = `UPDATE stories SET title = ?, content = ?, author_id = ?, category_id = ?, status = ?, featured = ?, published_at = ?, read_time = ? WHERE id = ?`;
-      params = [title, content, author_id, category_id, status, featuredValue, published_at, read_time || '5 min read', req.params.id];
-    }
+    // Build update query
+    const query = `UPDATE stories SET title = ?, content = ?, featured_image_url = ?, featured_image_url_2 = ?, featured_image_url_3 = ?, featured_image_url_4 = ?, author_id = ?, category_id = ?, status = ?, featured = ?, published_at = ?, read_time = ? WHERE id = ?`;
+    const params = [title, content, final_image_url, final_image_url_2, final_image_url_3, final_image_url_4, author_id, category_id, status, featuredValue, published_at, read_time || '5 min read', req.params.id];
     
     await db.query(query, params);
     res.json({ message: 'Story updated successfully' });

@@ -1,8 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { Plus, Search, Edit, Trash2, Award, Calendar, DollarSign, TrendingUp } from 'lucide-react'
 import api from '../services/api'
+import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
 
 export default function Sponsorships() {
+  const { setHideHeader } = useContext(HeaderVisibilityContext)
+  const { setHideSidebar } = useContext(SidebarVisibilityContext)
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [filterStatus, setFilterStatus] = useState('all')
@@ -16,6 +19,12 @@ export default function Sponsorships() {
     startDate: '',
     endDate: ''
   })
+  
+  // Hide header when create modal is open (keep sidebar visible)
+  useEffect(() => {
+    setHideHeader(showCreateModal)
+    setHideSidebar(false)
+  }, [showCreateModal, setHideHeader, setHideSidebar])
   
   // Fetch sponsorships from backend
   useEffect(() => {

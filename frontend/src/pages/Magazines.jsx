@@ -72,10 +72,10 @@ export default function Magazines() {
     fetchData()
   }, [])
 
-  // Hide header and sidebar when create/edit modals are open
+  // Hide header when create/edit modals are open (keep sidebar visible)
   useEffect(() => {
     setHideHeader(showCreateModal || showEditModal)
-    setHideSidebar(showCreateModal || showEditModal)
+    setHideSidebar(false)
   }, [showCreateModal, showEditModal, setHideHeader, setHideSidebar])
 
   const handleInputChange = (e) => {
@@ -1128,7 +1128,7 @@ export default function Magazines() {
                 </div>
               </div>
             </div>
-            <div style={{ padding: '12px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+            <div style={{ padding: '12px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '-16px' }}>
               <button
                 onClick={() => setShowCreateModal(false)}
                 style={{
@@ -1838,7 +1838,7 @@ export default function Magazines() {
                 </div>
               </div>
             </div>
-            <div style={{ padding: '12px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+            <div style={{ padding: '12px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '-16px' }}>
               <button
                 onClick={() => {
                   setShowEditModal(false)

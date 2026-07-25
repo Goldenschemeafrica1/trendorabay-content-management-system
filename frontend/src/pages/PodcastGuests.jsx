@@ -24,10 +24,10 @@ export default function PodcastGuests() {
     fetchGuests()
   }, [])
 
-  // Hide header and sidebar when create modal is open
+  // Hide header when create modal is open (keep sidebar visible)
   useEffect(() => {
     setHideHeader(showCreateModal)
-    setHideSidebar(showCreateModal)
+    setHideSidebar(false)
   }, [showCreateModal, setHideHeader, setHideSidebar])
 
   const fetchGuests = async () => {

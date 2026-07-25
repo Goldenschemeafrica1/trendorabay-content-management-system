@@ -8,16 +8,12 @@ const pool = mysql.createPool({
   database: process.env.DB_NAME,
   port: process.env.DB_PORT || 3306,
   waitForConnections: true,
-  connectionLimit: 50,
+  connectionLimit: 10,
   queueLimit: 0,
   enableKeepAlive: true,
   keepAliveInitialDelay: 0,
-  connectTimeout: 60000,
-  acquireTimeout: 60000,
-  timeout: 60000,
-  ssl: {
-    rejectUnauthorized: true
-  }
+  connectTimeout: 10000,
+  ssl: { rejectUnauthorized: false }
 });
 
 const promisePool = pool.promise();

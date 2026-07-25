@@ -1,12 +1,21 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { Plus, Search, Edit, Trash2, Folder, Tag } from 'lucide-react'
 import api from '../services/api'
+import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
 
 export default function Categories() {
+  const { setHideHeader } = useContext(HeaderVisibilityContext)
+  const { setHideSidebar } = useContext(SidebarVisibilityContext)
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
+  
+  // Hide header when create modal is open (keep sidebar visible)
+  useEffect(() => {
+    setHideHeader(showCreateModal)
+    setHideSidebar(false)
+  }, [showCreateModal, setHideHeader, setHideSidebar])
   
   // Fetch categories from backend
   useEffect(() => {
