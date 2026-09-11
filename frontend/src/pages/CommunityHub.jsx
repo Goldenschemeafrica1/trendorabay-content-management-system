@@ -1,37 +1,136 @@
-import { useState } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { Plus, Search, Edit, Trash2, MessageCircle, Heart, Share2, Eye, Calendar, User } from 'lucide-react'
-
-const posts = [
-  { id: 1, title: 'Welcome to the Community Hub', author: 'Admin', date: '2024-01-07', likes: 245, comments: 45, views: 1250, status: 'published' },
-  { id: 2, title: 'Upcoming Events Announcement', author: 'Sarah Johnson', date: '2024-01-06', likes: 189, comments: 32, views: 890, status: 'published' },
-  { id: 3, title: 'Writer Guidelines Update', author: 'Michael Chen', date: '2024-01-05', likes: 156, comments: 28, views: 720, status: 'published' },
-  { id: 4, title: 'Featured Author Interview', author: 'Emily Rodriguez', date: '2024-01-04', likes: 198, comments: 41, views: 980, status: 'draft' },
-  { id: 5, title: 'Community Feedback Request', author: 'Admin', date: '2024-01-03', likes: 312, comments: 67, views: 1450, status: 'published' },
-]
+import api from '../services/api'
+import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
 
 export default function CommunityHub() {
+  const { setHideHeader } = useContext(HeaderVisibilityContext)
+  const { setHideSidebar } = useContext(SidebarVisibilityContext)
   const [showCreateModal, setShowCreateModal] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [filterStatus, setFilterStatus] = useState('all')
+  const [posts, setPosts] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [editingPost, setEditingPost] = useState(null)
+  const [formData, setFormData] = useState({
+    title: '',
+    content: '',
+    status: 'draft'
+  })
+  
+  // Fetch posts from backend
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const data = await api.get('/community-posts')
+        setPosts(data)
+      } catch (error) {
+        console.error('Failed to fetch posts:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchPosts()
+  }, [])
+
+  // Hide header when create/edit modals are open (keep sidebar visible)
+  useEffect(() => {
+    setHideHeader(showCreateModal || showEditModal)
+    setHideSidebar(false)
+  }, [showCreateModal, showEditModal, setHideHeader, setHideSidebar])
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  const handleCreatePost = async () => {
+    if (!formData.title || formData.title.trim() === '') {
+      alert('Please fill in the post title field')
+      return
+    }
+    
+    try {
+      await api.post('/community-posts', formData)
+      setShowCreateModal(false)
+      setFormData({ title: '', content: '', status: 'draft' })
+      // Refresh posts list
+      const data = await api.get('/community-posts')
+      setPosts(data)
+      alert('Post created successfully!')
+    } catch (error) {
+      console.error('Failed to create post:', error)
+      alert('Failed to create post: ' + error.message)
+    }
+  }
+
+  const handleDeletePost = async (postId) => {
+    if (!confirm('Are you sure you want to delete this post?')) {
+      return
+    }
+    
+    try {
+      await api.delete(`/community-posts/${postId}`)
+      // Refresh posts list
+      const data = await api.get('/community-posts')
+      setPosts(data)
+      alert('Post deleted successfully!')
+    } catch (error) {
+      console.error('Failed to delete post:', error)
+      alert('Failed to delete post: ' + error.message)
+    }
+  }
+
+  const handleEditPost = (post) => {
+    setEditingPost(post)
+    setFormData({
+      title: post.title,
+      content: post.content || '',
+      status: post.status
+    })
+    setShowEditModal(true)
+  }
+
+  const handleUpdatePost = async () => {
+    if (!formData.title || formData.title.trim() === '') {
+      alert('Please fill in the post title field')
+      return
+    }
+    
+    try {
+      await api.put(`/community-posts/${editingPost.id}`, formData)
+      setShowEditModal(false)
+      setEditingPost(null)
+      setFormData({ title: '', content: '', status: 'draft' })
+      // Refresh posts list
+      const data = await api.get('/community-posts')
+      setPosts(data)
+      alert('Post updated successfully!')
+    } catch (error) {
+      console.error('Failed to update post:', error)
+      alert('Failed to update post: ' + error.message)
+    }
+  }
 
   const filteredPosts = posts.filter(post => {
     const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         post.author.toLowerCase().includes(searchTerm.toLowerCase())
+                         (post.author && post.author.toLowerCase().includes(searchTerm.toLowerCase()))
     const matchesStatus = filterStatus === 'all' || post.status === filterStatus
     return matchesSearch && matchesStatus
   })
 
   const totalPosts = posts.length
   const publishedPosts = posts.filter(p => p.status === 'published').length
-  const totalViews = posts.reduce((sum, p) => sum + p.views, 0)
+  const totalViews = posts.reduce((sum, p) => sum + (p.views || 0), 0)
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#0f172a' }}>Community Hub</h1>
-          <p style={{ color: '#64748b', marginTop: '2px', fontSize: '13px' }}>Manage community posts and discussions</p>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--text-primary)' }}>Community Hub</h1>
+          <p style={{ color: 'var(--text-secondary)', marginTop: '2px', fontSize: '13px' }}>Manage community posts and discussions</p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
@@ -67,11 +166,11 @@ export default function CommunityHub() {
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
           padding: '12px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
@@ -87,15 +186,15 @@ export default function CommunityHub() {
               <MessageCircle style={{ width: '16px', height: '16px', color: '#2563eb' }} />
             </div>
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{totalPosts}</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Total Posts</p>
+          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>{totalPosts}</h3>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>Total Posts</p>
         </div>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
           padding: '12px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
@@ -111,15 +210,15 @@ export default function CommunityHub() {
               <Eye style={{ width: '16px', height: '16px', color: '#16a34a' }} />
             </div>
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{totalViews.toLocaleString()}</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Total Views</p>
+          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>{totalViews.toLocaleString()}</h3>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>Total Views</p>
         </div>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
           padding: '12px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
@@ -135,8 +234,8 @@ export default function CommunityHub() {
               <Heart style={{ width: '16px', height: '16px', color: '#9333ea' }} />
             </div>
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{publishedPosts}</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Published</p>
+          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>{publishedPosts}</h3>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>Published</p>
         </div>
       </div>
 
@@ -151,8 +250,8 @@ export default function CommunityHub() {
             style={{
               width: '100%',
               padding: '8px 12px',
-              background: '#f8fafc',
-              border: '1px solid #e2e8f0',
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
               borderRadius: '10px',
               outline: 'none',
               fontSize: '13px',
@@ -163,7 +262,7 @@ export default function CommunityHub() {
               e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
             }}
             onBlur={(e) => {
-              e.currentTarget.style.borderColor = '#e2e8f0'
+              e.currentTarget.style.borderColor = 'var(--border-color)'
               e.currentTarget.style.boxShadow = 'none'
             }}
           />
@@ -198,40 +297,40 @@ export default function CommunityHub() {
 
       {/* Posts Table */}
       <div style={{
-        background: 'rgba(255, 255, 255, 0.95)',
+        background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
         backdropFilter: 'blur(20px)',
         borderRadius: '16px',
-        border: '1px solid rgba(226, 232, 240, 0.8)',
+        border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
         overflow: 'hidden'
       }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+          <thead style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}>
             <tr>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Post</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Author</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Date</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Engagement</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Status</th>
-              <th style={{ textAlign: 'right', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Actions</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Post</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Author</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Date</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Engagement</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Status</th>
+              <th style={{ textAlign: 'right', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredPosts.map((post) => (
-              <tr key={post.id} style={{ borderBottom: '1px solid #e2e8f0', transition: 'background 0.2s ease' }}
+              <tr key={post.id} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background 0.2s ease' }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#f8fafc'
+                e.currentTarget.style.background = 'var(--bg-secondary)'
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = 'transparent'
               }}>
                 <td style={{ padding: '12px 16px' }}>
-                  <span style={{ fontWeight: '500', color: '#0f172a', fontSize: '13px' }}>{post.title}</span>
+                  <span style={{ fontWeight: '500', color: 'var(--text-primary)', fontSize: '13px' }}>{post.title}</span>
                 </td>
-                <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{post.author}</td>
-                <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{post.date}</td>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{post.author || 'Admin'}</td>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{post.created_at ? new Date(post.created_at).toLocaleDateString() : 'N/A'}</td>
                 <td style={{ padding: '12px 16px' }}>
-                  <div style={{ display: 'flex', gap: '12px', fontSize: '13px', color: '#64748b' }}>
+                  <div style={{ display: 'flex', gap: '12px', fontSize: '13px', color: 'var(--text-secondary)' }}>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                       <Heart style={{ width: '14px', height: '14px' }} />
                       {post.likes}
@@ -252,8 +351,8 @@ export default function CommunityHub() {
                     borderRadius: '16px', 
                     fontSize: '11px', 
                     fontWeight: '500',
-                    background: post.status === 'published' ? '#dcfce7' : '#f1f5f9',
-                    color: post.status === 'published' ? '#166534' : '#475569'
+                    background: post.status === 'published' ? '#dcfce7' : 'var(--bg-secondary)',
+                    color: post.status === 'published' ? '#166534' : 'var(--text-secondary)'
                   }}>
                     {post.status.charAt(0).toUpperCase() + post.status.slice(1)}
                   </span>
@@ -269,12 +368,12 @@ export default function CommunityHub() {
                       transition: 'all 0.2s ease'
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = '#f1f5f9'
+                      e.currentTarget.style.background = 'var(--bg-secondary)'
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.background = 'transparent'
                     }}>
-                      <Edit style={{ width: '14px', height: '14px', color: '#64748b' }} />
+                      <Edit style={{ width: '14px', height: '14px', color: 'var(--text-secondary)' }} />
                     </button>
                     <button style={{
                       padding: '6px',
@@ -313,7 +412,7 @@ export default function CommunityHub() {
           zIndex: 50
         }}>
           <div style={{
-            background: 'white',
+            background: 'var(--bg-primary)',
             borderRadius: '16px',
             width: '100%',
             maxWidth: '600px',
@@ -323,12 +422,12 @@ export default function CommunityHub() {
           }}>
             <div style={{
               padding: '20px',
-              borderBottom: '1px solid #e2e8f0',
+              borderBottom: '1px solid var(--border-color)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-              <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a' }}>Create New Post</h2>
+              <h2 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)' }}>Create New Post</h2>
               <button
                 onClick={() => setShowCreateModal(false)}
                 style={{
@@ -338,12 +437,12 @@ export default function CommunityHub() {
                   borderRadius: '8px',
                   cursor: 'pointer',
                   fontSize: '18px',
-                  color: '#94a3b8',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = '#f1f5f9'
-                  e.currentTarget.style.color = '#64748b'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
@@ -356,7 +455,7 @@ export default function CommunityHub() {
             <div style={{ padding: '20px', overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Post Title</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Post Title</label>
                   <input
                     type="text"
                     placeholder="Enter post title..."
@@ -375,13 +474,13 @@ export default function CommunityHub() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Content</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Content</label>
                   <textarea
                     placeholder="Write your post content..."
                     rows={6}
@@ -401,13 +500,13 @@ export default function CommunityHub() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Status</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Status</label>
                   <select style={{
                     width: '100%',
                     padding: '10px 12px',
@@ -424,7 +523,7 @@ export default function CommunityHub() {
                     e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                   }}
                   onBlur={(e) => {
-                    e.currentTarget.style.borderColor = '#e2e8f0'
+                    e.currentTarget.style.borderColor = 'var(--border-color)'
                     e.currentTarget.style.boxShadow = 'none'
                   }}>
                     <option>draft</option>
@@ -433,22 +532,22 @@ export default function CommunityHub() {
                 </div>
               </div>
             </div>
-            <div style={{ padding: '20px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-              <button
-                onClick={() => setShowCreateModal(false)}
+            <div style={{ padding: '20px', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+              <button 
+                onClick={() => handleCreatePost()}
                 style={{
                   padding: '8px 16px',
                   background: 'transparent',
-                  border: '1px solid #e2e8f0',
+                  border: '1px solid var(--border-color)',
                   borderRadius: '10px',
                   cursor: 'pointer',
                   fontSize: '13px',
                   fontWeight: '500',
-                  color: '#64748b',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f8fafc'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'

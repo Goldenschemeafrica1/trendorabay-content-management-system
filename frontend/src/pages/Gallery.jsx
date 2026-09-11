@@ -110,14 +110,14 @@ export default function Gallery() {
           <h1 style={{ 
             fontSize: '28px', 
             fontWeight: '700', 
-            color: '#0f172a',
+            color: 'var(--text-primary)',
             marginBottom: '8px'
           }}>
             Gallery
           </h1>
           <p style={{ 
             fontSize: '14px', 
-            color: '#64748b' 
+            color: 'var(--text-secondary)' 
           }}>
             Manage your gallery images and media
           </p>
@@ -172,7 +172,7 @@ export default function Gallery() {
             transform: 'translateY(-50%)',
             width: '18px',
             height: '18px',
-            color: '#94a3b8'
+            color: 'var(--text-secondary)'
           }} />
           <input
             type="text"
@@ -182,18 +182,18 @@ export default function Gallery() {
             style={{
               width: '100%',
               padding: '12px 12px 12px 44px',
-              border: '1px solid #e2e8f0',
+              border: '1px solid var(--border-color)',
               borderRadius: '10px',
               fontSize: '14px',
               outline: 'none',
               transition: 'all 0.2s ease'
             }}
             onFocus={(e) => {
-              e.currentTarget.style.borderColor = '#7c3aed'
+              e.currentTarget.style.borderColor = 'var(--border-color)'
               e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
             }}
             onBlur={(e) => {
-              e.currentTarget.style.borderColor = '#e2e8f0'
+              e.currentTarget.style.borderColor = 'var(--border-color)'
               e.currentTarget.style.boxShadow = 'none'
             }}
           />
@@ -204,21 +204,21 @@ export default function Gallery() {
             alignItems: 'center',
             gap: '8px',
             padding: '12px 20px',
-            background: 'white',
-            border: '1px solid #e2e8f0',
+            background: 'var(--bg-primary)',
+            border: '1px solid var(--border-color)',
             borderRadius: '10px',
             fontSize: '14px',
-            color: '#475569',
+            color: 'var(--text-secondary)',
             cursor: 'pointer',
             transition: 'all 0.2s ease'
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = '#f8fafc'
-            e.currentTarget.style.borderColor = '#cbd5e1'
+            e.currentTarget.style.background = 'var(--bg-secondary)'
+            e.currentTarget.style.borderColor = 'var(--border-color)'
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'white'
-            e.currentTarget.style.borderColor = '#e2e8f0'
+            e.currentTarget.style.background = 'var(--bg-primary)'
+            e.currentTarget.style.borderColor = 'var(--border-color)'
           }}
         >
           <Filter style={{ width: '16px', height: '16px' }} />
@@ -233,54 +233,54 @@ export default function Gallery() {
             onClick={() => setViewMode('grid')}
             style={{
               padding: '10px',
-              background: viewMode === 'grid' ? 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)' : 'white',
-              border: '1px solid #e2e8f0',
+              background: viewMode === 'grid' ? 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)' : 'var(--bg-primary)',
+              border: '1px solid var(--border-color)',
               borderRadius: '8px',
               cursor: 'pointer',
               transition: 'all 0.2s ease'
             }}
             onMouseEnter={(e) => {
               if (viewMode !== 'grid') {
-                e.currentTarget.style.background = '#f8fafc'
+                e.currentTarget.style.background = 'var(--bg-secondary)'
               }
             }}
             onMouseLeave={(e) => {
               if (viewMode !== 'grid') {
-                e.currentTarget.style.background = 'white'
+                e.currentTarget.style.background = 'var(--bg-primary)'
               }
             }}
           >
             <Grid style={{ 
               width: '18px', 
               height: '18px', 
-              color: viewMode === 'grid' ? 'white' : '#64748b' 
+              color: viewMode === 'grid' ? 'white' : 'var(--text-secondary)' 
             }} />
           </button>
           <button
             onClick={() => setViewMode('list')}
             style={{
               padding: '10px',
-              background: viewMode === 'list' ? 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)' : 'white',
-              border: '1px solid #e2e8f0',
+              background: viewMode === 'list' ? 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)' : 'var(--bg-primary)',
+              border: '1px solid var(--border-color)',
               borderRadius: '8px',
               cursor: 'pointer',
               transition: 'all 0.2s ease'
             }}
             onMouseEnter={(e) => {
               if (viewMode !== 'list') {
-                e.currentTarget.style.background = '#f8fafc'
+                e.currentTarget.style.background = 'var(--bg-secondary)'
               }
             }}
             onMouseLeave={(e) => {
               if (viewMode !== 'list') {
-                e.currentTarget.style.background = 'white'
+                e.currentTarget.style.background = 'var(--bg-primary)'
               }
             }}
           >
             <List style={{ 
               width: '18px', 
               height: '18px', 
-              color: viewMode === 'list' ? 'white' : '#64748b' 
+              color: viewMode === 'list' ? 'white' : 'var(--text-secondary)' 
             }} />
           </button>
         </div>
@@ -294,19 +294,19 @@ export default function Gallery() {
           alignItems: 'center',
           justifyContent: 'center',
           padding: '80px 40px',
-          background: 'white',
+          background: 'var(--bg-primary)',
           borderRadius: '16px'
         }}>
           <Loader2 style={{ 
             width: '48px', 
             height: '48px', 
-            color: '#7c3aed',
+            color: 'var(--text-primary)',
             animation: 'spin 1s linear infinite',
             marginBottom: '24px'
           }} />
           <p style={{ 
             fontSize: '16px', 
-            color: '#64748b',
+            color: 'var(--text-secondary)',
             fontWeight: '500'
           }}>
             Loading gallery...
@@ -322,33 +322,33 @@ export default function Gallery() {
           alignItems: 'center',
           justifyContent: 'center',
           padding: '80px 40px',
-          background: 'white',
+          background: 'var(--bg-primary)',
           borderRadius: '16px',
-          border: '2px solid #fecaca'
+          border: '2px solid var(--border-color)'
         }}>
           <div style={{
             width: '80px',
             height: '80px',
-            background: 'linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)',
+            background: 'linear-gradient(135deg, var(--bg-secondary) 0%, var(--border-color) 100%)',
             borderRadius: '50%',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             marginBottom: '24px'
           }}>
-            <ImageIcon style={{ width: '40px', height: '40px', color: '#dc2626' }} />
+            <ImageIcon style={{ width: '40px', height: '40px', color: 'var(--text-secondary)' }} />
           </div>
           <h3 style={{ 
             fontSize: '18px', 
             fontWeight: '600', 
-            color: '#0f172a',
+            color: 'var(--text-primary)',
             marginBottom: '8px'
           }}>
             Error loading gallery
           </h3>
           <p style={{ 
             fontSize: '14px', 
-            color: '#64748b',
+            color: 'var(--text-secondary)',
             marginBottom: '24px',
             textAlign: 'center'
           }}>
@@ -393,33 +393,33 @@ export default function Gallery() {
           alignItems: 'center',
           justifyContent: 'center',
           padding: '80px 40px',
-          background: 'white',
+          background: 'var(--bg-primary)',
           borderRadius: '16px',
-          border: '2px dashed #e2e8f0'
+          border: '2px dashed var(--border-color)'
         }}>
           <div style={{
             width: '80px',
             height: '80px',
-            background: 'linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)',
+            background: 'linear-gradient(135deg, var(--bg-secondary) 0%, var(--border-color) 100%)',
             borderRadius: '50%',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             marginBottom: '24px'
           }}>
-            <ImageIcon style={{ width: '40px', height: '40px', color: '#94a3b8' }} />
+            <ImageIcon style={{ width: '40px', height: '40px', color: 'var(--text-secondary)' }} />
           </div>
           <h3 style={{ 
             fontSize: '18px', 
             fontWeight: '600', 
-            color: '#0f172a',
+            color: 'var(--text-primary)',
             marginBottom: '8px'
           }}>
             {searchQuery ? 'No images found' : 'No images yet'}
           </h3>
           <p style={{ 
             fontSize: '14px', 
-            color: '#64748b',
+            color: 'var(--text-secondary)',
             marginBottom: '24px',
             textAlign: 'center'
           }}>
@@ -472,12 +472,12 @@ export default function Gallery() {
             <div
               key={item.id ?? `gallery-${index}`}
               style={{
-                background: 'white',
+                background: 'var(--bg-primary)',
                 borderRadius: '16px',
                 overflow: 'hidden',
                 boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
                 transition: 'all 0.2s ease',
-                border: '1px solid #e2e8f0'
+                border: '1px solid var(--border-color)'
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.12)'
@@ -491,7 +491,7 @@ export default function Gallery() {
               <div style={{
                 position: 'relative',
                 aspectRatio: '16/9',
-                background: '#f8fafc',
+                background: 'var(--bg-secondary)',
                 overflow: 'hidden'
               }}>
                 <img
@@ -516,7 +516,7 @@ export default function Gallery() {
                     padding: '4px 12px',
                     borderRadius: '20px',
                     fontSize: '11px',
-                    fontWeight: '600',
+                    fontWeight: '500',
                     boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)'
                   }}>
                     Featured
@@ -540,8 +540,8 @@ export default function Gallery() {
                   <button
                     style={{
                       padding: '8px',
-                      background: 'white',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-primary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '8px',
                       cursor: 'pointer',
                       display: 'flex',
@@ -550,20 +550,20 @@ export default function Gallery() {
                       boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = '#f8fafc'
+                      e.currentTarget.style.background = 'var(--bg-secondary)'
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.background = 'white'
+                      e.currentTarget.style.background = 'var(--bg-primary)'
                     }}
                   >
-                    <Edit style={{ width: '16px', height: '16px', color: '#64748b' }} />
+                    <Edit style={{ width: '16px', height: '16px', color: 'var(--text-secondary)' }} />
                   </button>
                   <button
                     onClick={() => handleDelete(item.id)}
                     style={{
                       padding: '8px',
-                      background: 'white',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-primary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '8px',
                       cursor: 'pointer',
                       display: 'flex',
@@ -572,15 +572,15 @@ export default function Gallery() {
                       boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = '#fef2f2'
-                      e.currentTarget.style.borderColor = '#fecaca'
+                      e.currentTarget.style.background = 'var(--bg-secondary)'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.background = 'white'
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.background = 'var(--bg-primary)'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                     }}
                   >
-                    <Trash2 style={{ width: '16px', height: '16px', color: '#dc2626' }} />
+                    <Trash2 style={{ width: '16px', height: '16px', color: 'var(--text-secondary)' }} />
                   </button>
                 </div>
               </div>
@@ -588,7 +588,7 @@ export default function Gallery() {
                 {item.caption && (
                   <p style={{ 
                     fontSize: '12px', 
-                    color: '#64748b',
+                    color: 'var(--text-secondary)',
                     marginBottom: '8px',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
@@ -605,10 +605,12 @@ export default function Gallery() {
                   {item.category && (
                     <span style={{
                       fontSize: '11px',
-                      color: '#7c3aed',
-                      background: 'rgba(124, 58, 237, 0.1)',
-                      padding: '2px 8px',
+                      color: 'var(--text-secondary)',
+                      background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
+                      backdropFilter: 'blur(20px)',
                       borderRadius: '12px',
+                      border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
+                      padding: '2px 8px',
                       fontWeight: '500'
                     }}>
                       {item.category}
@@ -619,7 +621,7 @@ export default function Gallery() {
                     alignItems: 'center',
                     gap: '4px',
                     fontSize: '12px',
-                    color: '#94a3b8'
+                    color: 'var(--text-secondary)'
                   }}>
                     <span>❤️</span>
                     <span>{item.likes_count || 0}</span>
@@ -646,7 +648,7 @@ export default function Gallery() {
           zIndex: 1000
         }}>
           <div style={{
-            background: 'white',
+            background: 'var(--bg-primary)',
             borderRadius: '16px',
             padding: '32px',
             maxWidth: '500px',
@@ -657,7 +659,7 @@ export default function Gallery() {
             <h2 style={{
               fontSize: '24px',
               fontWeight: '700',
-              color: '#0f172a',
+              color: 'var(--text-primary)',
               marginBottom: '24px'
             }}>
               Add New Image
@@ -692,7 +694,7 @@ export default function Gallery() {
                   display: 'block',
                   fontSize: '14px',
                   fontWeight: '600',
-                  color: '#0f172a',
+                  color: 'var(--text-primary)',
                   marginBottom: '8px'
                 }}>
                   Choose Image *
@@ -712,7 +714,7 @@ export default function Gallery() {
                   style={{
                     width: '100%',
                     padding: '12px',
-                    border: '1px solid #e2e8f0',
+                    border: '1px solid var(--border-color)',
                     borderRadius: '8px',
                     fontSize: '14px',
                     outline: 'none'
@@ -723,7 +725,7 @@ export default function Gallery() {
                     marginTop: '12px',
                     borderRadius: '8px',
                     overflow: 'hidden',
-                    border: '1px solid #e2e8f0'
+                    border: '1px solid var(--border-color)'
                   }}>
                     <img
                       src={imagePreview}
@@ -746,7 +748,7 @@ export default function Gallery() {
                   display: 'block',
                   fontSize: '14px',
                   fontWeight: '600',
-                  color: '#0f172a',
+                  color: 'var(--text-primary)',
                   marginBottom: '8px'
                 }}>
                   Caption
@@ -757,7 +759,7 @@ export default function Gallery() {
                   style={{
                     width: '100%',
                     padding: '12px',
-                    border: '1px solid #e2e8f0',
+                    border: '1px solid var(--border-color)',
                     borderRadius: '8px',
                     fontSize: '14px',
                     outline: 'none',
@@ -775,12 +777,12 @@ export default function Gallery() {
                   onClick={() => setShowAddModal(false)}
                   style={{
                     padding: '12px 24px',
-                    background: 'white',
-                    border: '1px solid #e2e8f0',
+                    background: 'var(--bg-primary)',
+                    border: '1px solid var(--border-color)',
                     borderRadius: '8px',
                     fontSize: '14px',
                     fontWeight: '600',
-                    color: '#475569',
+                    color: 'var(--text-secondary)',
                     cursor: 'pointer'
                   }}
                 >

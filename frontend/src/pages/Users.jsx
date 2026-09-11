@@ -134,7 +134,7 @@ export default function Users() {
   if (loading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
-        <p style={{ color: '#64748b' }}>Loading users...</p>
+        <p style={{ color: 'var(--text-secondary)' }}>Loading users...</p>
       </div>
     )
   }
@@ -152,8 +152,8 @@ export default function Users() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#0f172a' }}>User Management</h1>
-          <p style={{ color: '#64748b', marginTop: '2px', fontSize: '13px' }}>Manage user accounts and permissions</p>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--text-primary)' }}>User Management</h1>
+          <p style={{ color: 'var(--text-secondary)', marginTop: '2px', fontSize: '13px' }}>Manage user accounts and permissions</p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
@@ -189,52 +189,58 @@ export default function Users() {
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
           padding: '8px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
-            <div style={{ 
-              width: '32px', 
-              height: '32px', 
-              background: 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)', 
-              borderRadius: '10px', 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center'
-            }}>
-              <UsersIcon style={{ width: '16px', height: '16px', color: '#2563eb' }} />
-            </div>
+          <div style={{ 
+            width: '32px', 
+            height: '32px', 
+            background: 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)', 
+            borderRadius: '10px', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center'
+          }}>
+            <UsersIcon style={{ width: '16px', height: '16px', color: '#2563eb' }} />
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{totalUsers}</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Total Users</p>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--text-primary)', margin: 0 }}>{totalUsers}</h3>
+            <p style={{ fontSize: '10px', color: 'var(--text-secondary)', margin: 0 }}>Total Users</p>
+          </div>
         </div>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
           padding: '8px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
-            <div style={{ 
-              width: '32px', 
-              height: '32px', 
-              background: 'linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%)', 
-              borderRadius: '10px', 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center'
-            }}>
-              <Shield style={{ width: '16px', height: '16px', color: '#9333ea' }} />
-            </div>
+          <div style={{ 
+            width: '32px', 
+            height: '32px', 
+            background: 'linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%)', 
+            borderRadius: '10px', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center'
+          }}>
+            <Shield style={{ width: '16px', height: '16px', color: '#9333ea' }} />
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{adminUsers}</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Admin Users</p>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--text-primary)', margin: 0 }}>{adminUsers}</h3>
+            <p style={{ fontSize: '10px', color: 'var(--text-secondary)', margin: 0 }}>Admin Users</p>
+          </div>
         </div>
       </div>
 
@@ -249,8 +255,8 @@ export default function Users() {
             style={{
               width: '100%',
               padding: '8px 12px',
-              background: '#f8fafc',
-              border: '1px solid #e2e8f0',
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
               borderRadius: '10px',
               outline: 'none',
               fontSize: '13px',
@@ -261,7 +267,7 @@ export default function Users() {
               e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
             }}
             onBlur={(e) => {
-              e.currentTarget.style.borderColor = '#e2e8f0'
+              e.currentTarget.style.borderColor = 'var(--border-color)'
               e.currentTarget.style.boxShadow = 'none'
             }}
           />
@@ -271,8 +277,8 @@ export default function Users() {
           onChange={(e) => setFilterRole(e.target.value)}
           style={{
             padding: '8px 12px',
-            background: '#f8fafc',
-            border: '1px solid #e2e8f0',
+            background: 'var(--bg-secondary)',
+            border: '1px solid var(--border-color)',
             borderRadius: '10px',
             outline: 'none',
             fontSize: '13px',
@@ -284,7 +290,7 @@ export default function Users() {
             e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
           }}
           onBlur={(e) => {
-            e.currentTarget.style.borderColor = '#e2e8f0'
+            e.currentTarget.style.borderColor = 'var(--border-color)'
             e.currentTarget.style.boxShadow = 'none'
           }}
         >
@@ -298,28 +304,28 @@ export default function Users() {
 
       {/* Users Table */}
       <div style={{
-        background: 'rgba(255, 255, 255, 0.95)',
+        background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
         backdropFilter: 'blur(20px)',
         borderRadius: '16px',
-        border: '1px solid rgba(226, 232, 240, 0.8)',
+        border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
         overflow: 'hidden'
       }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+          <thead style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}>
             <tr>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>User</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Name</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Role</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Joined</th>
-              <th style={{ textAlign: 'right', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Actions</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>User</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Name</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Role</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Joined</th>
+              <th style={{ textAlign: 'right', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredUsers.map((user, index) => (
-              <tr key={user.cms_user_id || `user-${index}`} style={{ borderBottom: '1px solid #e2e8f0', transition: 'background 0.2s ease' }}
+              <tr key={user.cms_user_id || `user-${index}`} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background 0.2s ease' }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#f8fafc'
+                e.currentTarget.style.background = 'var(--bg-secondary)'
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = 'transparent'
@@ -354,15 +360,15 @@ export default function Users() {
                       <UserIcon style={{ width: '20px', height: '20px', color: '#9333ea' }} />
                     </div>
                     <div>
-                      <p style={{ fontWeight: '500', color: '#0f172a', fontSize: '13px' }}>
+                      <p style={{ fontWeight: '500', color: 'var(--text-primary)', fontSize: '13px' }}>
                         {user.username || user.name || 'Unknown'}
                       </p>
-                      <p style={{ fontSize: '12px', color: '#64748b' }}>{user.email}</p>
+                      <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{user.email}</p>
                     </div>
                   </div>
                 </td>
                 <td style={{ padding: '12px 16px' }}>
-                  <p style={{ fontWeight: '500', color: '#0f172a', fontSize: '13px' }}>
+                  <p style={{ fontWeight: '500', color: 'var(--text-primary)', fontSize: '13px' }}>
                     {user.first_name || user.last_name ? `${user.first_name || ''} ${user.last_name || ''}`.trim() : '-'}
                   </p>
                 </td>
@@ -396,8 +402,8 @@ export default function Users() {
                         borderRadius: '16px', 
                         fontSize: '11px', 
                         fontWeight: '500',
-                        background: user.role === 'admin' || user.role === 'superadmin' ? '#f3e8ff' : '#f1f5f9',
-                        color: user.role === 'admin' || user.role === 'superadmin' ? '#9333ea' : '#475569'
+                        background: user.role === 'admin' || user.role === 'superadmin' ? '#f3e8ff' : 'var(--bg-secondary)',
+                        color: user.role === 'admin' || user.role === 'superadmin' ? '#9333ea' : 'var(--text-secondary)'
                       }}>
                         <Shield style={{ width: '12px', height: '12px', display: 'inline', marginRight: '4px', verticalAlign: 'middle' }} />
                         {user.role}
@@ -416,19 +422,19 @@ export default function Users() {
                             justifyContent: 'center'
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.background = '#f1f5f9'
+                            e.currentTarget.style.background = 'var(--bg-secondary)'
                           }}
                           onMouseLeave={(e) => {
                             e.currentTarget.style.background = 'transparent'
                           }}
                         >
-                          <Edit style={{ width: '12px', height: '12px', color: '#64748b' }} />
+                          <Edit style={{ width: '12px', height: '12px', color: 'var(--text-secondary)' }} />
                         </button>
                       )}
                     </div>
                   )}
                 </td>
-                <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{user.cms_created_at?.split('T')[0]}</td>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{user.cms_created_at?.split('T')[0]}</td>
                 <td style={{ padding: '12px 16px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '6px' }}>
                     {currentUser?.role === 'superadmin' && (
@@ -473,7 +479,7 @@ export default function Users() {
           zIndex: 50
         }}>
           <div style={{
-            background: 'white',
+            background: 'var(--bg-primary)',
             borderRadius: '16px',
             width: '100%',
             maxWidth: '500px',
@@ -483,12 +489,12 @@ export default function Users() {
           }}>
             <div style={{
               padding: '24px',
-              borderBottom: '1px solid #e2e8f0',
+              borderBottom: '1px solid var(--border-color)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-              <h2 style={{ fontSize: '20px', fontWeight: '600', color: '#0f172a' }}>Add New User</h2>
+              <h2 style={{ fontSize: '20px', fontWeight: '600', color: 'var(--text-primary)' }}>Add New User</h2>
               <button
                 onClick={() => {
                   setShowCreateModal(false)
@@ -501,16 +507,16 @@ export default function Users() {
                   borderRadius: '8px',
                   cursor: 'pointer',
                   fontSize: '20px',
-                  color: '#94a3b8',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f1f5f9'
-                  e.currentTarget.style.color = '#64748b'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
-                  e.currentTarget.style.color = '#94a3b8'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
               >
                 ✕
@@ -519,7 +525,7 @@ export default function Users() {
             <div style={{ padding: '24px', overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Username *</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Username *</label>
                   <input
                     type="text"
                     name="username"
@@ -529,8 +535,8 @@ export default function Users() {
                     style={{
                       width: '100%',
                       padding: '12px 16px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '12px',
                       outline: 'none',
                       fontSize: '14px',
@@ -541,13 +547,13 @@ export default function Users() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Email *</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Email *</label>
                   <input
                     type="email"
                     name="email"
@@ -557,8 +563,8 @@ export default function Users() {
                     style={{
                       width: '100%',
                       padding: '12px 16px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '12px',
                       outline: 'none',
                       fontSize: '14px',
@@ -569,13 +575,13 @@ export default function Users() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Password *</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Password *</label>
                   <input
                     type="password"
                     name="password"
@@ -585,8 +591,8 @@ export default function Users() {
                     style={{
                       width: '100%',
                       padding: '12px 16px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '12px',
                       outline: 'none',
                       fontSize: '14px',
@@ -597,14 +603,14 @@ export default function Users() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>First Name</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>First Name</label>
                     <input
                       type="text"
                       name="first_name"
@@ -614,8 +620,8 @@ export default function Users() {
                       style={{
                         width: '100%',
                         padding: '12px 16px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '12px',
                         outline: 'none',
                         fontSize: '14px',
@@ -626,13 +632,13 @@ export default function Users() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Last Name</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Last Name</label>
                     <input
                       type="text"
                       name="last_name"
@@ -642,8 +648,8 @@ export default function Users() {
                       style={{
                         width: '100%',
                         padding: '12px 16px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '12px',
                         outline: 'none',
                         fontSize: '14px',
@@ -654,14 +660,14 @@ export default function Users() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
                   </div>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Role</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Role</label>
                   <select
                     name="role"
                     value={formData.role}
@@ -669,8 +675,8 @@ export default function Users() {
                     style={{
                       width: '100%',
                       padding: '12px 16px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '12px',
                       outline: 'none',
                       fontSize: '14px',
@@ -682,7 +688,7 @@ export default function Users() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   >
@@ -693,7 +699,7 @@ export default function Users() {
                 </div>
               </div>
             </div>
-            <div style={{ padding: '24px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+            <div style={{ padding: '24px', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
               <button
                 onClick={() => {
                   setShowCreateModal(false)
@@ -702,16 +708,16 @@ export default function Users() {
                 style={{
                   padding: '10px 20px',
                   background: 'transparent',
-                  border: '1px solid #e2e8f0',
+                  border: '1px solid var(--border-color)',
                   borderRadius: '12px',
                   cursor: 'pointer',
                   fontSize: '14px',
                   fontWeight: '500',
-                  color: '#64748b',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f8fafc'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'

@@ -28,3 +28,4 @@ backend/uploads
 
 # Environment variables
 backend/.env
+backend/.env.bak

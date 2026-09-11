@@ -31,7 +31,10 @@ export default function Media() {
     try {
       // Force fresh fetch by clearing cache first
       api.clearRelatedCache('/media')
-      const data = await api.get('/media')
+      const response = await api.get('/media')
+      console.log('Media API response:', response)
+      const data = Array.isArray(response) ? response : (response.data || [])
+      console.log('Extracted data array:', data)
       setMediaItems(data)
       preloadImages(data)
       
@@ -40,6 +43,7 @@ export default function Media() {
       setFolders(uniqueFolders)
     } catch (error) {
       console.error('Failed to fetch media:', error)
+      setMediaItems([])
     } finally {
       setLoading(false)
     }
@@ -144,40 +148,9 @@ export default function Media() {
         }
       `}</style>
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div>
-          <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: '#0f172a' }}>Media Library</h1>
-          <p style={{ color: '#64748b', marginTop: '4px' }}>Manage images, files, and media assets</p>
-        </div>
-        <button
-          onClick={() => setShowUploadModal(true)}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            background: 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)',
-            color: 'white',
-            padding: '10px 20px',
-            borderRadius: '12px',
-            border: 'none',
-            cursor: 'pointer',
-            fontSize: '14px',
-            fontWeight: '500',
-            boxShadow: '0 4px 12px rgba(124, 58, 237, 0.3)',
-            transition: 'all 0.2s ease'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-2px)'
-            e.currentTarget.style.boxShadow = '0 6px 16px rgba(124, 58, 237, 0.4)'
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)'
-            e.currentTarget.style.boxShadow = '0 4px 12px rgba(124, 58, 237, 0.3)'
-          }}
-        >
-          <Upload style={{ width: '20px', height: '20px' }} />
-          Upload Files
-        </button>
+      <div>
+        <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: 'var(--text-primary)' }}>Media Library</h1>
+        <p style={{ color: 'var(--text-secondary)', marginTop: '4px' }}>Manage images, files, and media assets</p>
       </div>
 
       {/* Folders & Search */}
@@ -192,20 +165,20 @@ export default function Media() {
                 borderRadius: '12px',
                 whiteSpace: 'nowrap',
                 transition: 'all 0.2s ease',
-                border: selectedFolder === folder ? 'none' : '1px solid #e2e8f0',
-                background: selectedFolder === folder ? 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)' : 'white',
-                color: selectedFolder === folder ? 'white' : '#475569',
+                border: selectedFolder === folder ? 'none' : '1px solid var(--border-color)',
+                background: selectedFolder === folder ? 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)' : 'var(--bg-primary)',
+                color: selectedFolder === folder ? 'white' : 'var(--text-secondary)',
                 cursor: 'pointer',
                 boxShadow: selectedFolder === folder ? '0 4px 12px rgba(124, 58, 237, 0.3)' : 'none'
               }}
               onMouseEnter={(e) => {
                 if (selectedFolder !== folder) {
-                  e.currentTarget.style.background = '#f8fafc'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
                 }
               }}
               onMouseLeave={(e) => {
                 if (selectedFolder !== folder) {
-                  e.currentTarget.style.background = 'white'
+                  e.currentTarget.style.background = 'var(--bg-primary)'
                 }
               }}
             >
@@ -222,7 +195,7 @@ export default function Media() {
             transform: 'translateY(-50%)',
             width: '20px', 
             height: '20px', 
-            color: '#94a3b8' 
+            color: 'var(--text-secondary)' 
           }} />
           <input
             type="text"
@@ -234,8 +207,8 @@ export default function Media() {
               paddingLeft: '40px',
               paddingRight: '16px',
               padding: '10px 16px',
-              background: '#f8fafc',
-              border: '1px solid #e2e8f0',
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
               borderRadius: '12px',
               outline: 'none',
               fontSize: '14px',
@@ -246,7 +219,7 @@ export default function Media() {
               e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
             }}
             onBlur={(e) => {
-              e.currentTarget.style.borderColor = '#e2e8f0'
+              e.currentTarget.style.borderColor = 'var(--border-color)'
               e.currentTarget.style.boxShadow = 'none'
             }}
           />
@@ -261,10 +234,10 @@ export default function Media() {
       }}>
         {filteredMedia.map((item, index) => (
           <div key={item.id || `media-${index}`} style={{
-            background: 'rgba(255, 255, 255, 0.95)',
+            background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
             backdropFilter: 'blur(20px)',
             borderRadius: '16px',
-            border: '1px solid rgba(226, 232, 240, 0.8)',
+            border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
             boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
             overflow: 'hidden',
             transition: 'all 0.3s ease'
@@ -282,15 +255,15 @@ export default function Media() {
               background: item.type === 'image' && item.file_url && imagesLoaded[item.id]
                 ? `url(${item.file_url.startsWith('http') ? item.file_url : `${BASE_URL}${item.file_url}`}) center/cover no-repeat` 
                 : item.type === 'image' && item.file_url
-                ? 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100)'
-                : 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100)', 
+                ? 'linear-gradient(135deg, var(--bg-secondary) 0%, var(--border-color) 100)'
+                : 'linear-gradient(135deg, var(--bg-secondary) 0%, var(--border-color) 100)', 
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center',
               position: 'relative'
             }}>
               {item.type !== 'image' && (
-                <File style={{ width: '48px', height: '48px', color: '#94a3b8' }} />
+                <File style={{ width: '48px', height: '48px', color: 'var(--text-secondary)' }} />
               )}
               {item.type === 'image' && !imagesLoaded[item.id] && (
                 <div style={{ 
@@ -299,12 +272,12 @@ export default function Media() {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  background: 'rgba(255, 255, 255, 0.5)'
+                  background: 'color-mix(in srgb, var(--bg-primary) 50%, transparent)'
                 }}>
                   <div style={{ 
                     width: '32px', 
                     height: '32px', 
-                    border: '3px solid #e2e8f0',
+                    border: '3px solid var(--border-color)',
                     borderTop: '3px solid #7c3aed',
                     borderRadius: '50%',
                     animation: 'spin 1s linear infinite'
@@ -332,25 +305,25 @@ export default function Media() {
                   onClick={() => handleDownloadMedia(item)}
                   style={{
                     padding: '8px',
-                    background: 'white',
+                    background: 'var(--bg-primary)',
                     borderRadius: '8px',
                     border: 'none',
                     cursor: 'pointer',
                     transition: 'all 0.2s ease'
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = '#f1f5f9'
+                    e.currentTarget.style.background = 'var(--bg-secondary)'
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'white'
+                    e.currentTarget.style.background = 'var(--bg-primary)'
                   }}>
-                  <Download style={{ width: '16px', height: '16px', color: '#374151' }} />
+                  <Download style={{ width: '16px', height: '16px', color: 'var(--text-secondary)' }} />
                 </button>
                 <button 
                   onClick={() => handleDeleteMedia(item.id)}
                   style={{
                     padding: '8px',
-                    background: 'white',
+                    background: 'var(--bg-primary)',
                     borderRadius: '8px',
                     border: 'none',
                     cursor: 'pointer',
@@ -360,16 +333,16 @@ export default function Media() {
                     e.currentTarget.style.background = '#fef2f2'
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'white'
+                    e.currentTarget.style.background = 'var(--bg-primary)'
                   }}>
                   <Trash2 style={{ width: '16px', height: '16px', color: '#dc2626' }} />
                 </button>
               </div>
             </div>
             <div style={{ padding: '12px' }}>
-              <p style={{ fontSize: '14px', fontWeight: '500', color: '#0f172a', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}</p>
-              <p style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>{item.size}</p>
-              <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '4px' }}>{item.folder}</p>
+              <p style={{ fontSize: '14px', fontWeight: '500', color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}</p>
+              <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '4px' }}>{item.size}</p>
+              <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '4px' }}>{item.folder}</p>
             </div>
           </div>
         ))}
@@ -388,7 +361,7 @@ export default function Media() {
           zIndex: 50
         }}>
           <div style={{
-            background: 'white',
+            background: 'var(--bg-primary)',
             borderRadius: '16px',
             width: '100%',
             maxWidth: '600px',
@@ -398,12 +371,12 @@ export default function Media() {
           }}>
             <div style={{
               padding: '24px',
-              borderBottom: '1px solid #e2e8f0',
+              borderBottom: '1px solid var(--border-color)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-              <h2 style={{ fontSize: '20px', fontWeight: '600', color: '#0f172a' }}>Upload Files</h2>
+              <h2 style={{ fontSize: '20px', fontWeight: '600', color: 'var(--text-primary)' }}>Upload Files</h2>
               <button
                 onClick={() => setShowUploadModal(false)}
                 style={{
@@ -413,16 +386,16 @@ export default function Media() {
                   borderRadius: '8px',
                   cursor: 'pointer',
                   fontSize: '20px',
-                  color: '#94a3b8',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f1f5f9'
-                  e.currentTarget.style.color = '#64748b'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
-                  e.currentTarget.style.color = '#94a3b8'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
               >
                 ✕
@@ -431,15 +404,15 @@ export default function Media() {
             <div style={{ padding: '24px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Select Folder</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Select Folder</label>
                   <select 
                     value={uploadFolder}
                     onChange={(e) => setUploadFolder(e.target.value)}
                     style={{
                       width: '100%',
                       padding: '12px 16px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '12px',
                       outline: 'none',
                       fontSize: '14px',
@@ -451,7 +424,7 @@ export default function Media() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}>
                     {folders.filter(f => f !== 'All Files').map((folder, index) => (
@@ -470,21 +443,21 @@ export default function Media() {
                   <div 
                     onClick={() => document.getElementById('file-upload-input').click()}
                     style={{
-                      border: '2px dashed #e2e8f0',
+                      border: '2px dashed var(--border-color)',
                       borderRadius: '12px',
                       padding: '48px',
                       textAlign: 'center',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease',
-                      background: '#f8fafc'
+                      background: 'var(--bg-secondary)'
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.borderColor = '#7c3aed'
                       e.currentTarget.style.background = '#f5f3ff'
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
-                      e.currentTarget.style.background = '#f8fafc'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
+                      e.currentTarget.style.background = 'var(--bg-secondary)'
                     }}>
                     {uploadPreviews.length > 0 ? (
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', justifyContent: 'center' }}>
@@ -500,49 +473,49 @@ export default function Media() {
                             <div key={index} style={{ 
                               width: '80px', 
                               height: '80px', 
-                              background: '#f1f5f9', 
+                              background: 'var(--bg-secondary)', 
                               borderRadius: '8px', 
                               display: 'flex', 
                               alignItems: 'center', 
                               justifyContent: 'center' 
                             }}>
-                              <File style={{ width: '32px', height: '32px', color: '#94a3b8' }} />
+                              <File style={{ width: '32px', height: '32px', color: 'var(--text-secondary)' }} />
                             </div>
                           )
                         ))}
                       </div>
                     ) : (
                       <>
-                        <Upload style={{ width: '48px', height: '48px', color: '#94a3b8', margin: '0 auto 16px' }} />
-                        <p style={{ fontSize: '18px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Drop files here or click to upload</p>
-                        <p style={{ fontSize: '14px', color: '#64748b' }}>Support for images, PDFs, audio files, and more</p>
+                        <Upload style={{ width: '48px', height: '48px', color: 'var(--text-secondary)', margin: '0 auto 16px' }} />
+                        <p style={{ fontSize: '18px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Drop files here or click to upload</p>
+                        <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Support for images, PDFs, audio files, and more</p>
                       </>
                     )}
                   </div>
                   {uploadedFiles.length > 0 && (
-                    <p style={{ fontSize: '14px', color: '#64748b', marginTop: '12px', textAlign: 'center' }}>
+                    <p style={{ fontSize: '14px', color: 'var(--text-secondary)', marginTop: '12px', textAlign: 'center' }}>
                       {uploadedFiles.length} file{uploadedFiles.length > 1 ? 's' : ''} selected
                     </p>
                   )}
                 </div>
               </div>
             </div>
-            <div style={{ padding: '24px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+            <div style={{ padding: '24px', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
               <button
                 onClick={() => setShowUploadModal(false)}
                 style={{
                   padding: '10px 20px',
                   background: 'transparent',
-                  border: '1px solid #e2e8f0',
+                  border: '1px solid var(--border-color)',
                   borderRadius: '12px',
                   cursor: 'pointer',
                   fontSize: '14px',
                   fontWeight: '500',
-                  color: '#64748b',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f8fafc'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'

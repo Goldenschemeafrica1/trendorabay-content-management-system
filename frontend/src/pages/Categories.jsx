@@ -46,8 +46,8 @@ export default function Categories() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#0f172a' }}>Categories</h1>
-          <p style={{ color: '#64748b', marginTop: '2px', fontSize: '13px' }}>Manage content categories and tags</p>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--text-primary)' }}>Categories</h1>
+          <p style={{ color: 'var(--text-secondary)', marginTop: '2px', fontSize: '13px' }}>Manage content categories and tags</p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
@@ -83,11 +83,11 @@ export default function Categories() {
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
           padding: '12px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
@@ -103,15 +103,15 @@ export default function Categories() {
               <Folder style={{ width: '16px', height: '16px', color: '#2563eb' }} />
             </div>
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{totalCategories}</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Total Categories</p>
+          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>{totalCategories}</h3>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>Total Categories</p>
         </div>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
           padding: '12px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
@@ -127,8 +127,8 @@ export default function Categories() {
               <Tag style={{ width: '16px', height: '16px', color: '#16a34a' }} />
             </div>
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{totalItems}</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Total Items</p>
+          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>{totalItems}</h3>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>Total Items</p>
         </div>
       </div>
 
@@ -142,8 +142,8 @@ export default function Categories() {
           style={{
             width: '100%',
             padding: '8px 12px',
-            background: '#f8fafc',
-            border: '1px solid #e2e8f0',
+            background: 'var(--bg-secondary)',
+            border: '1px solid var(--border-color)',
             borderRadius: '10px',
             outline: 'none',
             fontSize: '13px',
@@ -168,10 +168,10 @@ export default function Categories() {
       }}>
         {filteredCategories.map((category) => (
           <div key={category.id} style={{
-            background: 'rgba(255, 255, 255, 0.95)',
+            background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
             backdropFilter: 'blur(20px)',
             borderRadius: '16px',
-            border: '1px solid rgba(226, 232, 240, 0.8)',
+            border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
             boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
             padding: '20px',
             transition: 'all 0.3s ease'
@@ -185,21 +185,21 @@ export default function Categories() {
             e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.08)'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-              <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#0f172a' }}>{category.name}</h3>
+              <h3 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)' }}>{category.name}</h3>
               <span style={{ 
                 padding: '3px 8px', 
                 borderRadius: '16px', 
                 fontSize: '11px', 
                 fontWeight: '500',
-                background: '#f1f5f9',
-                color: '#475569'
+                background: 'var(--bg-secondary)',
+                color: 'var(--text-secondary)'
               }}>
                 /{category.slug}
               </span>
             </div>
-            <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '12px' }}>{category.description}</p>
-            <div style={{ paddingTop: '12px', borderTop: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: '12px', color: '#64748b' }}>{category.count} items</span>
+            <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '12px' }}>{category.description}</p>
+            <div style={{ paddingTop: '12px', borderTop: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{category.count} items</span>
               <div style={{ display: 'flex', gap: '6px' }}>
                 <button style={{
                   padding: '6px',
@@ -210,12 +210,12 @@ export default function Categories() {
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f1f5f9'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
                 }}>
-                  <Edit style={{ width: '14px', height: '14px', color: '#64748b' }} />
+                  <Edit style={{ width: '14px', height: '14px', color: 'var(--text-secondary)' }} />
                 </button>
                 <button style={{
                   padding: '6px',
@@ -252,7 +252,7 @@ export default function Categories() {
           zIndex: 50
         }}>
           <div style={{
-            background: 'white',
+            background: 'var(--bg-primary)',
             borderRadius: '16px',
             width: '100%',
             maxWidth: '600px',
@@ -262,12 +262,12 @@ export default function Categories() {
           }}>
             <div style={{
               padding: '20px',
-              borderBottom: '1px solid #e2e8f0',
+              borderBottom: '1px solid var(--border-color)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-              <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a' }}>Add New Category</h2>
+              <h2 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)' }}>Add New Category</h2>
               <button
                 onClick={() => setShowCreateModal(false)}
                 style={{
@@ -277,16 +277,16 @@ export default function Categories() {
                   borderRadius: '8px',
                   cursor: 'pointer',
                   fontSize: '18px',
-                  color: '#94a3b8',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f1f5f9'
-                  e.currentTarget.style.color = '#64748b'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
-                  e.currentTarget.style.color = '#94a3b8'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
               >
                 ✕
@@ -295,15 +295,15 @@ export default function Categories() {
             <div style={{ padding: '20px', overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Category Name</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Category Name</label>
                   <input
                     type="text"
                     placeholder="Enter category name..."
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px',
@@ -314,21 +314,21 @@ export default function Categories() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Slug</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Slug</label>
                   <input
                     type="text"
                     placeholder="category-slug"
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px',
@@ -339,21 +339,21 @@ export default function Categories() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Description</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Description</label>
                   <textarea
                     placeholder="Enter description..."
                     rows={3}
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px',
@@ -365,29 +365,29 @@ export default function Categories() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
                 </div>
               </div>
             </div>
-            <div style={{ padding: '20px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+            <div style={{ padding: '20px', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
               <button
                 onClick={() => setShowCreateModal(false)}
                 style={{
                   padding: '8px 16px',
                   background: 'transparent',
-                  border: '1px solid #e2e8f0',
+                  border: '1px solid var(--border-color)',
                   borderRadius: '10px',
                   cursor: 'pointer',
                   fontSize: '13px',
                   fontWeight: '500',
-                  color: '#64748b',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f8fafc'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'

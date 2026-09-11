@@ -116,8 +116,8 @@ export default function AdvertisementInquiries() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#0f172a' }}>Advertisement Inquiries</h1>
-          <p style={{ color: '#64748b', marginTop: '2px', fontSize: '13px' }}>Manage incoming advertisement inquiries and requests</p>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--text-primary)' }}>Advertisement Inquiries</h1>
+          <p style={{ color: 'var(--text-secondary)', marginTop: '2px', fontSize: '13px' }}>Manage incoming advertisement inquiries and requests</p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
@@ -153,76 +153,85 @@ export default function AdvertisementInquiries() {
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
-          padding: '12px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
+          padding: '8px',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-            <div style={{ 
-              width: '32px', 
-              height: '32px', 
-              background: 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)', 
-              borderRadius: '10px', 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center'
-            }}>
-              <Mail style={{ width: '16px', height: '16px', color: '#2563eb' }} />
-            </div>
+          <div style={{ 
+            width: '32px', 
+            height: '32px', 
+            background: 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)', 
+            borderRadius: '10px', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center'
+          }}>
+            <Mail style={{ width: '16px', height: '16px', color: '#2563eb' }} />
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{totalInquiries}</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Total Inquiries</p>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--text-primary)', margin: 0 }}>{totalInquiries}</h3>
+            <p style={{ fontSize: '10px', color: 'var(--text-secondary)', margin: 0 }}>Total Inquiries</p>
+          </div>
         </div>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
-          padding: '12px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
+          padding: '8px',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-            <div style={{ 
-              width: '32px', 
-              height: '32px', 
-              background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)', 
-              borderRadius: '10px', 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center'
-            }}>
-              <Clock style={{ width: '16px', height: '16px', color: '#92400e' }} />
-            </div>
+          <div style={{ 
+            width: '32px', 
+            height: '32px', 
+            background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)', 
+            borderRadius: '10px', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center'
+          }}>
+            <Clock style={{ width: '16px', height: '16px', color: '#92400e' }} />
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{pendingInquiries}</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Pending</p>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--text-primary)', margin: 0 }}>{pendingInquiries}</h3>
+            <p style={{ fontSize: '10px', color: 'var(--text-secondary)', margin: 0 }}>Pending</p>
+          </div>
         </div>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
-          padding: '12px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
+          padding: '8px',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-            <div style={{ 
-              width: '32px', 
-              height: '32px', 
-              background: 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)', 
-              borderRadius: '10px', 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center'
-            }}>
-              <CheckCircle style={{ width: '16px', height: '16px', color: '#16a34a' }} />
-            </div>
+          <div style={{ 
+            width: '32px', 
+            height: '32px', 
+            background: 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)', 
+            borderRadius: '10px', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center'
+          }}>
+            <CheckCircle style={{ width: '16px', height: '16px', color: '#16a34a' }} />
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{approvedInquiries}</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Approved</p>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--text-primary)', margin: 0 }}>{approvedInquiries}</h3>
+            <p style={{ fontSize: '10px', color: 'var(--text-secondary)', margin: 0 }}>Approved</p>
+          </div>
         </div>
       </div>
 
@@ -237,8 +246,8 @@ export default function AdvertisementInquiries() {
             style={{
               width: '100%',
               padding: '8px 12px',
-              background: '#f8fafc',
-              border: '1px solid #e2e8f0',
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
               borderRadius: '10px',
               outline: 'none',
               fontSize: '13px',
@@ -249,7 +258,7 @@ export default function AdvertisementInquiries() {
               e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
             }}
             onBlur={(e) => {
-              e.currentTarget.style.borderColor = '#e2e8f0'
+              e.currentTarget.style.borderColor = 'var(--border-color)'
               e.currentTarget.style.boxShadow = 'none'
             }}
           />
@@ -259,8 +268,8 @@ export default function AdvertisementInquiries() {
           onChange={(e) => setFilterStatus(e.target.value)}
           style={{
             padding: '8px 12px',
-            background: '#f8fafc',
-            border: '1px solid #e2e8f0',
+            background: 'var(--bg-secondary)',
+            border: '1px solid var(--border-color)',
             borderRadius: '10px',
             outline: 'none',
             fontSize: '13px',
@@ -277,44 +286,44 @@ export default function AdvertisementInquiries() {
 
       {/* Inquiries Table */}
       <div style={{
-        background: 'rgba(255, 255, 255, 0.95)',
+        background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
         backdropFilter: 'blur(20px)',
         borderRadius: '16px',
-        border: '1px solid rgba(226, 232, 240, 0.8)',
+        border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
         overflow: 'hidden'
       }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+          <thead style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}>
             <tr>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Contact</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Company</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Budget</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Duration</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Date</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Status</th>
-              <th style={{ textAlign: 'right', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Actions</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Contact</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Company</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Budget</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Duration</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Date</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Status</th>
+              <th style={{ textAlign: 'right', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredInquiries.map((inquiry) => (
-              <tr key={inquiry.id} style={{ borderBottom: '1px solid #e2e8f0', transition: 'background 0.2s ease' }}
+              <tr key={inquiry.id} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background 0.2s ease' }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#f8fafc'
+                e.currentTarget.style.background = 'var(--bg-secondary)'
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = 'transparent'
               }}>
                 <td style={{ padding: '12px 16px' }}>
                   <div>
-                    <span style={{ fontWeight: '500', color: '#0f172a', fontSize: '13px' }}>{inquiry.name || inquiry.contact_name || '-'}</span>
+                    <span style={{ fontWeight: '500', color: 'var(--text-primary)', fontSize: '13px' }}>{inquiry.name || inquiry.contact_name || '-'}</span>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '4px' }}>
-                      <span style={{ fontSize: '11px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                         <Mail style={{ width: '10px', height: '10px' }} />
                         {inquiry.email || inquiry.contact_email || '-'}
                       </span>
                       {(inquiry.phone || inquiry.contact_phone) && (
-                        <span style={{ fontSize: '11px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                           <Phone style={{ width: '10px', height: '10px' }} />
                           {inquiry.phone || inquiry.contact_phone}
                         </span>
@@ -322,16 +331,16 @@ export default function AdvertisementInquiries() {
                     </div>
                   </div>
                 </td>
-                <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>
                   {inquiry.company || inquiry.company_name || '-'}
                 </td>
-                <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>
                   {inquiry.budget_range || inquiry.budgetRange || '-'}
                 </td>
-                <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>
                   {inquiry.preferred_duration || inquiry.preferredDuration || '-'}
                 </td>
-                <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>
                   {inquiry.inquiryDate || inquiry.inquiry_date || inquiry.created_at || '-'}
                 </td>
                 <td style={{ padding: '12px 16px' }}>
@@ -341,7 +350,7 @@ export default function AdvertisementInquiries() {
                     fontSize: '11px', 
                     fontWeight: '500',
                     background: inquiry.status === 'approved' ? '#dcfce7' : inquiry.status === 'pending' ? '#fef3c7' : '#f1f5f9',
-                    color: inquiry.status === 'approved' ? '#166534' : inquiry.status === 'pending' ? '#92400e' : '#475569'
+                    color: inquiry.status === 'approved' ? '#166534' : inquiry.status === 'pending' ? '#92400e' : 'var(--text-secondary)'
                   }}>
                     {inquiry.status ? inquiry.status.charAt(0).toUpperCase() + inquiry.status.slice(1) : 'Unknown'}
                   </span>
@@ -430,7 +439,7 @@ export default function AdvertisementInquiries() {
           zIndex: 50
         }}>
           <div style={{
-            background: 'white',
+            background: 'var(--bg-primary)',
             borderRadius: '16px',
             width: '100%',
             maxWidth: '600px',
@@ -440,12 +449,12 @@ export default function AdvertisementInquiries() {
           }}>
             <div style={{
               padding: '20px',
-              borderBottom: '1px solid #e2e8f0',
+              borderBottom: '1px solid var(--border-color)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-              <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a' }}>Add New Inquiry</h2>
+              <h2 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)' }}>Add New Inquiry</h2>
               <button
                 onClick={() => setShowCreateModal(false)}
                 style={{
@@ -455,16 +464,16 @@ export default function AdvertisementInquiries() {
                   borderRadius: '8px',
                   cursor: 'pointer',
                   fontSize: '18px',
-                  color: '#94a3b8',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = '#f1f5f9'
-                  e.currentTarget.style.color = '#64748b'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
-                  e.currentTarget.style.color = '#94a3b8'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
               >
                 ✕
@@ -473,7 +482,7 @@ export default function AdvertisementInquiries() {
             <div style={{ padding: '20px', overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Contact Name</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Contact Name</label>
                   <input
                     type="text"
                     name="contact_name"
@@ -483,8 +492,8 @@ export default function AdvertisementInquiries() {
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px'
@@ -492,7 +501,7 @@ export default function AdvertisementInquiries() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Email</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Email</label>
                   <input
                     type="email"
                     name="contact_email"
@@ -502,8 +511,8 @@ export default function AdvertisementInquiries() {
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px'
@@ -511,7 +520,7 @@ export default function AdvertisementInquiries() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Phone</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Phone</label>
                   <input
                     type="tel"
                     name="contact_phone"
@@ -521,8 +530,8 @@ export default function AdvertisementInquiries() {
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px'
@@ -530,7 +539,7 @@ export default function AdvertisementInquiries() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Company Name</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Company Name</label>
                   <input
                     type="text"
                     name="company_name"
@@ -540,8 +549,8 @@ export default function AdvertisementInquiries() {
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px'
@@ -549,7 +558,7 @@ export default function AdvertisementInquiries() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Message</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Message</label>
                   <textarea
                     name="message"
                     value={formData.message}
@@ -559,8 +568,8 @@ export default function AdvertisementInquiries() {
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px',
@@ -570,7 +579,7 @@ export default function AdvertisementInquiries() {
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Budget Range</label>
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Budget Range</label>
                     <input
                       type="text"
                       name="budget_range"
@@ -580,8 +589,8 @@ export default function AdvertisementInquiries() {
                       style={{
                         width: '100%',
                         padding: '10px 12px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '10px',
                         outline: 'none',
                         fontSize: '13px'
@@ -589,7 +598,7 @@ export default function AdvertisementInquiries() {
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Preferred Duration</label>
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Preferred Duration</label>
                     <input
                       type="text"
                       name="preferred_duration"
@@ -599,8 +608,8 @@ export default function AdvertisementInquiries() {
                       style={{
                         width: '100%',
                         padding: '10px 12px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '10px',
                         outline: 'none',
                         fontSize: '13px'
@@ -609,7 +618,7 @@ export default function AdvertisementInquiries() {
                   </div>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Status</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Status</label>
                   <select 
                     name="status"
                     value={formData.status}
@@ -617,8 +626,8 @@ export default function AdvertisementInquiries() {
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px',
@@ -632,18 +641,18 @@ export default function AdvertisementInquiries() {
                 </div>
               </div>
             </div>
-            <div style={{ padding: '20px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+            <div style={{ padding: '20px', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
               <button
                 onClick={() => setShowCreateModal(false)}
                 style={{
                   padding: '8px 16px',
                   background: 'transparent',
-                  border: '1px solid #e2e8f0',
+                  border: '1px solid var(--border-color)',
                   borderRadius: '10px',
                   cursor: 'pointer',
                   fontSize: '13px',
                   fontWeight: '500',
-                  color: '#64748b'
+                  color: 'var(--text-secondary)'
                 }}
               >
                 Cancel

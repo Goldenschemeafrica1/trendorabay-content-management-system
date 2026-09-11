@@ -185,8 +185,8 @@ export default function Events() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#0f172a' }}>Events</h1>
-          <p style={{ color: '#64748b', marginTop: '2px', fontSize: '13px' }}>Manage community events and gatherings</p>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--text-primary)' }}>Events</h1>
+          <p style={{ color: 'var(--text-secondary)', marginTop: '2px', fontSize: '13px' }}>Manage community events and gatherings</p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
@@ -222,11 +222,11 @@ export default function Events() {
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
           padding: '8px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
           display: 'flex',
           alignItems: 'center',
@@ -245,16 +245,16 @@ export default function Events() {
             <Calendar style={{ width: '16px', height: '16px', color: '#2563eb' }} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#0f172a', margin: 0 }}>{totalEvents}</h3>
-            <p style={{ fontSize: '10px', color: '#64748b', margin: 0 }}>Total Events</p>
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--text-primary)', margin: 0 }}>{totalEvents}</h3>
+            <p style={{ fontSize: '10px', color: 'var(--text-secondary)', margin: 0 }}>Total Events</p>
           </div>
         </div>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
           padding: '8px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
           display: 'flex',
           alignItems: 'center',
@@ -273,16 +273,16 @@ export default function Events() {
             <Clock style={{ width: '16px', height: '16px', color: '#16a34a' }} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#0f172a', margin: 0 }}>{upcomingEvents}</h3>
-            <p style={{ fontSize: '10px', color: '#64748b', margin: 0 }}>Upcoming Events</p>
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--text-primary)', margin: 0 }}>{upcomingEvents}</h3>
+            <p style={{ fontSize: '10px', color: 'var(--text-secondary)', margin: 0 }}>Upcoming Events</p>
           </div>
         </div>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
           padding: '8px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
           display: 'flex',
           alignItems: 'center',
@@ -301,8 +301,8 @@ export default function Events() {
             <Users style={{ width: '16px', height: '16px', color: '#9333ea' }} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#0f172a', margin: 0 }}>{totalAttendees}</h3>
-            <p style={{ fontSize: '10px', color: '#64748b', margin: 0 }}>Total Attendees</p>
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--text-primary)', margin: 0 }}>{totalAttendees}</h3>
+            <p style={{ fontSize: '10px', color: 'var(--text-secondary)', margin: 0 }}>Total Attendees</p>
           </div>
         </div>
       </div>
@@ -318,8 +318,8 @@ export default function Events() {
             style={{
               width: '100%',
               padding: '8px 12px',
-              background: '#f8fafc',
-              border: '1px solid #e2e8f0',
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
               borderRadius: '10px',
               outline: 'none',
               fontSize: '13px',
@@ -330,7 +330,7 @@ export default function Events() {
               e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
             }}
             onBlur={(e) => {
-              e.currentTarget.style.borderColor = '#e2e8f0'
+              e.currentTarget.style.borderColor = 'var(--border-color)'
               e.currentTarget.style.boxShadow = 'none'
             }}
           />
@@ -365,50 +365,50 @@ export default function Events() {
 
       {/* Events Table */}
       <div style={{
-        background: 'rgba(255, 255, 255, 0.95)',
+        background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
         backdropFilter: 'blur(20px)',
         borderRadius: '16px',
-        border: '1px solid rgba(226, 232, 240, 0.8)',
+        border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
         overflow: 'hidden'
       }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+          <thead style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}>
             <tr>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Event</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Date</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Location</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Attendees</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Type</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Status</th>
-              <th style={{ textAlign: 'right', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Actions</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Event</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Date</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Location</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Attendees</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Type</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Status</th>
+              <th style={{ textAlign: 'right', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredEvents.map((event, index) => (
-              <tr key={event.id || `event-${index}`} style={{ borderBottom: '1px solid #e2e8f0', transition: 'background 0.2s ease' }}
+              <tr key={event.id || `event-${index}`} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background 0.2s ease' }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#f8fafc'
+                e.currentTarget.style.background = 'var(--bg-secondary)'
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = 'transparent'
               }}>
                 <td style={{ padding: '12px 16px' }}>
-                  <span style={{ fontWeight: '500', color: '#0f172a', fontSize: '13px' }}>{event.title}</span>
+                  <span style={{ fontWeight: '500', color: 'var(--text-primary)', fontSize: '13px' }}>{event.title}</span>
                 </td>
-                <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>
                   {event.event_date ? new Date(event.event_date).toLocaleDateString() : 'N/A'}
                 </td>
-                <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{event.location}</td>
-                <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{event.attendees}</td>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{event.location}</td>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{event.attendees}</td>
                 <td style={{ padding: '12px 16px' }}>
                   <span style={{ 
                     padding: '3px 8px', 
                     borderRadius: '16px', 
                     fontSize: '11px', 
                     fontWeight: '500',
-                    background: '#f1f5f9',
-                    color: '#475569'
+                    background: 'var(--bg-secondary)',
+                    color: 'var(--text-secondary)'
                   }}>
                     {event.type}
                   </span>
@@ -438,12 +438,12 @@ export default function Events() {
                         transition: 'all 0.2s ease'
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.background = '#f1f5f9'
+                        e.currentTarget.style.background = 'var(--bg-secondary)'
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.background = 'transparent'
                       }}>
-                      <Edit style={{ width: '14px', height: '14px', color: '#64748b' }} />
+                      <Edit style={{ width: '14px', height: '14px', color: 'var(--text-secondary)' }} />
                     </button>
                     <button 
                       onClick={() => handleDeleteEvent(event.id)}
@@ -484,7 +484,7 @@ export default function Events() {
           zIndex: 50
         }}>
           <div style={{
-            background: 'white',
+            background: 'var(--bg-primary)',
             borderRadius: '16px',
             width: '100%',
             maxWidth: '600px',
@@ -494,12 +494,12 @@ export default function Events() {
           }}>
             <div style={{
               padding: '20px',
-              borderBottom: '1px solid #e2e8f0',
+              borderBottom: '1px solid var(--border-color)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-              <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a' }}>Add New Event</h2>
+              <h2 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)' }}>Add New Event</h2>
               <button
                 onClick={() => setShowCreateModal(false)}
                 style={{
@@ -509,12 +509,12 @@ export default function Events() {
                   borderRadius: '8px',
                   cursor: 'pointer',
                   fontSize: '18px',
-                  color: '#94a3b8',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = '#f1f5f9'
-                  e.currentTarget.style.color = '#64748b'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
@@ -549,7 +549,7 @@ export default function Events() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
@@ -578,7 +578,7 @@ export default function Events() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
@@ -606,7 +606,7 @@ export default function Events() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
@@ -633,7 +633,7 @@ export default function Events() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
@@ -662,7 +662,7 @@ export default function Events() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
@@ -689,7 +689,7 @@ export default function Events() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
@@ -723,7 +723,7 @@ export default function Events() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
@@ -751,7 +751,7 @@ export default function Events() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
@@ -781,7 +781,7 @@ export default function Events() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
@@ -808,7 +808,7 @@ export default function Events() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}>
                       <option value="In-Person">In-Person</option>
@@ -839,7 +839,7 @@ export default function Events() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}>
                     <option value="Conference">Conference</option>
@@ -916,7 +916,7 @@ export default function Events() {
           zIndex: 50
         }}>
           <div style={{
-            background: 'white',
+            background: 'var(--bg-primary)',
             borderRadius: '16px',
             width: '100%',
             maxWidth: '600px',
@@ -926,7 +926,7 @@ export default function Events() {
           }}>
             <div style={{
               padding: '20px',
-              borderBottom: '1px solid #e2e8f0',
+              borderBottom: '1px solid var(--border-color)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
@@ -941,12 +941,12 @@ export default function Events() {
                   borderRadius: '8px',
                   cursor: 'pointer',
                   fontSize: '18px',
-                  color: '#94a3b8',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = '#f1f5f9'
-                  e.currentTarget.style.color = '#64748b'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
@@ -981,7 +981,7 @@ export default function Events() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
@@ -1010,7 +1010,7 @@ export default function Events() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
@@ -1038,7 +1038,7 @@ export default function Events() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
@@ -1065,7 +1065,7 @@ export default function Events() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
@@ -1094,7 +1094,7 @@ export default function Events() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
@@ -1121,7 +1121,7 @@ export default function Events() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
@@ -1155,7 +1155,7 @@ export default function Events() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
@@ -1183,7 +1183,7 @@ export default function Events() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
@@ -1213,7 +1213,7 @@ export default function Events() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
@@ -1240,7 +1240,7 @@ export default function Events() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}>
                       <option value="In-Person">In-Person</option>
@@ -1271,7 +1271,7 @@ export default function Events() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}>
                     <option value="Conference">Conference</option>

@@ -29,16 +29,16 @@ export default function Performance() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#0f172a' }}>Content Performance</h1>
-          <p style={{ color: '#64748b', marginTop: '2px', fontSize: '13px' }}>Track content metrics and performance analytics</p>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--text-primary)' }}>Content Performance</h1>
+          <p style={{ color: 'var(--text-secondary)', marginTop: '2px', fontSize: '13px' }}>Track content metrics and performance analytics</p>
         </div>
         <select
           value={timeRange}
           onChange={(e) => setTimeRange(e.target.value)}
           style={{
             padding: '8px 12px',
-            background: '#f8fafc',
-            border: '1px solid #e2e8f0',
+            background: 'var(--bg-secondary)',
+            border: '1px solid var(--border-color)',
             borderRadius: '10px',
             outline: 'none',
             fontSize: '13px',
@@ -50,7 +50,7 @@ export default function Performance() {
             e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
           }}
           onBlur={(e) => {
-            e.currentTarget.style.borderColor = '#e2e8f0'
+            e.currentTarget.style.borderColor = 'var(--border-color)'
             e.currentTarget.style.boxShadow = 'none'
           }}
         >
@@ -63,11 +63,11 @@ export default function Performance() {
       {/* Stats Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
           padding: '12px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
@@ -93,15 +93,15 @@ export default function Performance() {
               +14.2%
             </span>
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{totalViews.toLocaleString()}</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Total Views</p>
+          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>{totalViews.toLocaleString()}</h3>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>Total Views</p>
         </div>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
           padding: '12px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
@@ -127,15 +127,15 @@ export default function Performance() {
               +8.5%
             </span>
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{avgEngagement}%</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Avg. Engagement</p>
+          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>{avgEngagement}%</h3>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>Avg. Engagement</p>
         </div>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
           padding: '12px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
@@ -161,13 +161,13 @@ export default function Performance() {
               +6.8%
             </span>
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>6:55</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Avg. Time on Site</p>
+          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>6:55</h3>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>Avg. Time on Site</p>
         </div>
       </div>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: '4px', borderBottom: '1px solid #e2e8f0' }}>
+      <div style={{ display: 'flex', gap: '4px', borderBottom: '1px solid var(--border-color)' }}>
         <button
           onClick={() => setSelectedTab('overview')}
           style={{
@@ -178,12 +178,12 @@ export default function Performance() {
             cursor: 'pointer',
             fontSize: '13px',
             fontWeight: '500',
-            color: selectedTab === 'overview' ? 'white' : '#64748b',
+            color: selectedTab === 'overview' ? 'white' : 'var(--text-secondary)',
             transition: 'all 0.2s ease'
           }}
           onMouseEnter={(e) => {
             if (selectedTab !== 'overview') {
-              e.currentTarget.style.background = '#f1f5f9'
+              e.currentTarget.style.background = 'var(--bg-secondary)'
             }
           }}
           onMouseLeave={(e) => {
@@ -204,12 +204,12 @@ export default function Performance() {
             cursor: 'pointer',
             fontSize: '13px',
             fontWeight: '500',
-            color: selectedTab === 'top' ? 'white' : '#64748b',
+            color: selectedTab === 'top' ? 'white' : 'var(--text-secondary)',
             transition: 'all 0.2s ease'
           }}
           onMouseEnter={(e) => {
             if (selectedTab !== 'top') {
-              e.currentTarget.style.background = '#f1f5f9'
+              e.currentTarget.style.background = 'var(--bg-secondary)'
             }
           }}
           onMouseLeave={(e) => {
@@ -225,36 +225,36 @@ export default function Performance() {
       {/* Content */}
       {selectedTab === 'overview' && (
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
           overflow: 'hidden'
         }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+            <thead style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}>
               <tr>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Content Type</th>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Views</th>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Engagement</th>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Avg. Time</th>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Growth</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Content Type</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Views</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Engagement</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Avg. Time</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Growth</th>
               </tr>
             </thead>
             <tbody>
               {performanceData.map((item, index) => (
-                <tr key={index} style={{ borderBottom: '1px solid #e2e8f0', transition: 'background 0.2s ease' }}
+                <tr key={index} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background 0.2s ease' }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f8fafc'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
                 }}>
                   <td style={{ padding: '12px 16px' }}>
-                    <span style={{ fontWeight: '500', color: '#0f172a', fontSize: '13px' }}>{item.type}</span>
+                    <span style={{ fontWeight: '500', color: 'var(--text-primary)', fontSize: '13px' }}>{item.type}</span>
                   </td>
-                  <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{item.views.toLocaleString()}</td>
+                  <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{item.views.toLocaleString()}</td>
                   <td style={{ padding: '12px 16px' }}>
                     <span style={{ 
                       padding: '3px 8px', 
@@ -267,7 +267,7 @@ export default function Performance() {
                       {item.engagement}%
                     </span>
                   </td>
-                  <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{item.avgTime}</td>
+                  <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{item.avgTime}</td>
                   <td style={{ padding: '12px 16px' }}>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '13px', color: '#16a34a' }}>
                       <ArrowUpRight style={{ width: '14px', height: '14px' }} />
@@ -283,34 +283,34 @@ export default function Performance() {
 
       {selectedTab === 'top' && (
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
           overflow: 'hidden'
         }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+            <thead style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}>
               <tr>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Content</th>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Type</th>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Views</th>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Engagement</th>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Date</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Content</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Type</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Views</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Engagement</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Date</th>
               </tr>
             </thead>
             <tbody>
               {topPerforming.map((item, index) => (
-                <tr key={index} style={{ borderBottom: '1px solid #e2e8f0', transition: 'background 0.2s ease' }}
+                <tr key={index} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background 0.2s ease' }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f8fafc'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
                 }}>
                   <td style={{ padding: '12px 16px' }}>
-                    <span style={{ fontWeight: '500', color: '#0f172a', fontSize: '13px' }}>{item.title}</span>
+                    <span style={{ fontWeight: '500', color: 'var(--text-primary)', fontSize: '13px' }}>{item.title}</span>
                   </td>
                   <td style={{ padding: '12px 16px' }}>
                     <span style={{ 
@@ -318,13 +318,13 @@ export default function Performance() {
                       borderRadius: '16px', 
                       fontSize: '11px', 
                       fontWeight: '500',
-                      background: '#f1f5f9',
-                      color: '#475569'
+                      background: 'var(--bg-secondary)',
+                      color: 'var(--text-secondary)'
                     }}>
                       {item.type}
                     </span>
                   </td>
-                  <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{item.views.toLocaleString()}</td>
+                  <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{item.views.toLocaleString()}</td>
                   <td style={{ padding: '12px 16px' }}>
                     <span style={{ 
                       padding: '3px 8px', 
@@ -337,7 +337,7 @@ export default function Performance() {
                       {item.engagement}%
                     </span>
                   </td>
-                  <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{item.date}</td>
+                  <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{item.date}</td>
                 </tr>
               ))}
             </tbody>

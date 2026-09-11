@@ -17,14 +17,17 @@ const upload = uploadFields([
 // Get all podcasts (public read, editor+ for full access)
 router.get('/', optionalAuth, async (req, res) => {
   try {
+    console.log('[GET /api/podcasts] Fetching podcasts...');
     const [rows] = await db.query(`
       SELECT p.*, c.name as category_name 
       FROM podcasts p 
       LEFT JOIN categories c ON p.category_id = c.id
       ORDER BY p.created_at DESC
     `);
+    console.log('[GET /api/podcasts] Successfully fetched', rows.length, 'podcasts');
     res.json(rows);
   } catch (error) {
+    console.error('[GET /api/podcasts] Error:', error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -107,8 +110,7 @@ router.post('/', authenticate, isEditor, upload, async (req, res) => {
     res.status(201).json({ id: result.insertId, message: 'Podcast created successfully' });
   } catch (error) {
     console.error('Error creating podcast:', error);
-    console.error('Error details:', error.sqlMessage || error.message);
-    res.status(500).json({ error: error.message, details: error.sqlMessage });
+    res.status(500).json({ error: 'Failed to create podcast' });
   }
 });
 

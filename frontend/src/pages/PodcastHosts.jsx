@@ -97,8 +97,8 @@ export default function PodcastHosts() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#0f172a' }}>Podcast Hosts</h1>
-          <p style={{ color: '#64748b', marginTop: '2px', fontSize: '13px' }}>Manage podcast hosts and presenters</p>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--text-primary)' }}>Podcast Hosts</h1>
+          <p style={{ color: 'var(--text-secondary)', marginTop: '2px', fontSize: '13px' }}>Manage podcast hosts and presenters</p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
@@ -134,11 +134,11 @@ export default function PodcastHosts() {
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
           padding: '12px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
@@ -154,15 +154,15 @@ export default function PodcastHosts() {
               <User style={{ width: '16px', height: '16px', color: '#2563eb' }} />
             </div>
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{totalHosts}</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Total Hosts</p>
+          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>{totalHosts}</h3>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>Total Hosts</p>
         </div>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
           padding: '12px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
@@ -178,8 +178,8 @@ export default function PodcastHosts() {
               <CheckCircle style={{ width: '16px', height: '16px', color: '#16a34a' }} />
             </div>
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{activeHosts}</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Active Hosts</p>
+          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>{activeHosts}</h3>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>Active Hosts</p>
         </div>
       </div>
 
@@ -194,8 +194,8 @@ export default function PodcastHosts() {
             style={{
               width: '100%',
               padding: '8px 12px',
-              background: '#f8fafc',
-              border: '1px solid #e2e8f0',
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
               borderRadius: '10px',
               outline: 'none',
               fontSize: '13px',
@@ -206,7 +206,7 @@ export default function PodcastHosts() {
               e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
             }}
             onBlur={(e) => {
-              e.currentTarget.style.borderColor = '#e2e8f0'
+              e.currentTarget.style.borderColor = 'var(--border-color)'
               e.currentTarget.style.boxShadow = 'none'
             }}
           />
@@ -216,8 +216,8 @@ export default function PodcastHosts() {
           onChange={(e) => setFilterStatus(e.target.value)}
           style={{
             padding: '8px 12px',
-            background: '#f8fafc',
-            border: '1px solid #e2e8f0',
+            background: 'var(--bg-secondary)',
+            border: '1px solid var(--border-color)',
             borderRadius: '10px',
             outline: 'none',
             fontSize: '13px',
@@ -233,28 +233,28 @@ export default function PodcastHosts() {
 
       {/* Hosts Table */}
       <div style={{
-        background: 'rgba(255, 255, 255, 0.95)',
+        background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
         backdropFilter: 'blur(20px)',
         borderRadius: '16px',
-        border: '1px solid rgba(226, 232, 240, 0.8)',
+        border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
         overflow: 'hidden'
       }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+          <thead style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}>
             <tr>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Host</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Email</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Joined</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Status</th>
-              <th style={{ textAlign: 'right', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Actions</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Host</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Email</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Joined</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Status</th>
+              <th style={{ textAlign: 'right', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredHosts.map((host) => (
-              <tr key={host.id} style={{ borderBottom: '1px solid #e2e8f0', transition: 'background 0.2s ease' }}
+              <tr key={host.id} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background 0.2s ease' }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#f8fafc'
+                e.currentTarget.style.background = 'var(--bg-secondary)'
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = 'transparent'
@@ -264,29 +264,29 @@ export default function PodcastHosts() {
                     <div style={{
                       width: '40px',
                       height: '40px',
-                      background: '#e2e8f0',
+                      background: 'var(--border-color)',
                       borderRadius: '50%',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       flexShrink: 0
                     }}>
-                      <User style={{ width: '18px', height: '18px', color: '#94a3b8' }} />
+                      <User style={{ width: '18px', height: '18px', color: 'var(--text-secondary)' }} />
                     </div>
                     <div>
-                      <p style={{ fontWeight: '500', color: '#0f172a', fontSize: '13px' }}>{host.name}</p>
+                      <p style={{ fontWeight: '500', color: 'var(--text-primary)', fontSize: '13px' }}>{host.name}</p>
                       {host.bio && (
-                        <p style={{ fontSize: '11px', color: '#64748b', marginTop: '2px', maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px', maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                           {host.bio}
                         </p>
                       )}
                     </div>
                   </div>
                 </td>
-                <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>
                   {host.email || '-'}
                 </td>
-                <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>
                   {host.created_at ? new Date(host.created_at).toISOString().split('T')[0] : '-'}
                 </td>
                 <td style={{ padding: '12px 16px' }}>
@@ -295,8 +295,8 @@ export default function PodcastHosts() {
                     borderRadius: '16px', 
                     fontSize: '11px', 
                     fontWeight: '500',
-                    background: host.status === 'active' ? '#dcfce7' : '#f1f5f9',
-                    color: host.status === 'active' ? '#166534' : '#475569'
+                    background: host.status === 'active' ? '#dcfce7' : 'var(--bg-secondary)',
+                    color: host.status === 'active' ? '#166534' : 'var(--text-secondary)'
                   }}>
                     {host.status ? host.status.charAt(0).toUpperCase() + host.status.slice(1) : 'Unknown'}
                   </span>
@@ -312,12 +312,12 @@ export default function PodcastHosts() {
                       transition: 'all 0.2s ease'
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = '#f1f5f9'
+                      e.currentTarget.style.background = 'var(--bg-secondary)'
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.background = 'transparent'
                     }}>
-                      <Edit style={{ width: '14px', height: '14px', color: '#64748b' }} />
+                      <Edit style={{ width: '14px', height: '14px', color: 'var(--text-secondary)' }} />
                     </button>
                     <button 
                       onClick={() => handleDeleteHost(host.id)}
@@ -358,7 +358,7 @@ export default function PodcastHosts() {
           zIndex: 50
         }}>
           <div style={{
-            background: 'white',
+            background: 'var(--bg-primary)',
             borderRadius: '16px',
             width: '100%',
             maxWidth: '600px',
@@ -368,12 +368,12 @@ export default function PodcastHosts() {
           }}>
             <div style={{
               padding: '20px',
-              borderBottom: '1px solid #e2e8f0',
+              borderBottom: '1px solid var(--border-color)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-              <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a' }}>Add New Host</h2>
+              <h2 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)' }}>Add New Host</h2>
               <button
                 onClick={() => setShowCreateModal(false)}
                 style={{
@@ -383,16 +383,16 @@ export default function PodcastHosts() {
                   borderRadius: '8px',
                   cursor: 'pointer',
                   fontSize: '18px',
-                  color: '#94a3b8',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f1f5f9'
-                  e.currentTarget.style.color = '#64748b'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
-                  e.currentTarget.style.color = '#94a3b8'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
               >
                 ✕
@@ -401,7 +401,7 @@ export default function PodcastHosts() {
             <div style={{ padding: '20px', overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Host Name</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Host Name</label>
                   <input
                     type="text"
                     name="name"
@@ -411,8 +411,8 @@ export default function PodcastHosts() {
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px'
@@ -420,7 +420,7 @@ export default function PodcastHosts() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Email</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Email</label>
                   <input
                     type="email"
                     name="email"
@@ -430,8 +430,8 @@ export default function PodcastHosts() {
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px'
@@ -439,7 +439,7 @@ export default function PodcastHosts() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Bio</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Bio</label>
                   <textarea
                     name="bio"
                     value={formData.bio}
@@ -449,8 +449,8 @@ export default function PodcastHosts() {
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px',
@@ -459,7 +459,7 @@ export default function PodcastHosts() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Status</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Status</label>
                   <select 
                     name="status"
                     value={formData.status}
@@ -467,8 +467,8 @@ export default function PodcastHosts() {
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px',
@@ -481,18 +481,18 @@ export default function PodcastHosts() {
                 </div>
               </div>
             </div>
-            <div style={{ padding: '20px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+            <div style={{ padding: '20px', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
               <button
                 onClick={() => setShowCreateModal(false)}
                 style={{
                   padding: '8px 16px',
                   background: 'transparent',
-                  border: '1px solid #e2e8f0',
+                  border: '1px solid var(--border-color)',
                   borderRadius: '10px',
                   cursor: 'pointer',
                   fontSize: '13px',
                   fontWeight: '500',
-                  color: '#64748b'
+                  color: 'var(--text-secondary)'
                 }}
               >
                 Cancel

@@ -42,8 +42,8 @@ export default function Subscribers() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#0f172a' }}>Subscribers</h1>
-          <p style={{ color: '#64748b', marginTop: '2px', fontSize: '13px' }}>Manage subscription accounts and billing</p>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--text-primary)' }}>Subscribers</h1>
+          <p style={{ color: 'var(--text-secondary)', marginTop: '2px', fontSize: '13px' }}>Manage subscription accounts and billing</p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
@@ -79,11 +79,11 @@ export default function Subscribers() {
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
           padding: '12px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
@@ -99,15 +99,15 @@ export default function Subscribers() {
               <User style={{ width: '16px', height: '16px', color: '#2563eb' }} />
             </div>
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{totalSubscribers}</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Total Subscribers</p>
+          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>{totalSubscribers}</h3>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>Total Subscribers</p>
         </div>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
           padding: '12px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
@@ -123,15 +123,15 @@ export default function Subscribers() {
               <CheckCircle style={{ width: '16px', height: '16px', color: '#16a34a' }} />
             </div>
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{activeSubscribers}</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Active Subscribers</p>
+          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>{activeSubscribers}</h3>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>Active Subscribers</p>
         </div>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
           padding: '12px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
@@ -147,8 +147,8 @@ export default function Subscribers() {
               <CreditCard style={{ width: '16px', height: '16px', color: '#9333ea' }} />
             </div>
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>${monthlyRevenue.toFixed(0)}</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Monthly Revenue</p>
+          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>${monthlyRevenue.toFixed(0)}</h3>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>Monthly Revenue</p>
         </div>
       </div>
 
@@ -163,8 +163,8 @@ export default function Subscribers() {
             style={{
               width: '100%',
               padding: '8px 12px',
-              background: '#f8fafc',
-              border: '1px solid #e2e8f0',
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
               borderRadius: '10px',
               outline: 'none',
               fontSize: '13px',
@@ -175,7 +175,7 @@ export default function Subscribers() {
               e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
             }}
             onBlur={(e) => {
-              e.currentTarget.style.borderColor = '#e2e8f0'
+              e.currentTarget.style.borderColor = 'var(--border-color)'
               e.currentTarget.style.boxShadow = 'none'
             }}
           />
@@ -185,8 +185,8 @@ export default function Subscribers() {
           onChange={(e) => setFilterStatus(e.target.value)}
           style={{
             padding: '8px 12px',
-            background: '#f8fafc',
-            border: '1px solid #e2e8f0',
+            background: 'var(--bg-secondary)',
+            border: '1px solid var(--border-color)',
             borderRadius: '10px',
             outline: 'none',
             fontSize: '13px',
@@ -211,37 +211,37 @@ export default function Subscribers() {
 
       {/* Subscribers Table */}
       <div style={{
-        background: 'rgba(255, 255, 255, 0.95)',
+        background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
         backdropFilter: 'blur(20px)',
         borderRadius: '16px',
-        border: '1px solid rgba(226, 232, 240, 0.8)',
+        border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
         overflow: 'hidden'
       }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+          <thead style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}>
             <tr>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Subscriber</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Plan</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Joined</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Next Billing</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Status</th>
-              <th style={{ textAlign: 'right', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Actions</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Subscriber</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Plan</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Joined</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Next Billing</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Status</th>
+              <th style={{ textAlign: 'right', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredSubscribers.map((subscriber) => (
-              <tr key={subscriber.id} style={{ borderBottom: '1px solid #e2e8f0', transition: 'background 0.2s ease' }}
+              <tr key={subscriber.id} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background 0.2s ease' }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#f8fafc'
+                e.currentTarget.style.background = 'var(--bg-secondary)'
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = 'transparent'
               }}>
                 <td style={{ padding: '12px 16px' }}>
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <span style={{ fontWeight: '500', color: '#0f172a', fontSize: '13px' }}>{subscriber.name}</span>
-                    <span style={{ color: '#64748b', fontSize: '11px' }}>{subscriber.email}</span>
+                    <span style={{ fontWeight: '500', color: 'var(--text-primary)', fontSize: '13px' }}>{subscriber.name}</span>
+                    <span style={{ color: 'var(--text-secondary)', fontSize: '11px' }}>{subscriber.email}</span>
                   </div>
                 </td>
                 <td style={{ padding: '12px 16px' }}>
@@ -256,8 +256,8 @@ export default function Subscribers() {
                     {subscriber.plan}
                   </span>
                 </td>
-                <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{subscriber.joined}</td>
-                <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{subscriber.nextBilling}</td>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{subscriber.joined}</td>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{subscriber.nextBilling}</td>
                 <td style={{ padding: '12px 16px' }}>
                   <span style={{ 
                     padding: '3px 8px', 
@@ -265,7 +265,7 @@ export default function Subscribers() {
                     fontSize: '11px', 
                     fontWeight: '500',
                     background: subscriber.status === 'active' ? '#dcfce7' : subscriber.status === 'past_due' ? '#fee2e2' : '#f1f5f9',
-                    color: subscriber.status === 'active' ? '#166534' : subscriber.status === 'past_due' ? '#991b1b' : '#475569'
+                    color: subscriber.status === 'active' ? '#166534' : subscriber.status === 'past_due' ? '#991b1b' : 'var(--text-secondary)'
                   }}>
                     {subscriber.status === 'active' ? 'Active' : subscriber.status === 'past_due' ? 'Past Due' : 'Cancelled'}
                   </span>
@@ -281,12 +281,12 @@ export default function Subscribers() {
                       transition: 'all 0.2s ease'
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = '#f1f5f9'
+                      e.currentTarget.style.background = 'var(--bg-secondary)'
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.background = 'transparent'
                     }}>
-                      <Edit style={{ width: '14px', height: '14px', color: '#64748b' }} />
+                      <Edit style={{ width: '14px', height: '14px', color: 'var(--text-secondary)' }} />
                     </button>
                     <button style={{
                       padding: '6px',
@@ -325,7 +325,7 @@ export default function Subscribers() {
           zIndex: 50
         }}>
           <div style={{
-            background: 'white',
+            background: 'var(--bg-primary)',
             borderRadius: '16px',
             width: '100%',
             maxWidth: '600px',
@@ -335,12 +335,12 @@ export default function Subscribers() {
           }}>
             <div style={{
               padding: '20px',
-              borderBottom: '1px solid #e2e8f0',
+              borderBottom: '1px solid var(--border-color)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-              <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a' }}>Add New Subscriber</h2>
+              <h2 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)' }}>Add New Subscriber</h2>
               <button
                 onClick={() => setShowCreateModal(false)}
                 style={{
@@ -350,16 +350,16 @@ export default function Subscribers() {
                   borderRadius: '8px',
                   cursor: 'pointer',
                   fontSize: '18px',
-                  color: '#94a3b8',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f1f5f9'
-                  e.currentTarget.style.color = '#64748b'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
-                  e.currentTarget.style.color = '#94a3b8'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
               >
                 ✕
@@ -368,15 +368,15 @@ export default function Subscribers() {
             <div style={{ padding: '20px', overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Name</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Name</label>
                   <input
                     type="text"
                     placeholder="Enter subscriber name..."
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px',
@@ -387,21 +387,21 @@ export default function Subscribers() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Email</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Email</label>
                   <input
                     type="email"
                     placeholder="Enter email address..."
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px',
@@ -412,18 +412,18 @@ export default function Subscribers() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Plan</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Plan</label>
                   <select style={{
                     width: '100%',
                     padding: '10px 12px',
-                    background: '#f8fafc',
-                    border: '1px solid #e2e8f0',
+                    background: 'var(--bg-secondary)',
+                    border: '1px solid var(--border-color)',
                     borderRadius: '10px',
                     outline: 'none',
                     fontSize: '13px',
@@ -435,7 +435,7 @@ export default function Subscribers() {
                     e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                   }}
                   onBlur={(e) => {
-                    e.currentTarget.style.borderColor = '#e2e8f0'
+                    e.currentTarget.style.borderColor = 'var(--border-color)'
                     e.currentTarget.style.boxShadow = 'none'
                   }}>
                     <option>Basic</option>
@@ -445,22 +445,22 @@ export default function Subscribers() {
                 </div>
               </div>
             </div>
-            <div style={{ padding: '20px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+            <div style={{ padding: '20px', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
               <button
                 onClick={() => setShowCreateModal(false)}
                 style={{
                   padding: '8px 16px',
                   background: 'transparent',
-                  border: '1px solid #e2e8f0',
+                  border: '1px solid var(--border-color)',
                   borderRadius: '10px',
                   cursor: 'pointer',
                   fontSize: '13px',
                   fontWeight: '500',
-                  color: '#64748b',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f8fafc'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'

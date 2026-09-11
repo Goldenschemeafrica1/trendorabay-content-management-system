@@ -4,13 +4,14 @@ import { Plus, Search, Filter, MoreVertical, Edit, Trash2, Eye, EyeOff } from 'l
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import api from '../services/api'
-import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
+import { HeaderVisibilityContext, SidebarVisibilityContext, ThemeContext } from '../components/Layout'
 
 const API_BASE_URL = 'https://trendorabay-content-management-system.onrender.com'
 
 export default function Stories() {
   const { setHideHeader } = useContext(HeaderVisibilityContext)
   const { setHideSidebar } = useContext(SidebarVisibilityContext)
+  const { isDarkMode } = useContext(ThemeContext)
   const [searchParams] = useSearchParams()
   const location = useLocation()
   const [showCreateModal, setShowCreateModal] = useState(false)
@@ -48,7 +49,7 @@ export default function Stories() {
       setSearchTerm(searchParam)
     }
   }, [searchParams])
-  
+
   // Fetch stories from backend
   useEffect(() => {
     const fetchStories = async () => {
@@ -372,8 +373,8 @@ export default function Stories() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: '#0f172a' }}>Stories</h1>
-          <p style={{ color: '#64748b', marginTop: '4px' }}>Manage your articles and blog posts</p>
+          <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: isDarkMode ? '#f1f5f9' : '#0f172a' }}>Stories</h1>
+          <p style={{ color: isDarkMode ? '#94a3b8' : '#64748b', marginTop: '4px' }}>Manage your articles and blog posts</p>
         </div>
         <button onClick={() => setShowCreateModal(true)}
           style={{
@@ -416,11 +417,12 @@ export default function Stories() {
             style={{
               width: '100%',
               padding: '10px 16px',
-              background: '#f8fafc',
-              border: '1px solid #e2e8f0',
+              background: isDarkMode ? '#1e293b' : '#f8fafc',
+              border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
               borderRadius: '12px',
               outline: 'none',
               fontSize: '14px',
+              color: isDarkMode ? '#f1f5f9' : '#0f172a',
               transition: 'all 0.2s ease'
             }}
             onFocus={(e) => {
@@ -428,7 +430,7 @@ export default function Stories() {
               e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
             }}
             onBlur={(e) => {
-              e.currentTarget.style.borderColor = '#e2e8f0'
+              e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
               e.currentTarget.style.boxShadow = 'none'
             }}
           />
@@ -438,11 +440,12 @@ export default function Stories() {
           onChange={(e) => setFilterStatus(e.target.value)}
           style={{
             padding: '10px 16px',
-            background: '#f8fafc',
-            border: '1px solid #e2e8f0',
+            background: isDarkMode ? '#1e293b' : '#f8fafc',
+            border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
             borderRadius: '12px',
             outline: 'none',
             fontSize: '14px',
+            color: isDarkMode ? '#f1f5f9' : '#0f172a',
             cursor: 'pointer',
             transition: 'all 0.2s ease'
           }}
@@ -451,7 +454,7 @@ export default function Stories() {
             e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
           }}
           onBlur={(e) => {
-            e.currentTarget.style.borderColor = '#e2e8f0'
+            e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
             e.currentTarget.style.boxShadow = 'none'
           }}
         >
@@ -463,55 +466,55 @@ export default function Stories() {
 
       {/* Stories Table */}
       <div style={{
-        background: 'rgba(255, 255, 255, 0.95)',
+        background: isDarkMode ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)',
         backdropFilter: 'blur(20px)',
         borderRadius: '16px',
-        border: '1px solid rgba(226, 232, 240, 0.8)',
+        border: isDarkMode ? '1px solid rgba(51, 65, 85, 0.8)' : '1px solid rgba(226, 232, 240, 0.8)',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
         overflow: 'hidden'
       }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+          <thead style={{ background: isDarkMode ? '#1e293b' : '#f8fafc', borderBottom: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0' }}>
             <tr>
-              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Title</th>
-              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Author</th>
-              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Category</th>
-              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Status</th>
-              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Date</th>
-              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Views</th>
-              <th style={{ textAlign: 'right', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Actions</th>
+              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: isDarkMode ? '#94a3b8' : '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Title</th>
+              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: isDarkMode ? '#94a3b8' : '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Author</th>
+              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: isDarkMode ? '#94a3b8' : '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Category</th>
+              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: isDarkMode ? '#94a3b8' : '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Status</th>
+              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: isDarkMode ? '#94a3b8' : '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Date</th>
+              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: isDarkMode ? '#94a3b8' : '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Views</th>
+              <th style={{ textAlign: 'right', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: isDarkMode ? '#94a3b8' : '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredStories.map((story) => (
-              <tr key={story.id} style={{ borderBottom: '1px solid #f1f5f9', transition: 'background 0.2s ease' }}
+              <tr key={story.id} style={{ borderBottom: isDarkMode ? '1px solid #334155' : '1px solid #f1f5f9', transition: 'background 0.2s ease' }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f8fafc'
+                  e.currentTarget.style.background = isDarkMode ? '#334155' : '#f8fafc'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
                 }}>
                 <td style={{ padding: '16px 24px' }}>
-                  <span style={{ fontWeight: '500', color: '#0f172a', fontSize: '14px' }}>{story.title}</span>
+                  <span style={{ fontWeight: '500', color: isDarkMode ? '#f1f5f9' : '#0f172a', fontSize: '14px' }}>{story.title}</span>
                 </td>
-                <td style={{ padding: '16px 24px', color: '#64748b', fontSize: '14px' }}>{story.author}</td>
+                <td style={{ padding: '16px 24px', color: isDarkMode ? '#94a3b8' : '#64748b', fontSize: '14px' }}>{story.author}</td>
                 <td style={{ padding: '16px 24px' }}>
-                  <span style={{ 
-                    padding: '4px 12px', 
-                    background: '#f1f5f9', 
-                    color: '#475569', 
-                    borderRadius: '20px', 
-                    fontSize: '12px', 
+                  <span style={{
+                    padding: '4px 12px',
+                    background: isDarkMode ? '#334155' : '#f1f5f9',
+                    color: isDarkMode ? '#94a3b8' : '#475569',
+                    borderRadius: '20px',
+                    fontSize: '12px',
                     fontWeight: '500'
                   }}>
                     {story.category}
                   </span>
                 </td>
                 <td style={{ padding: '16px 24px' }}>
-                  <span style={{ 
-                    padding: '4px 12px', 
-                    borderRadius: '20px', 
-                    fontSize: '12px', 
+                  <span style={{
+                    padding: '4px 12px',
+                    borderRadius: '20px',
+                    fontSize: '12px',
                     fontWeight: '500',
                     background: story.status === 'published' ? '#dcfce7' : '#fef9c3',
                     color: story.status === 'published' ? '#166534' : '#854d0e'
@@ -519,11 +522,11 @@ export default function Stories() {
                     {story.status}
                   </span>
                 </td>
-                <td style={{ padding: '16px 24px', color: '#64748b', fontSize: '14px' }}>{story.date}</td>
-                <td style={{ padding: '16px 24px', color: '#64748b', fontSize: '14px' }}>{story.views.toLocaleString()}</td>
+                <td style={{ padding: '16px 24px', color: isDarkMode ? '#94a3b8' : '#64748b', fontSize: '14px' }}>{story.date}</td>
+                <td style={{ padding: '16px 24px', color: isDarkMode ? '#94a3b8' : '#64748b', fontSize: '14px' }}>{story.views.toLocaleString()}</td>
                 <td style={{ padding: '16px 24px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '8px' }}>
-                    <button 
+                    <button
                       onClick={() => handleViewStory(story)}
                       style={{
                         padding: '8px',
@@ -534,14 +537,14 @@ export default function Stories() {
                         transition: 'all 0.2s ease'
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.background = '#f1f5f9'
+                        e.currentTarget.style.background = isDarkMode ? '#334155' : '#f1f5f9'
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.background = 'transparent'
                       }}>
-                      <Eye style={{ width: '16px', height: '16px', color: '#64748b' }} />
+                      <Eye style={{ width: '16px', height: '16px', color: isDarkMode ? '#94a3b8' : '#64748b' }} />
                     </button>
-                    <button 
+                    <button
                       onClick={() => handleEditStory(story)}
                       style={{
                         padding: '8px',
@@ -552,14 +555,14 @@ export default function Stories() {
                         transition: 'all 0.2s ease'
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.background = '#f1f5f9'
+                        e.currentTarget.style.background = isDarkMode ? '#334155' : '#f1f5f9'
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.background = 'transparent'
                       }}>
-                      <Edit style={{ width: '16px', height: '16px', color: '#64748b' }} />
+                      <Edit style={{ width: '16px', height: '16px', color: isDarkMode ? '#94a3b8' : '#64748b' }} />
                     </button>
-                    <button 
+                    <button
                       onClick={() => handleDeleteStory(story.id)}
                       style={{
                         padding: '8px',
@@ -570,7 +573,7 @@ export default function Stories() {
                         transition: 'all 0.2s ease'
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.background = '#fef2f2'
+                        e.currentTarget.style.background = isDarkMode ? 'rgba(239, 68, 68, 0.2)' : '#fef2f2'
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.background = 'transparent'
@@ -594,11 +597,12 @@ export default function Stories() {
           backdropFilter: 'blur(4px)',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center',
+          justifyContent: 'flex-end',
+          paddingRight: '10%',
           zIndex: 50
         }}>
           <div style={{
-            background: 'white',
+            background: isDarkMode ? '#1e293b' : 'white',
             borderRadius: '16px',
             width: '100%',
             maxWidth: '900px',
@@ -608,12 +612,12 @@ export default function Stories() {
           }}>
             <div style={{
               padding: '24px',
-              borderBottom: '1px solid #e2e8f0',
+              borderBottom: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-              <h2 style={{ fontSize: '20px', fontWeight: '600', color: '#0f172a' }}>Create New Story</h2>
+              <h2 style={{ fontSize: '20px', fontWeight: '600', color: isDarkMode ? '#f1f5f9' : '#0f172a' }}>Create New Story</h2>
               <button onClick={() => setShowCreateModal(false)}
                 style={{
                   padding: '8px',
@@ -624,20 +628,20 @@ export default function Stories() {
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f1f5f9'
+                  e.currentTarget.style.background = isDarkMode ? '#334155' : '#f1f5f9'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
                 }}
               >
-                <MoreVertical style={{ width: '20px', height: '20px', color: '#64748b' }} />
+                <MoreVertical style={{ width: '20px', height: '20px', color: isDarkMode ? '#94a3b8' : '#64748b' }} />
               </button>
             </div>
             <div style={{ padding: '24px', overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '20px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Title</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Title</label>
                     <input
                       type="text"
                       name="title"
@@ -646,11 +650,12 @@ export default function Stories() {
                       style={{
                         width: '100%',
                         padding: '12px 16px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: isDarkMode ? '#0f172a' : '#f8fafc',
+                        border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                         borderRadius: '12px',
                         outline: 'none',
                         fontSize: '14px',
+                        color: isDarkMode ? '#f1f5f9' : '#0f172a',
                         transition: 'all 0.2s ease'
                       }}
                       onFocus={(e) => {
@@ -658,13 +663,13 @@ export default function Stories() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Read Time</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Read Time</label>
                     <input
                       type="text"
                       name="read_time"
@@ -674,11 +679,12 @@ export default function Stories() {
                       style={{
                         width: '100%',
                         padding: '12px 16px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: isDarkMode ? '#0f172a' : '#f8fafc',
+                        border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                         borderRadius: '12px',
                         outline: 'none',
                         fontSize: '14px',
+                        color: isDarkMode ? '#f1f5f9' : '#0f172a',
                         transition: 'all 0.2s ease'
                       }}
                       onFocus={(e) => {
@@ -686,7 +692,7 @@ export default function Stories() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
@@ -694,15 +700,16 @@ export default function Stories() {
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Author</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Author</label>
                     <select name="author_id" value={formData.author_id} onChange={handleInputChange} style={{
                       width: '100%',
                       padding: '12px 16px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: isDarkMode ? '#0f172a' : '#f8fafc',
+                      border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                       borderRadius: '12px',
                       outline: 'none',
                       fontSize: '14px',
+                      color: isDarkMode ? '#f1f5f9' : '#0f172a',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease'
                     }}
@@ -711,7 +718,7 @@ export default function Stories() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                       e.currentTarget.style.boxShadow = 'none'
                     }}>
                       <option value="">Select author...</option>
@@ -721,15 +728,16 @@ export default function Stories() {
                     </select>
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Category</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Category</label>
                     <select name="category" value={formData.category} onChange={handleInputChange} style={{
                       width: '100%',
                       padding: '12px 16px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: isDarkMode ? '#0f172a' : '#f8fafc',
+                      border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                       borderRadius: '12px',
                       outline: 'none',
                       fontSize: '14px',
+                      color: isDarkMode ? '#f1f5f9' : '#0f172a',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease'
                     }}
@@ -738,7 +746,7 @@ export default function Stories() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                       e.currentTarget.style.boxShadow = 'none'
                     }}>
                       <option value="">Select category...</option>
@@ -749,7 +757,7 @@ export default function Stories() {
                   </div>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Cover Image</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Cover Image</label>
                   <input
                     type="file"
                     accept="image/*"
@@ -757,17 +765,18 @@ export default function Stories() {
                     style={{
                       width: '100%',
                       padding: '8px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: isDarkMode ? '#0f172a' : '#f8fafc',
+                      border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                       borderRadius: '8px',
                       outline: 'none',
                       fontSize: '13px',
+                      color: isDarkMode ? '#f1f5f9' : '#0f172a',
                       cursor: 'pointer'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Featured Image 2</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Featured Image 2</label>
                   <input
                     type="file"
                     accept="image/*"
@@ -775,17 +784,18 @@ export default function Stories() {
                     style={{
                       width: '100%',
                       padding: '8px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: isDarkMode ? '#0f172a' : '#f8fafc',
+                      border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                       borderRadius: '8px',
                       outline: 'none',
                       fontSize: '13px',
+                      color: isDarkMode ? '#f1f5f9' : '#0f172a',
                       cursor: 'pointer'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Featured Image 3</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Featured Image 3</label>
                   <input
                     type="file"
                     accept="image/*"
@@ -793,17 +803,18 @@ export default function Stories() {
                     style={{
                       width: '100%',
                       padding: '8px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: isDarkMode ? '#0f172a' : '#f8fafc',
+                      border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                       borderRadius: '8px',
                       outline: 'none',
                       fontSize: '13px',
+                      color: isDarkMode ? '#f1f5f9' : '#0f172a',
                       cursor: 'pointer'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Featured Image 4</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Featured Image 4</label>
                   <input
                     type="file"
                     accept="image/*"
@@ -811,22 +822,23 @@ export default function Stories() {
                     style={{
                       width: '100%',
                       padding: '8px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: isDarkMode ? '#0f172a' : '#f8fafc',
+                      border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                       borderRadius: '8px',
                       outline: 'none',
                       fontSize: '13px',
+                      color: isDarkMode ? '#f1f5f9' : '#0f172a',
                       cursor: 'pointer'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Content</label>
-                  <div style={{ 
-                    border: '1px solid #e2e8f0', 
-                    borderRadius: '12px', 
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Content</label>
+                  <div style={{
+                    border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
+                    borderRadius: '12px',
                     overflow: 'hidden', 
-                    background: 'white',
+                    background: isDarkMode ? '#0f172a' : 'white',
                     minHeight: '500px',
                     boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)'
                   }}>
@@ -837,21 +849,21 @@ export default function Stories() {
                 </div>
               </div>
             </div>
-            <div style={{ padding: '12px 24px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '12px', flexShrink: 0 }}>
+            <div style={{ padding: '12px 24px', borderTop: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '12px', flexShrink: 0 }}>
               <button onClick={() => setShowCreateModal(false)}
                 style={{
-                  padding: '10px 20px',
+                  padding: '8px 16px',
                   background: 'transparent',
-                  border: '1px solid #e2e8f0',
+                  border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                   borderRadius: '12px',
                   cursor: 'pointer',
-                  fontSize: '14px',
+                  fontSize: '13px',
                   fontWeight: '500',
-                  color: '#64748b',
+                  color: isDarkMode ? '#94a3b8' : '#64748b',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f8fafc'
+                  e.currentTarget.style.background = isDarkMode ? '#334155' : '#f8fafc'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
@@ -862,18 +874,18 @@ export default function Stories() {
               <button 
                 onClick={() => handleCreateStory('draft')}
                 style={{
-                  padding: '10px 20px',
+                  padding: '8px 16px',
                   background: 'transparent',
-                  border: '1px solid #e2e8f0',
+                  border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                   borderRadius: '12px',
                   cursor: 'pointer',
-                  fontSize: '14px',
+                  fontSize: '13px',
                   fontWeight: '500',
-                  color: '#64748b',
+                  color: isDarkMode ? '#94a3b8' : '#64748b',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f8fafc'
+                  e.currentTarget.style.background = isDarkMode ? '#334155' : '#f8fafc'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
@@ -884,12 +896,12 @@ export default function Stories() {
               <button 
                 onClick={() => handleCreateStory('published')}
                 style={{
-                  padding: '10px 20px',
+                  padding: '8px 16px',
                   background: 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)',
                   border: 'none',
                   borderRadius: '12px',
                   cursor: 'pointer',
-                  fontSize: '14px',
+                  fontSize: '13px',
                   fontWeight: '500',
                   color: 'white',
                   boxShadow: '0 4px 12px rgba(124, 58, 237, 0.3)',
@@ -920,11 +932,12 @@ export default function Stories() {
           backdropFilter: 'blur(4px)',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center',
+          justifyContent: 'flex-end',
+          paddingRight: '10%',
           zIndex: 50
         }}>
           <div style={{
-            background: 'white',
+            background: isDarkMode ? '#1e293b' : 'white',
             borderRadius: '16px',
             width: '100%',
             maxWidth: '900px',
@@ -934,13 +947,13 @@ export default function Stories() {
           }}>
             <div style={{
               padding: '24px',
-              borderBottom: '1px solid #e2e8f0',
+              borderBottom: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-              <h2 style={{ fontSize: '20px', fontWeight: '600', color: '#0f172a' }}>Edit Story</h2>
-              <button 
+              <h2 style={{ fontSize: '20px', fontWeight: '600', color: isDarkMode ? '#f1f5f9' : '#0f172a' }}>Edit Story</h2>
+              <button
                 onClick={() => {
                   setShowEditModal(false)
                   setEditingStory(null)
@@ -954,6 +967,12 @@ export default function Stories() {
                   })
                   setCoverImageFile(null)
                   setCoverImagePreview(null)
+                  setCoverImageFile2(null)
+                  setCoverImagePreview2(null)
+                  setCoverImageFile3(null)
+                  setCoverImagePreview3(null)
+                  setCoverImageFile4(null)
+                  setCoverImagePreview4(null)
                 }}
                 style={{
                   padding: '8px',
@@ -961,88 +980,65 @@ export default function Stories() {
                   border: 'none',
                   borderRadius: '8px',
                   cursor: 'pointer',
+                  fontSize: '20px',
+                  color: isDarkMode ? '#94a3b8' : '#64748b',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f1f5f9'
+                  e.currentTarget.style.background = isDarkMode ? '#334155' : '#f1f5f9'
+                  e.currentTarget.style.color = isDarkMode ? '#64748b' : '#64748b'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
+                  e.currentTarget.style.color = isDarkMode ? '#94a3b8' : '#64748b'
                 }}
               >
-                <MoreVertical style={{ width: '20px', height: '20px', color: '#64748b' }} />
+                ✕
               </button>
             </div>
             <div style={{ padding: '24px', overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '20px' }}>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Title</label>
-                    <input
-                      type="text"
-                      name="title"
-                      value={formData.title}
-                      onChange={handleInputChange}
-                      style={{
-                        width: '100%',
-                        padding: '12px 16px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '12px',
-                        outline: 'none',
-                        fontSize: '14px',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onFocus={(e) => {
-                        e.currentTarget.style.borderColor = '#7c3aed'
-                        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
-                        e.currentTarget.style.boxShadow = 'none'
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Read Time</label>
-                    <input
-                      type="text"
-                      name="read_time"
-                      value={formData.read_time}
-                      onChange={handleInputChange}
-                      placeholder="e.g., 5 min read"
-                      style={{
-                        width: '100%',
-                        padding: '12px 16px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '12px',
-                        outline: 'none',
-                        fontSize: '14px',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onFocus={(e) => {
-                        e.currentTarget.style.borderColor = '#7c3aed'
-                        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
-                        e.currentTarget.style.boxShadow = 'none'
-                      }}
-                    />
-                  </div>
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Author</label>
-                    <select name="author_id" value={formData.author_id} onChange={handleInputChange} style={{
+                <div>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Title</label>
+                  <input
+                    type="text"
+                    name="title"
+                    value={formData.title}
+                    onChange={handleInputChange}
+                    placeholder="Enter story title..."
+                    style={{
                       width: '100%',
                       padding: '12px 16px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: isDarkMode ? '#0f172a' : '#f8fafc',
+                      border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                       borderRadius: '12px',
                       outline: 'none',
                       fontSize: '14px',
+                      color: isDarkMode ? '#f1f5f9' : '#0f172a',
+                      transition: 'all 0.2s ease'
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.borderColor = '#7c3aed'
+                      e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
+                      e.currentTarget.style.boxShadow = 'none'
+                    }}
+                  />
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Author</label>
+                    <select name="author_id" value={formData.author_id} onChange={handleInputChange} style={{
+                      width: '100%',
+                      padding: '12px 16px',
+                      background: isDarkMode ? '#0f172a' : '#f8fafc',
+                      border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
+                      borderRadius: '12px',
+                      outline: 'none',
+                      fontSize: '14px',
+                      color: isDarkMode ? '#f1f5f9' : '#0f172a',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease'
                     }}
@@ -1051,7 +1047,7 @@ export default function Stories() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                       e.currentTarget.style.boxShadow = 'none'
                     }}>
                       <option value="">Select author...</option>
@@ -1061,15 +1057,16 @@ export default function Stories() {
                     </select>
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Category</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Category</label>
                     <select name="category" value={formData.category} onChange={handleInputChange} style={{
                       width: '100%',
                       padding: '12px 16px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: isDarkMode ? '#0f172a' : '#f8fafc',
+                      border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                       borderRadius: '12px',
                       outline: 'none',
                       fontSize: '14px',
+                      color: isDarkMode ? '#f1f5f9' : '#0f172a',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease'
                     }}
@@ -1078,7 +1075,7 @@ export default function Stories() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                       e.currentTarget.style.boxShadow = 'none'
                     }}>
                       <option value="">Select category...</option>
@@ -1088,23 +1085,53 @@ export default function Stories() {
                     </select>
                   </div>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <input
-                    type="checkbox"
-                    name="featured"
-                    checked={formData.featured}
-                    onChange={(e) => setFormData(prev => ({ ...prev, featured: e.target.checked }))}
-                    style={{
-                      width: '20px',
-                      height: '20px',
-                      cursor: 'pointer',
-                      accentColor: '#7c3aed'
-                    }}
-                  />
-                  <label style={{ fontSize: '14px', fontWeight: '500', color: '#374151', cursor: 'pointer' }}>Featured Story</label>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Read Time</label>
+                    <input
+                      type="text"
+                      name="read_time"
+                      value={formData.read_time}
+                      onChange={handleInputChange}
+                      placeholder="e.g., 5 min read"
+                      style={{
+                        width: '100%',
+                        padding: '10px 12px',
+                        borderRadius: '8px',
+                        border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
+                        fontSize: '14px',
+                        color: isDarkMode ? '#f1f5f9' : '#0f172a',
+                        outline: 'none',
+                        transition: 'all 0.2s ease'
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = '#7c3aed'
+                        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
+                        e.currentTarget.style.boxShadow = 'none'
+                      }}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', paddingTop: '32px' }}>
+                    <input
+                      type="checkbox"
+                      name="featured"
+                      checked={formData.featured}
+                      onChange={(e) => setFormData(prev => ({ ...prev, featured: e.target.checked }))}
+                      style={{
+                        width: '20px',
+                        height: '20px',
+                        cursor: 'pointer',
+                        accentColor: '#7c3aed'
+                      }}
+                    />
+                    <label style={{ fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', cursor: 'pointer' }}>Featured Story</label>
+                  </div>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Cover Image</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Cover Image</label>
                   <input
                     type="file"
                     accept="image/*"
@@ -1112,17 +1139,18 @@ export default function Stories() {
                     style={{
                       width: '100%',
                       padding: '8px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: isDarkMode ? '#0f172a' : '#f8fafc',
+                      border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                       borderRadius: '8px',
                       outline: 'none',
                       fontSize: '13px',
+                      color: isDarkMode ? '#f1f5f9' : '#0f172a',
                       cursor: 'pointer'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Featured Image 2</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Featured Image 2</label>
                   <input
                     type="file"
                     accept="image/*"
@@ -1130,17 +1158,18 @@ export default function Stories() {
                     style={{
                       width: '100%',
                       padding: '8px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: isDarkMode ? '#0f172a' : '#f8fafc',
+                      border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                       borderRadius: '8px',
                       outline: 'none',
                       fontSize: '13px',
+                      color: isDarkMode ? '#f1f5f9' : '#0f172a',
                       cursor: 'pointer'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Featured Image 3</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Featured Image 3</label>
                   <input
                     type="file"
                     accept="image/*"
@@ -1148,17 +1177,18 @@ export default function Stories() {
                     style={{
                       width: '100%',
                       padding: '8px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: isDarkMode ? '#0f172a' : '#f8fafc',
+                      border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                       borderRadius: '8px',
                       outline: 'none',
                       fontSize: '13px',
+                      color: isDarkMode ? '#f1f5f9' : '#0f172a',
                       cursor: 'pointer'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Featured Image 4</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Featured Image 4</label>
                   <input
                     type="file"
                     accept="image/*"
@@ -1166,23 +1196,24 @@ export default function Stories() {
                     style={{
                       width: '100%',
                       padding: '8px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: isDarkMode ? '#0f172a' : '#f8fafc',
+                      border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                       borderRadius: '8px',
                       outline: 'none',
                       fontSize: '13px',
+                      color: isDarkMode ? '#f1f5f9' : '#0f172a',
                       cursor: 'pointer'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Content</label>
-                  <div style={{ 
-                    border: '1px solid #e2e8f0', 
-                    borderRadius: '12px', 
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Content</label>
+                  <div style={{
+                    border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
+                    borderRadius: '12px',
                     overflow: 'hidden', 
-                    background: 'white',
-                    minHeight: '500px',
+                    background: isDarkMode ? '#0f172a' : 'white',
+                    minHeight: '400px',
                     boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)'
                   }}>
                     <div style={{ padding: '8px' }}>
@@ -1192,7 +1223,7 @@ export default function Stories() {
                 </div>
               </div>
             </div>
-            <div style={{ padding: '12px 24px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '12px', flexShrink: 0 }}>
+            <div style={{ padding: '12px 24px', borderTop: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '12px', flexShrink: 0 }}>
               <button 
                 onClick={() => {
                   setShowEditModal(false)
@@ -1209,16 +1240,16 @@ export default function Stories() {
                 style={{
                   padding: '10px 20px',
                   background: 'transparent',
-                  border: '1px solid #e2e8f0',
+                  border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                   borderRadius: '12px',
                   cursor: 'pointer',
                   fontSize: '14px',
                   fontWeight: '500',
-                  color: '#64748b',
+                  color: isDarkMode ? '#94a3b8' : '#64748b',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f8fafc'
+                  e.currentTarget.style.background = isDarkMode ? '#334155' : '#f8fafc'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
@@ -1231,16 +1262,16 @@ export default function Stories() {
                 style={{
                   padding: '10px 20px',
                   background: 'transparent',
-                  border: '1px solid #e2e8f0',
+                  border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                   borderRadius: '12px',
                   cursor: 'pointer',
                   fontSize: '14px',
                   fontWeight: '500',
-                  color: '#64748b',
+                  color: isDarkMode ? '#94a3b8' : '#64748b',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f8fafc'
+                  e.currentTarget.style.background = isDarkMode ? '#334155' : '#f8fafc'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
@@ -1286,85 +1317,144 @@ export default function Stories() {
           background: 'rgba(0, 0, 0, 0.5)',
           backdropFilter: 'blur(4px)',
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          alignItems: 'flex-start',
+          justifyContent: 'flex-end',
+          paddingRight: '10%',
+          paddingTop: '8%',
           zIndex: 50
         }}>
           <div style={{
-            background: 'white',
-            borderRadius: '12px',
+            background: isDarkMode ? '#1e293b' : 'white',
+            borderRadius: '16px',
             width: '100%',
-            maxWidth: '600px',
-            maxHeight: '80vh',
+            maxWidth: '900px',
+            maxHeight: '90vh',
             overflow: 'hidden',
             boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
           }}>
             <div style={{
-              padding: '16px',
-              borderBottom: '1px solid #e2e8f0',
+              padding: '16px 24px',
+              borderBottom: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'space-between',
-              background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)'
+              justifyContent: 'space-between'
             }}>
-              <h2 style={{ fontSize: '16px', fontWeight: '600', color: '#0f172a' }}>Story Preview</h2>
+              <h2 style={{ fontSize: '20px', fontWeight: '600', color: isDarkMode ? '#f1f5f9' : '#0f172a' }}>Story Preview</h2>
               <button
                 onClick={() => {
                   setShowViewModal(false)
                   setViewingStory(null)
                 }}
                 style={{
-                  padding: '6px',
-                  background: 'white',
-                  border: '1px solid #e2e8f0',
-                  borderRadius: '6px',
+                  padding: '8px',
+                  background: 'transparent',
+                  border: 'none',
+                  borderRadius: '8px',
                   cursor: 'pointer',
-                  fontSize: '16px',
-                  color: '#64748b',
+                  fontSize: '20px',
+                  color: isDarkMode ? '#94a3b8' : '#64748b',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f1f5f9'
-                  e.currentTarget.style.borderColor = '#cbd5e1'
-                  e.currentTarget.style.color = '#0f172a'
+                  e.currentTarget.style.background = isDarkMode ? '#334155' : '#f1f5f9'
+                  e.currentTarget.style.color = isDarkMode ? '#64748b' : '#64748b'
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'white'
-                  e.currentTarget.style.borderColor = '#e2e8f0'
-                  e.currentTarget.style.color = '#64748b'
+                  e.currentTarget.style.background = 'transparent'
+                  e.currentTarget.style.color = isDarkMode ? '#94a3b8' : '#64748b'
                 }}
               >
                 ✕
               </button>
             </div>
-            <div style={{ padding: '20px', overflowY: 'auto', maxHeight: 'calc(80vh - 120px)' }}>
-              {viewingStory.featured_image_url && (
+            <div style={{ padding: '24px', overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
+              {(viewingStory.featured_image_url || viewingStory.featured_image_url_2 || viewingStory.featured_image_url_3 || viewingStory.featured_image_url_4) && (
                 <div style={{ 
-                  position: 'relative',
-                  marginBottom: '20px',
-                  borderRadius: '12px',
-                  overflow: 'hidden',
-                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(2, 1fr)',
+                  gap: '16px',
+                  marginBottom: '20px'
                 }}>
-                  <img 
-                    src={viewingStory.featured_image_url.startsWith('http') ? viewingStory.featured_image_url : `${API_BASE_URL}${viewingStory.featured_image_url}`} 
-                    alt="Featured" 
-                    style={{ 
-                      width: '100%', 
-                      height: '220px', 
-                      objectFit: 'cover',
-                      display: 'block'
-                    }}
-                  />
-                  <div style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    padding: '20px',
-                    background: 'linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent)'
-                  }}>
-                  </div>
+                  {viewingStory.featured_image_url && (
+                    <div style={{ 
+                      position: 'relative',
+                      borderRadius: '12px',
+                      overflow: 'hidden',
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                      aspectRatio: '16/9'
+                    }}>
+                      <img 
+                        src={viewingStory.featured_image_url.startsWith('http') ? viewingStory.featured_image_url : `${API_BASE_URL}${viewingStory.featured_image_url}`} 
+                        alt="Cover Image" 
+                        style={{ 
+                          width: '100%', 
+                          height: '100%', 
+                          objectFit: 'cover',
+                          display: 'block'
+                        }}
+                      />
+                    </div>
+                  )}
+                  {viewingStory.featured_image_url_2 && (
+                    <div style={{ 
+                      position: 'relative',
+                      borderRadius: '12px',
+                      overflow: 'hidden',
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                      aspectRatio: '16/9'
+                    }}>
+                      <img 
+                        src={viewingStory.featured_image_url_2.startsWith('http') ? viewingStory.featured_image_url_2 : `${API_BASE_URL}${viewingStory.featured_image_url_2}`} 
+                        alt="Featured Image 2" 
+                        style={{ 
+                          width: '100%', 
+                          height: '100%', 
+                          objectFit: 'cover',
+                          display: 'block'
+                        }}
+                      />
+                    </div>
+                  )}
+                  {viewingStory.featured_image_url_3 && (
+                    <div style={{ 
+                      position: 'relative',
+                      borderRadius: '12px',
+                      overflow: 'hidden',
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                      aspectRatio: '16/9'
+                    }}>
+                      <img 
+                        src={viewingStory.featured_image_url_3.startsWith('http') ? viewingStory.featured_image_url_3 : `${API_BASE_URL}${viewingStory.featured_image_url_3}`} 
+                        alt="Featured Image 3" 
+                        style={{ 
+                          width: '100%', 
+                          height: '100%', 
+                          objectFit: 'cover',
+                          display: 'block'
+                        }}
+                      />
+                    </div>
+                  )}
+                  {viewingStory.featured_image_url_4 && (
+                    <div style={{ 
+                      position: 'relative',
+                      borderRadius: '12px',
+                      overflow: 'hidden',
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                      aspectRatio: '16/9'
+                    }}>
+                      <img 
+                        src={viewingStory.featured_image_url_4.startsWith('http') ? viewingStory.featured_image_url_4 : `${API_BASE_URL}${viewingStory.featured_image_url_4}`} 
+                        alt="Featured Image 4" 
+                        style={{ 
+                          width: '100%', 
+                          height: '100%', 
+                          objectFit: 'cover',
+                          display: 'block'
+                        }}
+                      />
+                    </div>
+                  )}
                 </div>
               )}
               <div style={{ marginBottom: '12px' }}>
@@ -1381,20 +1471,20 @@ export default function Stories() {
                   {viewingStory.category || viewingStory.category_name || 'Uncategorized'}
                 </span>
               </div>
-              <h1 style={{ fontSize: '20px', fontWeight: '700', color: '#0f172a', marginBottom: '12px', lineHeight: '1.3' }}>{viewingStory.title}</h1>
-              <div style={{ display: 'flex', gap: '12px', marginBottom: '16px', fontSize: '12px', color: '#64748b', alignItems: 'center', flexWrap: 'wrap' }}>
+              <h1 style={{ fontSize: '20px', fontWeight: '700', color: isDarkMode ? '#f1f5f9' : '#0f172a', marginBottom: '12px', lineHeight: '1.3' }}>{viewingStory.title}</h1>
+              <div style={{ display: 'flex', gap: '12px', marginBottom: '16px', fontSize: '12px', color: isDarkMode ? '#94a3b8' : '#64748b', alignItems: 'center', flexWrap: 'wrap' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <span style={{ fontWeight: '600', color: '#475569' }}>Author:</span>
+                  <span style={{ fontWeight: '600', color: isDarkMode ? '#94a3b8' : '#475569' }}>Author:</span>
                   <span>{viewingStory.author_name || 'Unknown'}</span>
                 </div>
-                <span style={{ color: '#cbd5e1' }}>•</span>
+                <span style={{ color: isDarkMode ? '#64748b' : '#cbd5e1' }}>•</span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <span style={{ fontWeight: '600', color: '#475569' }}>Category:</span>
+                  <span style={{ fontWeight: '600', color: isDarkMode ? '#94a3b8' : '#475569' }}>Category:</span>
                   <span>{viewingStory.category || viewingStory.category_name || 'Uncategorized'}</span>
                 </div>
-                <span style={{ color: '#cbd5e1' }}>•</span>
+                <span style={{ color: isDarkMode ? '#64748b' : '#cbd5e1' }}>•</span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <span style={{ fontWeight: '600', color: '#475569' }}>Status:</span>
+                  <span style={{ fontWeight: '600', color: isDarkMode ? '#94a3b8' : '#475569' }}>Status:</span>
                   <span style={{ 
                     padding: '2px 6px', 
                     borderRadius: '8px', 
@@ -1408,49 +1498,18 @@ export default function Stories() {
                 </div>
               </div>
               <div style={{ 
-                borderTop: '1px solid #f1f5f9', 
+                borderTop: isDarkMode ? '1px solid #334155' : '1px solid #f1f5f9', 
                 paddingTop: '16px'
               }}>
                 <div 
                   style={{ 
                     fontSize: '14px', 
                     lineHeight: '1.6', 
-                    color: '#334155'
+                    color: isDarkMode ? '#94a3b8' : '#374151',
                   }}
                   dangerouslySetInnerHTML={{ __html: viewingStory.content }}
                 />
               </div>
-            </div>
-            <div style={{ padding: '16px', borderTop: '1px solid #e2e8f0', background: '#f8fafc' }}>
-              <button
-                onClick={() => {
-                  setShowViewModal(false)
-                  setViewingStory(null)
-                }}
-                style={{
-                  width: '100%',
-                  padding: '10px 20px',
-                  background: 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)',
-                  border: 'none',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  fontSize: '13px',
-                  fontWeight: '600',
-                  color: 'white',
-                  boxShadow: '0 2px 8px rgba(124, 58, 237, 0.3)',
-                  transition: 'all 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-1px)'
-                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(124, 58, 237, 0.4)'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)'
-                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(124, 58, 237, 0.3)'
-                }}
-              >
-                Close Preview
-              </button>
             </div>
           </div>
         </div>

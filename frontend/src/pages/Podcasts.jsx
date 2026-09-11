@@ -279,8 +279,8 @@ export default function Podcasts() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: '#0f172a' }}>Podcasts</h1>
-          <p style={{ color: '#64748b', marginTop: '4px' }}>Manage podcast episodes and audio content</p>
+          <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: 'var(--text-primary)' }}>Podcasts</h1>
+          <p style={{ color: 'var(--text-secondary)', marginTop: '4px' }}>Manage podcast episodes and audio content</p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
@@ -323,8 +323,8 @@ export default function Podcasts() {
           style={{
             width: '100%',
             padding: '10px 16px',
-            background: '#f8fafc',
-            border: '1px solid #e2e8f0',
+            background: 'var(--bg-secondary)',
+            border: '1px solid var(--border-color)',
             borderRadius: '12px',
             outline: 'none',
             fontSize: '14px',
@@ -335,7 +335,7 @@ export default function Podcasts() {
             e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
           }}
           onBlur={(e) => {
-            e.currentTarget.style.borderColor = '#e2e8f0'
+            e.currentTarget.style.borderColor = 'var(--border-color)'
             e.currentTarget.style.boxShadow = 'none'
           }}
         />
@@ -349,10 +349,10 @@ export default function Podcasts() {
       }}>
         {filteredPodcasts.map((podcast) => (
           <div key={podcast.id} style={{
-            background: 'rgba(255, 255, 255, 0.95)',
+            background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
             backdropFilter: 'blur(20px)',
             borderRadius: '16px',
-            border: '1px solid rgba(226, 232, 240, 0.8)',
+            border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
             boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
             overflow: 'hidden',
             transition: 'all 0.3s ease'
@@ -391,7 +391,7 @@ export default function Podcasts() {
             </div>
             <div style={{ padding: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '6px' }}>
-                <h3 style={{ fontWeight: '600', color: '#0f172a', fontSize: '14px', flex: 1 }}>{podcast.title}</h3>
+                <h3 style={{ fontWeight: '600', color: 'var(--text-primary)', fontSize: '14px', flex: 1 }}>{podcast.title}</h3>
                 <span style={{ 
                   padding: '3px 8px', 
                   borderRadius: '16px', 
@@ -405,19 +405,19 @@ export default function Podcasts() {
                   {podcast.status}
                 </span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '12px', color: '#64748b', marginBottom: '6px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '6px' }}>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
                   <Clock style={{ width: '14px', height: '14px' }} />
                   {podcast.duration}
                 </span>
                 <span>Episode {podcast.episode}</span>
               </div>
-              <p style={{ fontSize: '11px', color: '#94a3b8', marginBottom: '12px' }}>{podcast.date}</p>
+              <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '12px' }}>{podcast.date}</p>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <span style={{ 
                   padding: '3px 8px', 
-                  background: '#f1f5f9', 
-                  color: '#475569', 
+                  background: 'var(--bg-secondary)', 
+                  color: 'var(--text-secondary)', 
                   borderRadius: '16px', 
                   fontSize: '11px', 
                   fontWeight: '500'
@@ -437,7 +437,7 @@ export default function Podcasts() {
                     }}
                     onMouseEnter={(e) => {
                       if (playingAudio !== podcast.id) {
-                        e.currentTarget.style.background = '#f1f5f9'
+                        e.currentTarget.style.background = 'var(--bg-secondary)'
                       }
                     }}
                     onMouseLeave={(e) => {
@@ -445,7 +445,7 @@ export default function Podcasts() {
                         e.currentTarget.style.background = 'transparent'
                       }
                     }}>
-                    <Play style={{ width: '14px', height: '14px', color: playingAudio === podcast.id ? 'white' : '#64748b', fill: playingAudio === podcast.id ? 'white' : 'none' }} />
+                    <Play style={{ width: '14px', height: '14px', color: playingAudio === podcast.id ? 'white' : 'var(--text-secondary)', fill: playingAudio === podcast.id ? 'white' : 'none' }} />
                   </button>
                   <button 
                     onClick={() => handleEditPodcast(podcast)}
@@ -458,12 +458,12 @@ export default function Podcasts() {
                       transition: 'all 0.2s ease'
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = '#f1f5f9'
+                      e.currentTarget.style.background = 'var(--bg-secondary)'
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.background = 'transparent'
                     }}>
-                    <Edit style={{ width: '14px', height: '14px', color: '#64748b' }} />
+                    <Edit style={{ width: '14px', height: '14px', color: 'var(--text-secondary)' }} />
                   </button>
                   <button 
                     onClick={() => handleDeletePodcast(podcast.id)}
@@ -503,7 +503,7 @@ export default function Podcasts() {
           zIndex: 50
         }}>
           <div style={{
-            background: 'white',
+            background: 'var(--bg-primary)',
             borderRadius: '16px',
             width: '100%',
             maxWidth: '600px',
@@ -513,12 +513,12 @@ export default function Podcasts() {
           }}>
             <div style={{
               padding: '24px',
-              borderBottom: '1px solid #e2e8f0',
+              borderBottom: '1px solid var(--border-color)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-              <h2 style={{ fontSize: '20px', fontWeight: '600', color: '#0f172a' }}>Add New Episode</h2>
+              <h2 style={{ fontSize: '20px', fontWeight: '600', color: 'var(--text-primary)' }}>Add New Episode</h2>
               <button
                 onClick={() => setShowCreateModal(false)}
                 style={{
@@ -528,16 +528,16 @@ export default function Podcasts() {
                   borderRadius: '8px',
                   cursor: 'pointer',
                   fontSize: '20px',
-                  color: '#94a3b8',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f1f5f9'
-                  e.currentTarget.style.color = '#64748b'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
-                  e.currentTarget.style.color = '#94a3b8'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
               >
                 ✕
@@ -546,7 +546,7 @@ export default function Podcasts() {
             <div style={{ padding: '24px', overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Episode Title</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Episode Title</label>
                   <input
                     type="text"
                     name="title"
@@ -556,8 +556,8 @@ export default function Podcasts() {
                     style={{
                       width: '100%',
                       padding: '12px 16px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '12px',
                       outline: 'none',
                       fontSize: '14px',
@@ -568,14 +568,14 @@ export default function Podcasts() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Episode Number</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Episode Number</label>
                     <input
                       type="number"
                       name="episode_number"
@@ -585,8 +585,8 @@ export default function Podcasts() {
                       style={{
                         width: '100%',
                         padding: '12px 16px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '12px',
                         outline: 'none',
                         fontSize: '14px',
@@ -597,13 +597,13 @@ export default function Podcasts() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Category</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Category</label>
                     <select 
                       name="category"
                       value={formData.category}
@@ -611,8 +611,8 @@ export default function Podcasts() {
                       style={{
                         width: '100%',
                         padding: '12px 16px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '12px',
                         outline: 'none',
                         fontSize: '14px',
@@ -624,7 +624,7 @@ export default function Podcasts() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}>
                       <option value="">Select category...</option>
@@ -636,7 +636,7 @@ export default function Podcasts() {
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Guest</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Guest</label>
                     <select 
                       name="guest"
                       value={formData.guest}
@@ -644,8 +644,8 @@ export default function Podcasts() {
                       style={{
                         width: '100%',
                         padding: '12px 16px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '12px',
                         outline: 'none',
                         fontSize: '14px',
@@ -657,7 +657,7 @@ export default function Podcasts() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}>
                       <option value="">Select guest...</option>
@@ -667,7 +667,7 @@ export default function Podcasts() {
                     </select>
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Status</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Status</label>
                     <select 
                       name="status"
                       value={formData.status}
@@ -675,8 +675,8 @@ export default function Podcasts() {
                       style={{
                         width: '100%',
                         padding: '12px 16px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '12px',
                         outline: 'none',
                         fontSize: '14px',
@@ -688,7 +688,7 @@ export default function Podcasts() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}>
                       <option value="draft">Draft</option>
@@ -698,7 +698,7 @@ export default function Podcasts() {
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Duration</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Duration</label>
                     <input
                       type="text"
                       name="duration"
@@ -708,8 +708,8 @@ export default function Podcasts() {
                       style={{
                         width: '100%',
                         padding: '12px 16px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '12px',
                         outline: 'none',
                         fontSize: '14px',
@@ -720,13 +720,13 @@ export default function Podcasts() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Host</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Host</label>
                     <select 
                       name="host"
                       value={formData.host}
@@ -734,8 +734,8 @@ export default function Podcasts() {
                       style={{
                         width: '100%',
                         padding: '12px 16px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '12px',
                         outline: 'none',
                         fontSize: '14px',
@@ -747,7 +747,7 @@ export default function Podcasts() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}>
                       <option value="">Select host...</option>
@@ -758,7 +758,7 @@ export default function Podcasts() {
                   </div>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Description</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Description</label>
                   <textarea
                     name="description"
                     value={formData.description}
@@ -768,8 +768,8 @@ export default function Podcasts() {
                     style={{
                       width: '100%',
                       padding: '12px 16px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '12px',
                       outline: 'none',
                       fontSize: '14px',
@@ -781,13 +781,13 @@ export default function Podcasts() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Cover Art</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Cover Art</label>
                   <input
                     type="file"
                     accept="image/*"
@@ -798,21 +798,21 @@ export default function Podcasts() {
                   <div 
                     onClick={() => coverArtInputRef.current?.click()}
                     style={{
-                      border: '2px dashed #e2e8f0',
+                      border: '2px dashed var(--border-color)',
                       borderRadius: '12px',
                       padding: '32px',
                       textAlign: 'center',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease',
-                      background: '#f8fafc'
+                      background: 'var(--bg-secondary)'
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.borderColor = '#7c3aed'
-                      e.currentTarget.style.background = '#f5f3ff'
+                      e.currentTarget.style.background = 'var(--bg-secondary)'
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
-                      e.currentTarget.style.background = '#f8fafc'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
+                      e.currentTarget.style.background = 'var(--bg-secondary)'
                     }}>
                     {coverArtPreview ? (
                       <img 
@@ -822,14 +822,14 @@ export default function Podcasts() {
                       />
                     ) : (
                       <>
-                        <Upload style={{ width: '32px', height: '32px', color: '#94a3b8', margin: '0 auto 8px' }} />
-                        <p style={{ fontSize: '14px', color: '#64748b' }}>Click to upload cover art</p>
+                        <Upload style={{ width: '32px', height: '32px', color: 'var(--text-secondary)', margin: '0 auto 8px' }} />
+                        <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Click to upload cover art</p>
                       </>
                     )}
                   </div>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Audio File</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Audio File</label>
                   <input
                     type="file"
                     accept="audio/*"
@@ -840,34 +840,34 @@ export default function Podcasts() {
                   <div 
                     onClick={() => audioFileInputRef.current?.click()}
                     style={{
-                      border: '2px dashed #e2e8f0',
+                      border: '2px dashed var(--border-color)',
                       borderRadius: '12px',
                       padding: '32px',
                       textAlign: 'center',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease',
-                      background: '#f8fafc'
+                      background: 'var(--bg-secondary)'
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.borderColor = '#7c3aed'
-                      e.currentTarget.style.background = '#f5f3ff'
+                      e.currentTarget.style.background = 'var(--bg-secondary)'
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
-                      e.currentTarget.style.background = '#f8fafc'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
+                      e.currentTarget.style.background = 'var(--bg-secondary)'
                     }}>
                     {audioFile ? (
-                      <p style={{ fontSize: '14px', color: '#64748b' }}>{audioFile.name}</p>
+                      <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>{audioFile.name}</p>
                     ) : (
                       <>
-                        <Upload style={{ width: '32px', height: '32px', color: '#94a3b8', margin: '0 auto 8px' }} />
-                        <p style={{ fontSize: '14px', color: '#64748b' }}>Click to upload audio file (MP3, WAV)</p>
+                        <Upload style={{ width: '32px', height: '32px', color: 'var(--text-secondary)', margin: '0 auto 8px' }} />
+                        <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Click to upload audio file (MP3, WAV)</p>
                       </>
                     )}
                   </div>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Video File (Optional)</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Video File (Optional)</label>
                   <input
                     type="file"
                     accept="video/*"
@@ -878,50 +878,50 @@ export default function Podcasts() {
                   <div 
                     onClick={() => videoFileInputRef.current?.click()}
                     style={{
-                      border: '2px dashed #e2e8f0',
+                      border: '2px dashed var(--border-color)',
                       borderRadius: '12px',
                       padding: '32px',
                       textAlign: 'center',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease',
-                      background: '#f8fafc'
+                      background: 'var(--bg-secondary)'
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.borderColor = '#7c3aed'
-                      e.currentTarget.style.background = '#f5f3ff'
+                      e.currentTarget.style.background = 'var(--bg-secondary)'
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
-                      e.currentTarget.style.background = '#f8fafc'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
+                      e.currentTarget.style.background = 'var(--bg-secondary)'
                     }}>
                     {videoFile ? (
-                      <p style={{ fontSize: '14px', color: '#64748b' }}>{videoFile.name}</p>
+                      <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>{videoFile.name}</p>
                     ) : (
                       <>
-                        <Upload style={{ width: '32px', height: '32px', color: '#94a3b8', margin: '0 auto 8px' }} />
-                        <p style={{ fontSize: '14px', color: '#64748b' }}>Click to upload video file (MP4, MOV)</p>
+                        <Upload style={{ width: '32px', height: '32px', color: 'var(--text-secondary)', margin: '0 auto 8px' }} />
+                        <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Click to upload video file (MP4, MOV)</p>
                       </>
                     )}
                   </div>
                 </div>
               </div>
             </div>
-            <div style={{ padding: '6px 24px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+            <div style={{ padding: '6px 24px', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
               <button
                 onClick={() => setShowCreateModal(false)}
                 style={{
                   padding: '10px 20px',
                   background: 'transparent',
-                  border: '1px solid #e2e8f0',
+                  border: '1px solid var(--border-color)',
                   borderRadius: '12px',
                   cursor: 'pointer',
                   fontSize: '14px',
                   fontWeight: '500',
-                  color: '#64748b',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f8fafc'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
@@ -934,16 +934,16 @@ export default function Podcasts() {
                 style={{
                   padding: '10px 20px',
                   background: 'transparent',
-                  border: '1px solid #e2e8f0',
+                  border: '1px solid var(--border-color)',
                   borderRadius: '12px',
                   cursor: 'pointer',
                   fontSize: '14px',
                   fontWeight: '500',
-                  color: '#64748b',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f8fafc'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
@@ -992,7 +992,7 @@ export default function Podcasts() {
           zIndex: 50
         }}>
           <div style={{
-            background: 'white',
+            background: 'var(--bg-primary)',
             borderRadius: '16px',
             width: '100%',
             maxWidth: '600px',
@@ -1002,12 +1002,12 @@ export default function Podcasts() {
           }}>
             <div style={{
               padding: '24px',
-              borderBottom: '1px solid #e2e8f0',
+              borderBottom: '1px solid var(--border-color)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-              <h2 style={{ fontSize: '20px', fontWeight: '600', color: '#0f172a' }}>Edit Episode</h2>
+              <h2 style={{ fontSize: '20px', fontWeight: '600', color: 'var(--text-primary)' }}>Edit Episode</h2>
               <button
                 onClick={() => {
                   setShowEditModal(false)
@@ -1024,16 +1024,16 @@ export default function Podcasts() {
                   borderRadius: '8px',
                   cursor: 'pointer',
                   fontSize: '20px',
-                  color: '#94a3b8',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f1f5f9'
-                  e.currentTarget.style.color = '#64748b'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
-                  e.currentTarget.style.color = '#94a3b8'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
               >
                 ✕
@@ -1042,7 +1042,7 @@ export default function Podcasts() {
             <div style={{ padding: '24px', overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Episode Title</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Episode Title</label>
                   <input
                     type="text"
                     name="title"
@@ -1052,8 +1052,8 @@ export default function Podcasts() {
                     style={{
                       width: '100%',
                       padding: '12px 16px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '12px',
                       outline: 'none',
                       fontSize: '14px',
@@ -1064,14 +1064,14 @@ export default function Podcasts() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Episode Number</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Episode Number</label>
                     <input
                       type="number"
                       name="episode_number"
@@ -1081,8 +1081,8 @@ export default function Podcasts() {
                       style={{
                         width: '100%',
                         padding: '12px 16px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '12px',
                         outline: 'none',
                         fontSize: '14px',
@@ -1093,13 +1093,13 @@ export default function Podcasts() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Category</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Category</label>
                     <select 
                       name="category"
                       value={formData.category}
@@ -1107,8 +1107,8 @@ export default function Podcasts() {
                       style={{
                         width: '100%',
                         padding: '12px 16px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '12px',
                         outline: 'none',
                         fontSize: '14px',
@@ -1120,7 +1120,7 @@ export default function Podcasts() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}>
                       <option value="">Select category...</option>
@@ -1132,7 +1132,7 @@ export default function Podcasts() {
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Guest</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Guest</label>
                     <select 
                       name="guest"
                       value={formData.guest}
@@ -1140,8 +1140,8 @@ export default function Podcasts() {
                       style={{
                         width: '100%',
                         padding: '12px 16px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '12px',
                         outline: 'none',
                         fontSize: '14px',
@@ -1153,7 +1153,7 @@ export default function Podcasts() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}>
                       <option value="">Select guest...</option>
@@ -1163,7 +1163,7 @@ export default function Podcasts() {
                     </select>
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Status</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Status</label>
                     <select 
                       name="status"
                       value={formData.status}
@@ -1171,8 +1171,8 @@ export default function Podcasts() {
                       style={{
                         width: '100%',
                         padding: '12px 16px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '12px',
                         outline: 'none',
                         fontSize: '14px',
@@ -1184,7 +1184,7 @@ export default function Podcasts() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}>
                       <option value="draft">Draft</option>
@@ -1194,7 +1194,7 @@ export default function Podcasts() {
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Duration</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Duration</label>
                     <input
                       type="text"
                       name="duration"
@@ -1204,8 +1204,8 @@ export default function Podcasts() {
                       style={{
                         width: '100%',
                         padding: '12px 16px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '12px',
                         outline: 'none',
                         fontSize: '14px',
@@ -1216,13 +1216,13 @@ export default function Podcasts() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Host</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Host</label>
                     <select 
                       name="host"
                       value={formData.host}
@@ -1230,8 +1230,8 @@ export default function Podcasts() {
                       style={{
                         width: '100%',
                         padding: '12px 16px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '12px',
                         outline: 'none',
                         fontSize: '14px',
@@ -1243,7 +1243,7 @@ export default function Podcasts() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}>
                       <option value="">Select host...</option>
@@ -1254,7 +1254,7 @@ export default function Podcasts() {
                   </div>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Description</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Description</label>
                   <textarea
                     name="description"
                     value={formData.description}
@@ -1264,8 +1264,8 @@ export default function Podcasts() {
                     style={{
                       width: '100%',
                       padding: '12px 16px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '12px',
                       outline: 'none',
                       fontSize: '14px',
@@ -1277,13 +1277,13 @@ export default function Podcasts() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Cover Art</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Cover Art</label>
                   <input
                     type="file"
                     accept="image/*"
@@ -1294,21 +1294,21 @@ export default function Podcasts() {
                   <div 
                     onClick={() => editCoverArtInputRef.current?.click()}
                     style={{
-                      border: '2px dashed #e2e8f0',
+                      border: '2px dashed var(--border-color)',
                       borderRadius: '12px',
                       padding: '32px',
                       textAlign: 'center',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease',
-                      background: '#f8fafc'
+                      background: 'var(--bg-secondary)'
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.borderColor = '#7c3aed'
-                      e.currentTarget.style.background = '#f5f3ff'
+                      e.currentTarget.style.background = 'var(--bg-secondary)'
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
-                      e.currentTarget.style.background = '#f8fafc'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
+                      e.currentTarget.style.background = 'var(--bg-secondary)'
                     }}>
                     {coverArtPreview ? (
                       <img 
@@ -1318,14 +1318,14 @@ export default function Podcasts() {
                       />
                     ) : (
                       <>
-                        <Upload style={{ width: '32px', height: '32px', color: '#94a3b8', margin: '0 auto 8px' }} />
-                        <p style={{ fontSize: '14px', color: '#64748b' }}>Click to upload cover art</p>
+                        <Upload style={{ width: '32px', height: '32px', color: 'var(--text-secondary)', margin: '0 auto 8px' }} />
+                        <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Click to upload cover art</p>
                       </>
                     )}
                   </div>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Audio File</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Audio File</label>
                   <input
                     type="file"
                     accept="audio/*"
@@ -1336,35 +1336,35 @@ export default function Podcasts() {
                   <div 
                     onClick={() => editAudioFileInputRef.current?.click()}
                     style={{
-                      border: '2px dashed #e2e8f0',
+                      border: '2px dashed var(--border-color)',
                       borderRadius: '12px',
                       padding: '32px',
                       textAlign: 'center',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease',
-                      background: '#f8fafc'
+                      background: 'var(--bg-secondary)'
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.borderColor = '#7c3aed'
-                      e.currentTarget.style.background = '#f5f3ff'
+                      e.currentTarget.style.background = 'var(--bg-secondary)'
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
-                      e.currentTarget.style.background = '#f8fafc'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
+                      e.currentTarget.style.background = 'var(--bg-secondary)'
                     }}>
                     {audioFile ? (
-                      <p style={{ fontSize: '14px', color: '#64748b' }}>{audioFile.name}</p>
+                      <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>{audioFile.name}</p>
                     ) : (
                       <>
-                        <Upload style={{ width: '32px', height: '32px', color: '#94a3b8', margin: '0 auto 8px' }} />
-                        <p style={{ fontSize: '14px', color: '#64748b' }}>Click to upload audio file (MP3, WAV)</p>
+                        <Upload style={{ width: '32px', height: '32px', color: 'var(--text-secondary)', margin: '0 auto 8px' }} />
+                        <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Click to upload audio file (MP3, WAV)</p>
                       </>
                     )}
                   </div>
                 </div>
               </div>
             </div>
-            <div style={{ padding: '6px 24px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+            <div style={{ padding: '6px 24px', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
               <button
                 onClick={() => {
                   setShowEditModal(false)
@@ -1377,16 +1377,16 @@ export default function Podcasts() {
                 style={{
                   padding: '10px 20px',
                   background: 'transparent',
-                  border: '1px solid #e2e8f0',
+                  border: '1px solid var(--border-color)',
                   borderRadius: '12px',
                   cursor: 'pointer',
                   fontSize: '14px',
                   fontWeight: '500',
-                  color: '#64748b',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f8fafc'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
@@ -1399,16 +1399,16 @@ export default function Podcasts() {
                 style={{
                   padding: '10px 20px',
                   background: 'transparent',
-                  border: '1px solid #e2e8f0',
+                  border: '1px solid var(--border-color)',
                   borderRadius: '12px',
                   cursor: 'pointer',
                   fontSize: '14px',
                   fontWeight: '500',
-                  color: '#64748b',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f8fafc'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'

@@ -116,8 +116,8 @@ export default function PodcastPage() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#0f172a' }}>Podcast Page</h1>
-          <p style={{ color: '#64748b', marginTop: '2px', fontSize: '13px' }}>Configure the podcast page content and featured episodes</p>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--text-primary)' }}>Podcast Page</h1>
+          <p style={{ color: 'var(--text-secondary)', marginTop: '2px', fontSize: '13px' }}>Configure the podcast page content and featured episodes</p>
         </div>
         <div style={{ display: 'flex', gap: '10px' }}>
           <button
@@ -126,21 +126,21 @@ export default function PodcastPage() {
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              background: '#f8fafc',
-              color: '#64748b',
+              background: 'var(--bg-secondary)',
+              color: 'var(--text-secondary)',
               padding: '8px 16px',
               borderRadius: '10px',
-              border: '1px solid #e2e8f0',
+              border: '1px solid var(--border-color)',
               cursor: 'pointer',
               fontSize: '13px',
               fontWeight: '500',
               transition: 'all 0.2s ease'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = '#f1f5f9'
+              e.currentTarget.style.background = 'var(--bg-secondary)'
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = '#f8fafc'
+              e.currentTarget.style.background = 'var(--bg-secondary)'
             }}
           >
             <Eye style={{ width: '16px', height: '16px' }} />
@@ -178,20 +178,20 @@ export default function PodcastPage() {
 
       {loading ? (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
-          <p style={{ color: '#64748b' }}>Loading podcasts...</p>
+          <p style={{ color: 'var(--text-secondary)' }}>Loading podcasts...</p>
         </div>
       ) : (
         <>
       {/* Featured Episodes */}
       <div style={{
-        background: 'rgba(255, 255, 255, 0.95)',
+        background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
         backdropFilter: 'blur(20px)',
         borderRadius: '16px',
-        border: '1px solid rgba(226, 232, 240, 0.8)',
+        border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
         padding: '20px'
       }}>
-        <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#0f172a', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <h3 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Mic style={{ width: '20px', height: '20px' }} />
             Featured Episodes
@@ -218,13 +218,13 @@ export default function PodcastPage() {
         <div style={{ display: 'flex', flexDirection: 'row', gap: '12px', flexWrap: 'wrap' }}>
           {featuredEpisodes.map((episode, index) => (
             <div key={episode.id || `featured-episode-${index}`} style={{
-              background: '#f8fafc',
+              background: 'var(--bg-secondary)',
               borderRadius: '10px',
               padding: '12px',
               display: 'flex',
               flexDirection: 'column',
               gap: '12px',
-              border: '1px solid #e2e8f0',
+              border: '1px solid var(--border-color)',
               flex: '1',
               minWidth: '280px'
             }}>
@@ -262,17 +262,17 @@ export default function PodcastPage() {
                 )}
               </div>
               <div>
-                <p style={{ fontSize: '14px', fontWeight: '500', color: '#0f172a' }}>{episode.title}</p>
+                <p style={{ fontSize: '14px', fontWeight: '500', color: 'var(--text-primary)' }}>{episode.title}</p>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '4px' }}>
-                  <span style={{ fontSize: '12px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <span style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                     <Clock style={{ width: '12px', height: '12px' }} />
                     {episode.duration}
                   </span>
-                  <span style={{ fontSize: '12px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <span style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                     <Users style={{ width: '12px', height: '12px' }} />
                     {episode.views.toLocaleString()} views
                   </span>
-                  <span style={{ fontSize: '12px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <span style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                     <Calendar style={{ width: '12px', height: '12px' }} />
                     {episode.date}
                   </span>
@@ -295,20 +295,40 @@ export default function PodcastPage() {
 
       {/* Live Podcast Banner */}
       <div style={{
-        background: 'rgba(255, 255, 255, 0.95)',
+        background: 'var(--bg-primary)',
         backdropFilter: 'blur(20px)',
         borderRadius: '16px',
-        border: '1px solid rgba(226, 232, 240, 0.8)',
+        border: '1px solid var(--border-color)',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
         padding: '20px'
       }}>
-        <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#0f172a', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Radio style={{ width: '20px', height: '20px' }} />
-          Live Podcast Banner
+        <h3 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Radio style={{ width: '20px', height: '20px' }} />
+            Live Podcast Banner
+          </div>
+          <button
+            style={{
+              padding: '8px 16px',
+              background: 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)',
+              border: 'none',
+              borderRadius: '10px',
+              color: 'white',
+              fontSize: '13px',
+              fontWeight: '500',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}
+          >
+            <Plus style={{ width: '16px', height: '16px' }} />
+            Add Episode
+          </button>
         </h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', fontWeight: '500', color: '#374151', cursor: 'pointer' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', cursor: 'pointer' }}>
               <input
                 type="checkbox"
                 checked={livePodcastBanner.enabled}
@@ -319,7 +339,7 @@ export default function PodcastPage() {
             </label>
           </div>
           <div>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Banner Title</label>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Banner Title</label>
             <input
               type="text"
               value={livePodcastBanner.title}
@@ -327,8 +347,8 @@ export default function PodcastPage() {
               style={{
                 width: '100%',
                 padding: '10px 12px',
-                background: '#f8fafc',
-                border: '1px solid #e2e8f0',
+                background: 'var(--bg-secondary)',
+                border: '1px solid var(--border-color)',
                 borderRadius: '10px',
                 outline: 'none',
                 fontSize: '13px',
@@ -339,13 +359,13 @@ export default function PodcastPage() {
                 e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
               }}
               onBlur={(e) => {
-                e.currentTarget.style.borderColor = '#e2e8f0'
+                e.currentTarget.style.borderColor = 'var(--border-color)'
                 e.currentTarget.style.boxShadow = 'none'
               }}
             />
           </div>
           <div>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Description</label>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Description</label>
             <textarea
               value={livePodcastBanner.description}
               onChange={(e) => setLivePodcastBanner({ ...livePodcastBanner, description: e.target.value })}
@@ -353,8 +373,8 @@ export default function PodcastPage() {
               style={{
                 width: '100%',
                 padding: '10px 12px',
-                background: '#f8fafc',
-                border: '1px solid #e2e8f0',
+                background: 'var(--bg-secondary)',
+                border: '1px solid var(--border-color)',
                 borderRadius: '10px',
                 outline: 'none',
                 fontSize: '13px',
@@ -366,13 +386,13 @@ export default function PodcastPage() {
                 e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
               }}
               onBlur={(e) => {
-                e.currentTarget.style.borderColor = '#e2e8f0'
+                e.currentTarget.style.borderColor = 'var(--border-color)'
                 e.currentTarget.style.boxShadow = 'none'
               }}
             />
           </div>
           <div>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Schedule</label>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Schedule</label>
             <input
               type="text"
               value={livePodcastBanner.schedule}
@@ -380,8 +400,8 @@ export default function PodcastPage() {
               style={{
                 width: '100%',
                 padding: '10px 12px',
-                background: '#f8fafc',
-                border: '1px solid #e2e8f0',
+                background: 'var(--bg-secondary)',
+                border: '1px solid var(--border-color)',
                 borderRadius: '10px',
                 outline: 'none',
                 fontSize: '13px',
@@ -392,7 +412,7 @@ export default function PodcastPage() {
                 e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
               }}
               onBlur={(e) => {
-                e.currentTarget.style.borderColor = '#e2e8f0'
+                e.currentTarget.style.borderColor = 'var(--border-color)'
                 e.currentTarget.style.boxShadow = 'none'
               }}
             />
@@ -426,14 +446,14 @@ export default function PodcastPage() {
 
       {/* ✦ Latest Episodes */}
       <div style={{
-        background: 'rgba(255, 255, 255, 0.95)',
+        background: 'var(--bg-primary)',
         backdropFilter: 'blur(20px)',
         borderRadius: '16px',
-        border: '1px solid rgba(226, 232, 240, 0.8)',
+        border: '1px solid var(--border-color)',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
         padding: '20px'
       }}>
-        <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#0f172a', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <h3 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Star style={{ width: '20px', height: '20px' }} />
             ✦ Latest Episodes
@@ -460,13 +480,13 @@ export default function PodcastPage() {
         <div style={{ display: 'flex', flexDirection: 'row', gap: '12px', flexWrap: 'wrap' }}>
           {latestEpisodes.map((episode, index) => (
             <div key={episode.id || `latest-episode-${index}`} style={{
-              background: '#f8fafc',
+              background: 'var(--bg-secondary)',
               borderRadius: '10px',
               padding: '12px',
               display: 'flex',
               flexDirection: 'column',
               gap: '12px',
-              border: '1px solid #e2e8f0',
+              border: '1px solid var(--border-color)',
               flex: '1',
               minWidth: '280px'
             }}>
@@ -504,13 +524,13 @@ export default function PodcastPage() {
                 )}
               </div>
               <div>
-                <p style={{ fontSize: '14px', fontWeight: '500', color: '#0f172a' }}>{episode.title}</p>
+                <p style={{ fontSize: '14px', fontWeight: '500', color: 'var(--text-primary)' }}>{episode.title}</p>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '4px' }}>
-                  <span style={{ fontSize: '12px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <span style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                     <Clock style={{ width: '12px', height: '12px' }} />
                     {episode.duration}
                   </span>
-                  <span style={{ fontSize: '12px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <span style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                     <Calendar style={{ width: '12px', height: '12px' }} />
                     {episode.date}
                   </span>
@@ -533,14 +553,14 @@ export default function PodcastPage() {
 
       {/* Podcast Hosts */}
       <div style={{
-        background: 'rgba(255, 255, 255, 0.95)',
+        background: 'var(--bg-primary)',
         backdropFilter: 'blur(20px)',
         borderRadius: '16px',
-        border: '1px solid rgba(226, 232, 240, 0.8)',
+        border: '1px solid var(--border-color)',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
         padding: '20px'
       }}>
-        <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#0f172a', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <h3 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <User style={{ width: '20px', height: '20px' }} />
             Podcast Hosts
@@ -567,13 +587,13 @@ export default function PodcastPage() {
         <div style={{ display: 'flex', flexDirection: 'row', gap: '12px', flexWrap: 'wrap' }}>
           {podcastHosts.map((host, index) => (
             <div key={host.id || `host-${index}`} style={{
-              background: '#f8fafc',
+              background: 'var(--bg-secondary)',
               borderRadius: '10px',
               padding: '12px 16px',
               display: 'flex',
               alignItems: 'center',
               gap: '12px',
-              border: '1px solid #e2e8f0',
+              border: '1px solid var(--border-color)',
               flex: '1',
               minWidth: '280px'
             }}>
@@ -589,8 +609,8 @@ export default function PodcastPage() {
                 <User style={{ width: '16px', height: '16px', color: 'white' }} />
               </div>
               <div style={{ flex: 1 }}>
-                <p style={{ fontSize: '14px', fontWeight: '500', color: '#0f172a' }}>{host.name}</p>
-                <p style={{ fontSize: '12px', color: '#64748b', marginTop: '2px' }}>{host.role}</p>
+                <p style={{ fontSize: '14px', fontWeight: '500', color: 'var(--text-primary)' }}>{host.name}</p>
+                <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>{host.role}</p>
               </div>
               <button
                 style={{
@@ -609,14 +629,14 @@ export default function PodcastPage() {
 
       {/* Blog Posts */}
       <div style={{
-        background: 'rgba(255, 255, 255, 0.95)',
+        background: 'var(--bg-primary)',
         backdropFilter: 'blur(20px)',
         borderRadius: '16px',
-        border: '1px solid rgba(226, 232, 240, 0.8)',
+        border: '1px solid var(--border-color)',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
         padding: '20px'
       }}>
-        <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#0f172a', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <h3 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <FileText style={{ width: '20px', height: '20px' }} />
             Blog Posts
@@ -643,13 +663,13 @@ export default function PodcastPage() {
         <div style={{ display: 'flex', flexDirection: 'row', gap: '12px', flexWrap: 'wrap' }}>
           {blogPosts.map((post, index) => (
             <div key={post.id || `post-${index}`} style={{
-              background: '#f8fafc',
+              background: 'var(--bg-secondary)',
               borderRadius: '10px',
               padding: '12px',
               display: 'flex',
               flexDirection: 'column',
               gap: '12px',
-              border: '1px solid #e2e8f0',
+              border: '1px solid var(--border-color)',
               flex: '1',
               minWidth: '280px'
             }}>
@@ -687,13 +707,13 @@ export default function PodcastPage() {
                 )}
               </div>
               <div>
-                <p style={{ fontSize: '14px', fontWeight: '500', color: '#0f172a' }}>{post.title}</p>
+                <p style={{ fontSize: '14px', fontWeight: '500', color: 'var(--text-primary)' }}>{post.title}</p>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '4px' }}>
-                  <span style={{ fontSize: '12px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <span style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                     <Calendar style={{ width: '12px', height: '12px' }} />
                     {post.date}
                   </span>
-                  <span style={{ fontSize: '12px', color: '#64748b', background: '#e2e8f0', padding: '2px 8px', borderRadius: '4px' }}>
+                  <span style={{ fontSize: '12px', color: 'var(--text-secondary)', background: 'var(--border-color)', padding: '2px 8px', borderRadius: '4px' }}>
                     {post.category}
                   </span>
                 </div>
@@ -715,14 +735,14 @@ export default function PodcastPage() {
 
       {/* Featured Guests */}
       <div style={{
-        background: 'rgba(255, 255, 255, 0.95)',
+        background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
         backdropFilter: 'blur(20px)',
         borderRadius: '16px',
-        border: '1px solid rgba(226, 232, 240, 0.8)',
+        border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
         padding: '20px'
       }}>
-        <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#0f172a', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <h3 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Award style={{ width: '20px', height: '20px' }} />
             Featured Guests
@@ -755,7 +775,7 @@ export default function PodcastPage() {
               display: 'flex',
               alignItems: 'center',
               gap: '12px',
-              border: '1px solid #e2e8f0',
+              border: '1px solid var(--border-color)',
               flex: '0 0 calc(25% - 12px)',
               minWidth: '200px'
             }}>
@@ -771,9 +791,9 @@ export default function PodcastPage() {
                 <Award style={{ width: '16px', height: '16px', color: 'white' }} />
               </div>
               <div style={{ flex: 1 }}>
-                <p style={{ fontSize: '14px', fontWeight: '500', color: '#0f172a' }}>{guest.name}</p>
-                <p style={{ fontSize: '12px', color: '#64748b', marginTop: '2px' }}>{guest.title}</p>
-                <p style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>Episode: {guest.episode}</p>
+                <p style={{ fontSize: '14px', fontWeight: '500', color: 'var(--text-primary)' }}>{guest.name}</p>
+                <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>{guest.title}</p>
+                <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>Episode: {guest.episode}</p>
               </div>
               <button
                 style={{
@@ -803,7 +823,7 @@ export default function PodcastPage() {
           zIndex: 50
         }}>
           <div style={{
-            background: 'white',
+            background: 'var(--bg-primary)',
             borderRadius: '16px',
             width: '90%',
             maxWidth: '800px',
@@ -813,12 +833,12 @@ export default function PodcastPage() {
           }}>
             <div style={{
               padding: '20px',
-              borderBottom: '1px solid #e2e8f0',
+              borderBottom: '1px solid var(--border-color)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-              <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a' }}>Podcast Page Preview</h2>
+              <h2 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)' }}>Podcast Page Preview</h2>
               <button
                 onClick={() => setShowPreview(false)}
                 style={{
@@ -828,28 +848,28 @@ export default function PodcastPage() {
                   borderRadius: '8px',
                   cursor: 'pointer',
                   fontSize: '18px',
-                  color: '#94a3b8',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f1f5f9'
-                  e.currentTarget.style.color = '#64748b'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
-                  e.currentTarget.style.color = '#94a3b8'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
               >
                 ✕
               </button>
             </div>
             <div style={{ padding: '40px' }}>
-              <h1 style={{ fontSize: '32px', fontWeight: 'bold', color: '#0f172a', marginBottom: '16px' }}>{podcastTitle}</h1>
-              <p style={{ fontSize: '16px', color: '#64748b', lineHeight: '1.6', marginBottom: '32px' }}>{podcastContent}</p>
-              <h3 style={{ fontSize: '20px', fontWeight: '600', color: '#0f172a', marginBottom: '16px' }}>Featured Episodes</h3>
+              <h1 style={{ fontSize: '32px', fontWeight: 'bold', color: 'var(--text-primary)', marginBottom: '16px' }}>{podcastTitle}</h1>
+              <p style={{ fontSize: '16px', color: 'var(--text-secondary)', lineHeight: '1.6', marginBottom: '32px' }}>{podcastContent}</p>
+              <h3 style={{ fontSize: '20px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>Featured Episodes</h3>
               {featuredEpisodes.map((episode, index) => (
                 <div key={episode.id || `featured-episode-view-${index}`} style={{
-                  background: '#f8fafc',
+                  background: 'var(--bg-secondary)',
                   borderRadius: '10px',
                   padding: '16px',
                   marginBottom: '12px',

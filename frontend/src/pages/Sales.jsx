@@ -62,16 +62,16 @@ export default function Sales() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#0f172a' }}>Sales Reports</h1>
-          <p style={{ color: '#64748b', marginTop: '2px', fontSize: '13px' }}>Track revenue, orders, and sales performance</p>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--text-primary)' }}>Sales Reports</h1>
+          <p style={{ color: 'var(--text-secondary)', marginTop: '2px', fontSize: '13px' }}>Track revenue, orders, and sales performance</p>
         </div>
         <select
           value={timeRange}
           onChange={(e) => setTimeRange(e.target.value)}
           style={{
             padding: '8px 12px',
-            background: '#f8fafc',
-            border: '1px solid #e2e8f0',
+            background: 'var(--bg-secondary)',
+            border: '1px solid var(--border-color)',
             borderRadius: '10px',
             outline: 'none',
             fontSize: '13px',
@@ -83,7 +83,7 @@ export default function Sales() {
             e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
           }}
           onBlur={(e) => {
-            e.currentTarget.style.borderColor = '#e2e8f0'
+            e.currentTarget.style.borderColor = 'var(--border-color)'
             e.currentTarget.style.boxShadow = 'none'
           }}
         >
@@ -97,11 +97,11 @@ export default function Sales() {
       {/* Stats Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
           padding: '12px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
@@ -127,15 +127,15 @@ export default function Sales() {
               +{revenueGrowth}%
             </span>
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>${totalRevenue.toLocaleString()}</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Total Revenue</p>
+          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>${totalRevenue.toLocaleString()}</h3>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>Total Revenue</p>
         </div>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
           padding: '12px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
@@ -161,15 +161,15 @@ export default function Sales() {
               +12.3%
             </span>
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{totalOrders}</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Total Orders</p>
+          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>{totalOrders}</h3>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>Total Orders</p>
         </div>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
           padding: '12px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
@@ -195,13 +195,13 @@ export default function Sales() {
               +5.8%
             </span>
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>${avgOrderValue}</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Avg. Order Value</p>
+          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>${avgOrderValue}</h3>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>Avg. Order Value</p>
         </div>
       </div>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: '4px', borderBottom: '1px solid #e2e8f0' }}>
+      <div style={{ display: 'flex', gap: '4px', borderBottom: '1px solid var(--border-color)' }}>
         <button
           onClick={() => setSelectedTab('overview')}
           style={{
@@ -212,12 +212,12 @@ export default function Sales() {
             cursor: 'pointer',
             fontSize: '13px',
             fontWeight: '500',
-            color: selectedTab === 'overview' ? 'white' : '#64748b',
+            color: selectedTab === 'overview' ? 'white' : 'var(--text-secondary)',
             transition: 'all 0.2s ease'
           }}
           onMouseEnter={(e) => {
             if (selectedTab !== 'overview') {
-              e.currentTarget.style.background = '#f1f5f9'
+              e.currentTarget.style.background = 'var(--bg-secondary)'
             }
           }}
           onMouseLeave={(e) => {
@@ -238,12 +238,12 @@ export default function Sales() {
             cursor: 'pointer',
             fontSize: '13px',
             fontWeight: '500',
-            color: selectedTab === 'products' ? 'white' : '#64748b',
+            color: selectedTab === 'products' ? 'white' : 'var(--text-secondary)',
             transition: 'all 0.2s ease'
           }}
           onMouseEnter={(e) => {
             if (selectedTab !== 'products') {
-              e.currentTarget.style.background = '#f1f5f9'
+              e.currentTarget.style.background = 'var(--bg-secondary)'
             }
           }}
           onMouseLeave={(e) => {
@@ -259,15 +259,15 @@ export default function Sales() {
       {/* Content */}
       {selectedTab === 'overview' && (
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
           padding: '20px'
         }}>
-          <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#0f172a', marginBottom: '16px' }}>Revenue Trend</h3>
-          <div style={{ display: 'flex', alignItems: 'flex-end', gap: '16px', height: '200px', paddingBottom: '20px', borderBottom: '1px solid #e2e8f0' }}>
+          <h3 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>Revenue Trend</h3>
+          <div style={{ display: 'flex', alignItems: 'flex-end', gap: '16px', height: '200px', paddingBottom: '20px', borderBottom: '1px solid var(--border-color)' }}>
             {salesData.map((data, index) => (
               <div key={index} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
                 <div style={{
@@ -283,7 +283,7 @@ export default function Sales() {
                 onMouseLeave={(e) => {
                   e.currentTarget.style.opacity = '1'
                 }} />
-                <span style={{ fontSize: '11px', color: '#64748b' }}>{data.date}</span>
+                <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{data.date}</span>
               </div>
             ))}
           </div>
@@ -300,28 +300,28 @@ export default function Sales() {
           overflow: 'hidden'
         }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+            <thead style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}>
               <tr>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Product</th>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Sales</th>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Revenue</th>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Growth</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Product</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Sales</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Revenue</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Growth</th>
               </tr>
             </thead>
             <tbody>
               {topProducts.map((product, index) => (
-                <tr key={index} style={{ borderBottom: '1px solid #e2e8f0', transition: 'background 0.2s ease' }}
+                <tr key={index} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background 0.2s ease' }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f8fafc'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
                 }}>
                   <td style={{ padding: '12px 16px' }}>
-                    <span style={{ fontWeight: '500', color: '#0f172a', fontSize: '13px' }}>{product.name}</span>
+                    <span style={{ fontWeight: '500', color: 'var(--text-primary)', fontSize: '13px' }}>{product.name}</span>
                   </td>
-                  <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{product.sales}</td>
-                  <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>${product.revenue.toLocaleString()}</td>
+                  <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{product.sales}</td>
+                  <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>${product.revenue.toLocaleString()}</td>
                   <td style={{ padding: '12px 16px' }}>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '13px', color: product.growth >= 0 ? '#16a34a' : '#dc2626' }}>
                       {product.growth >= 0 ? <ArrowUpRight style={{ width: '14px', height: '14px' }} /> : <ArrowDownRight style={{ width: '14px', height: '14px' }} />}

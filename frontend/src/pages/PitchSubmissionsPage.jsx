@@ -73,10 +73,10 @@ export default function PitchSubmissionsPage() {
   const getStatusColor = (status) => {
     switch (status) {
       case 'pending': return '#f59e0b'
-      case 'reviewed': return '#3b82f6'
+      case 'reviewed': return 'var(--text-primary)'
       case 'accepted': return '#10b981'
       case 'rejected': return '#ef4444'
-      default: return '#64748b'
+      default: return 'var(--text-secondary)'
     }
   }
 
@@ -95,8 +95,8 @@ export default function PitchSubmissionsPage() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#0f172a' }}>Pitch Submissions</h1>
-          <p style={{ color: '#64748b', marginTop: '2px', fontSize: '13px' }}>Manage content and episode pitch submissions</p>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--text-primary)' }}>Pitch Submissions</h1>
+          <p style={{ color: 'var(--text-secondary)', marginTop: '2px', fontSize: '13px' }}>Manage content and episode pitch submissions</p>
         </div>
         <div style={{ display: 'flex', gap: '10px' }}>
           <button
@@ -105,11 +105,11 @@ export default function PitchSubmissionsPage() {
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              background: '#f8fafc',
-              color: '#64748b',
+              background: 'var(--bg-secondary)',
+              color: 'var(--text-secondary)',
               padding: '8px 16px',
               borderRadius: '10px',
-              border: '1px solid #e2e8f0',
+              border: '1px solid var(--border-color)',
               cursor: 'pointer',
               fontSize: '13px',
               fontWeight: '500',
@@ -142,10 +142,10 @@ export default function PitchSubmissionsPage() {
 
       {/* Filters */}
       <div style={{
-        background: 'rgba(255, 255, 255, 0.95)',
+        background: 'var(--bg-primary)',
         backdropFilter: 'blur(20px)',
         borderRadius: '16px',
-        border: '1px solid rgba(226, 232, 240, 0.8)',
+        border: '1px solid var(--border-color)',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
         padding: '20px',
         display: 'flex',
@@ -153,7 +153,7 @@ export default function PitchSubmissionsPage() {
         alignItems: 'center'
       }}>
         <div style={{ flex: 1, position: 'relative' }}>
-          <Search style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', width: '16px', height: '16px', color: '#94a3b8' }} />
+          <Search style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', width: '16px', height: '16px', color: 'var(--text-secondary)' }} />
           <input
             type="text"
             placeholder="Search submissions..."
@@ -162,8 +162,8 @@ export default function PitchSubmissionsPage() {
             style={{
               width: '100%',
               padding: '10px 12px 10px 40px',
-              background: '#f8fafc',
-              border: '1px solid #e2e8f0',
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
               borderRadius: '10px',
               outline: 'none',
               fontSize: '13px',
@@ -178,9 +178,9 @@ export default function PitchSubmissionsPage() {
               onClick={() => setFilterStatus(status)}
               style={{
                 padding: '8px 16px',
-                background: filterStatus === status ? 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)' : '#f8fafc',
-                color: filterStatus === status ? 'white' : '#64748b',
-                border: filterStatus === status ? 'none' : '1px solid #e2e8f0',
+                background: filterStatus === status ? '#7c3aed' : 'var(--bg-secondary)',
+                color: filterStatus === status ? 'white' : 'var(--text-secondary)',
+                border: filterStatus === status ? 'none' : '1px solid var(--border-color)',
                 borderRadius: '10px',
                 fontSize: '13px',
                 fontWeight: '500',
@@ -197,21 +197,21 @@ export default function PitchSubmissionsPage() {
       {/* Submissions List */}
       {loading ? (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
-          <p style={{ color: '#64748b' }}>Loading submissions...</p>
+          <p style={{ color: 'var(--text-secondary)' }}>Loading submissions...</p>
         </div>
       ) : (
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'var(--bg-primary)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid var(--border-color)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
           padding: '20px'
         }}>
           {filteredSubmissions.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '60px 20px' }}>
-              <Lightbulb style={{ width: '48px', height: '48px', color: '#cbd5e1', margin: '0 auto 16px' }} />
-              <p style={{ color: '#64748b', fontSize: '14px' }}>No submissions found</p>
+              <Lightbulb style={{ width: '48px', height: '48px', color: 'var(--text-secondary)', margin: '0 auto 16px' }} />
+              <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>No submissions found</p>
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -219,10 +219,10 @@ export default function PitchSubmissionsPage() {
                 <div
                   key={submission.id || `submission-${index}`}
                   style={{
-                    background: 'white',
+                    background: 'var(--bg-secondary)',
                     borderRadius: '16px',
                     padding: '20px',
-                    border: '1px solid #e2e8f0',
+                    border: '1px solid var(--border-color)',
                     display: 'flex',
                     alignItems: 'flex-start',
                     gap: '20px',
@@ -233,12 +233,12 @@ export default function PitchSubmissionsPage() {
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = 'translateY(-2px)'
                     e.currentTarget.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.1)'
-                    e.currentTarget.style.borderColor = '#cbd5e1'
+                    e.currentTarget.style.borderColor = '#7c3aed'
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.transform = 'translateY(0)'
                     e.currentTarget.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.05)'
-                    e.currentTarget.style.borderColor = '#e2e8f0'
+                    e.currentTarget.style.borderColor = 'var(--border-color)'
                   }}
                   onClick={() => {
                     setSelectedSubmission(submission)
@@ -248,7 +248,7 @@ export default function PitchSubmissionsPage() {
                   <div style={{
                     width: '56px',
                     height: '56px',
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
                     borderRadius: '14px',
                     display: 'flex',
                     alignItems: 'center',
@@ -260,12 +260,12 @@ export default function PitchSubmissionsPage() {
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px', flexWrap: 'wrap' }}>
-                      <p style={{ fontSize: '16px', fontWeight: '600', color: '#0f172a', margin: 0 }}>{submission.pitch_title}</p>
+                      <p style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)', margin: 0 }}>{submission.pitch_title}</p>
                       <span style={{
                         fontSize: '11px',
                         padding: '3px 10px',
                         borderRadius: '20px',
-                        background: `${getStatusColor(submission.status)}15`,
+                        background: `${getStatusColor(submission.status)}20`,
                         color: getStatusColor(submission.status),
                         fontWeight: '600',
                         textTransform: 'uppercase',
@@ -275,19 +275,19 @@ export default function PitchSubmissionsPage() {
                       </span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap', marginBottom: '8px' }}>
-                      <span style={{ fontSize: '13px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: '500' }}>
-                        <Mail style={{ width: '14px', height: '14px', color: '#94a3b8' }} />
+                      <span style={{ fontSize: '13px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: '500' }}>
+                        <Mail style={{ width: '14px', height: '14px', color: 'var(--text-secondary)' }} />
                         {submission.full_name}
                       </span>
                       {submission.topic && (
-                        <span style={{ fontSize: '13px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: '500' }}>
-                          <FileText style={{ width: '14px', height: '14px', color: '#94a3b8' }} />
+                        <span style={{ fontSize: '13px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: '500' }}>
+                          <FileText style={{ width: '14px', height: '14px', color: 'var(--text-secondary)' }} />
                           {submission.topic}
                         </span>
                       )}
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
-                      <span style={{ fontSize: '12px', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <span style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <Calendar style={{ width: '13px', height: '13px' }} />
                         {new Date(submission.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                       </span>
@@ -324,7 +324,7 @@ export default function PitchSubmissionsPage() {
                           }}
                           style={{ 
                             fontSize: '12px', 
-                            color: '#667eea', 
+                            color: '#7c3aed', 
                             display: 'flex', 
                             alignItems: 'center', 
                             gap: '6px', 
@@ -338,13 +338,13 @@ export default function PitchSubmissionsPage() {
                             transition: 'all 0.2s ease'
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.background = '#667eea'
+                            e.currentTarget.style.background = '#7c3aed'
                             e.currentTarget.style.color = 'white'
-                            e.currentTarget.style.borderColor = '#667eea'
+                            e.currentTarget.style.borderColor = '#7c3aed'
                           }}
                           onMouseLeave={(e) => {
                             e.currentTarget.style.background = '#f5f3ff'
-                            e.currentTarget.style.color = '#667eea'
+                            e.currentTarget.style.color = '#7c3aed'
                             e.currentTarget.style.borderColor = '#e9d5ff'
                           }}
                         >
@@ -363,26 +363,26 @@ export default function PitchSubmissionsPage() {
                       }}
                       style={{
                         padding: '10px',
-                        background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
-                        border: '1px solid #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '10px',
                         cursor: 'pointer',
                         transition: 'all 0.2s ease',
                         boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)'
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
-                        e.currentTarget.style.borderColor = '#667eea'
+                        e.currentTarget.style.background = '#7c3aed'
+                        e.currentTarget.style.borderColor = '#7c3aed'
                         e.currentTarget.querySelector('svg').style.color = 'white'
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.background = 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)'
-                        e.currentTarget.style.borderColor = '#e2e8f0'
-                        e.currentTarget.querySelector('svg').style.color = '#64748b'
+                        e.currentTarget.style.background = 'var(--bg-secondary)'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
+                        e.currentTarget.querySelector('svg').style.color = 'var(--text-secondary)'
                       }}
                       title="View Details"
                     >
-                      <Eye style={{ width: '18px', height: '18px', color: '#64748b', transition: 'color 0.2s ease' }} />
+                      <Eye style={{ width: '18px', height: '18px', color: 'var(--text-secondary)', transition: 'color 0.2s ease' }} />
                     </button>
                     {submission.status === 'pending' && (
                       <>
@@ -393,26 +393,26 @@ export default function PitchSubmissionsPage() {
                           }}
                           style={{
                             padding: '10px',
-                            background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)',
-                            border: '1px solid #bfdbfe',
+                            background: 'var(--bg-secondary)',
+                            border: '1px solid var(--border-color)',
                             borderRadius: '10px',
                             cursor: 'pointer',
                             transition: 'all 0.2s ease',
-                            boxShadow: '0 1px 2px rgba(59, 130, 246, 0.1)'
+                            boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)'
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.background = 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)'
-                            e.currentTarget.style.borderColor = '#3b82f6'
+                            e.currentTarget.style.background = '#7c3aed'
+                            e.currentTarget.style.borderColor = '#7c3aed'
                             e.currentTarget.querySelector('svg').style.color = 'white'
                           }}
                           onMouseLeave={(e) => {
-                            e.currentTarget.style.background = 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)'
-                            e.currentTarget.style.borderColor = '#bfdbfe'
-                            e.currentTarget.querySelector('svg').style.color = '#3b82f6'
+                            e.currentTarget.style.background = 'var(--bg-secondary)'
+                            e.currentTarget.style.borderColor = 'var(--border-color)'
+                            e.currentTarget.querySelector('svg').style.color = 'var(--text-secondary)'
                           }}
                           title="Mark as Reviewed"
                         >
-                          <Filter style={{ width: '18px', height: '18px', color: '#3b82f6', transition: 'color 0.2s ease' }} />
+                          <Filter style={{ width: '18px', height: '18px', color: 'var(--text-secondary)', transition: 'color 0.2s ease' }} />
                         </button>
                         <button
                           onClick={(e) => {
@@ -421,21 +421,21 @@ export default function PitchSubmissionsPage() {
                           }}
                           style={{
                             padding: '10px',
-                            background: 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)',
-                            border: '1px solid #a7f3d0',
+                            background: 'var(--bg-secondary)',
+                            border: '1px solid var(--border-color)',
                             borderRadius: '10px',
                             cursor: 'pointer',
                             transition: 'all 0.2s ease',
-                            boxShadow: '0 1px 2px rgba(16, 185, 129, 0.1)'
+                            boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)'
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
+                            e.currentTarget.style.background = '#10b981'
                             e.currentTarget.style.borderColor = '#10b981'
                             e.currentTarget.querySelector('svg').style.color = 'white'
                           }}
                           onMouseLeave={(e) => {
-                            e.currentTarget.style.background = 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)'
-                            e.currentTarget.style.borderColor = '#a7f3d0'
+                            e.currentTarget.style.background = 'var(--bg-secondary)'
+                            e.currentTarget.style.borderColor = 'var(--border-color)'
                             e.currentTarget.querySelector('svg').style.color = '#10b981'
                           }}
                           title="Accept"
@@ -449,21 +449,21 @@ export default function PitchSubmissionsPage() {
                           }}
                           style={{
                             padding: '10px',
-                            background: 'linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)',
-                            border: '1px solid #fecaca',
+                            background: 'var(--bg-secondary)',
+                            border: '1px solid var(--border-color)',
                             borderRadius: '10px',
                             cursor: 'pointer',
                             transition: 'all 0.2s ease',
-                            boxShadow: '0 1px 2px rgba(239, 68, 68, 0.1)'
+                            boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)'
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)'
+                            e.currentTarget.style.background = '#ef4444'
                             e.currentTarget.style.borderColor = '#ef4444'
                             e.currentTarget.querySelector('svg').style.color = 'white'
                           }}
                           onMouseLeave={(e) => {
-                            e.currentTarget.style.background = 'linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)'
-                            e.currentTarget.style.borderColor = '#fecaca'
+                            e.currentTarget.style.background = 'var(--bg-secondary)'
+                            e.currentTarget.style.borderColor = 'var(--border-color)'
                             e.currentTarget.querySelector('svg').style.color = '#ef4444'
                           }}
                           title="Reject"
@@ -479,21 +479,21 @@ export default function PitchSubmissionsPage() {
                       }}
                       style={{
                         padding: '10px',
-                        background: 'linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)',
-                        border: '1px solid #fecaca',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '10px',
                         cursor: 'pointer',
                         transition: 'all 0.2s ease',
-                        boxShadow: '0 1px 2px rgba(239, 68, 68, 0.1)'
+                        boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)'
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)'
+                        e.currentTarget.style.background = '#ef4444'
                         e.currentTarget.style.borderColor = '#ef4444'
                         e.currentTarget.querySelector('svg').style.color = 'white'
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.background = 'linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)'
-                        e.currentTarget.style.borderColor = '#fecaca'
+                        e.currentTarget.style.background = 'var(--bg-secondary)'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.querySelector('svg').style.color = '#ef4444'
                       }}
                       title="Delete"
@@ -521,7 +521,7 @@ export default function PitchSubmissionsPage() {
           zIndex: 50
         }}>
           <div style={{
-            background: 'white',
+            background: 'var(--bg-primary)',
             borderRadius: '16px',
             width: '90%',
             maxWidth: '700px',
@@ -531,12 +531,12 @@ export default function PitchSubmissionsPage() {
           }}>
             <div style={{
               padding: '20px',
-              borderBottom: '1px solid #e2e8f0',
+              borderBottom: '1px solid var(--border-color)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-              <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a' }}>Pitch Details</h2>
+              <h2 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)' }}>Pitch Details</h2>
               <button
                 onClick={() => setShowModal(false)}
                 style={{
@@ -546,7 +546,7 @@ export default function PitchSubmissionsPage() {
                   borderRadius: '8px',
                   cursor: 'pointer',
                   fontSize: '18px',
-                  color: '#94a3b8'
+                  color: 'var(--text-secondary)'
                 }}
               >
                 ×
@@ -567,23 +567,23 @@ export default function PitchSubmissionsPage() {
                     <Lightbulb style={{ width: '32px', height: '32px', color: 'white' }} />
                   </div>
                   <div>
-                    <h3 style={{ fontSize: '20px', fontWeight: '600', color: '#0f172a' }}>{selectedSubmission.pitch_title}</h3>
-                    <p style={{ fontSize: '14px', color: '#64748b' }}>by {selectedSubmission.full_name}</p>
+                    <h3 style={{ fontSize: '20px', fontWeight: '600', color: 'var(--text-primary)' }}>{selectedSubmission.pitch_title}</h3>
+                    <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>by {selectedSubmission.full_name}</p>
                   </div>
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
                   <div>
-                    <label style={{ fontSize: '12px', fontWeight: '500', color: '#64748b', display: 'block', marginBottom: '4px' }}>Email</label>
-                    <p style={{ fontSize: '14px', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <label style={{ fontSize: '12px', fontWeight: '500', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Email</label>
+                    <p style={{ fontSize: '14px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <Mail style={{ width: '14px', height: '14px' }} />
                       {selectedSubmission.email}
                     </p>
                   </div>
                   {selectedSubmission.phone && (
                     <div>
-                      <label style={{ fontSize: '12px', fontWeight: '500', color: '#64748b', display: 'block', marginBottom: '4px' }}>Phone</label>
-                      <p style={{ fontSize: '14px', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <label style={{ fontSize: '12px', fontWeight: '500', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Phone</label>
+                      <p style={{ fontSize: '14px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <Phone style={{ width: '14px', height: '14px' }} />
                         {selectedSubmission.phone}
                       </p>
@@ -591,15 +591,15 @@ export default function PitchSubmissionsPage() {
                   )}
                   {selectedSubmission.topic && (
                     <div>
-                      <label style={{ fontSize: '12px', fontWeight: '500', color: '#64748b', display: 'block', marginBottom: '4px' }}>Topic</label>
-                      <p style={{ fontSize: '14px', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <label style={{ fontSize: '12px', fontWeight: '500', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Topic</label>
+                      <p style={{ fontSize: '14px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <FileText style={{ width: '14px', height: '14px' }} />
                         {selectedSubmission.topic}
                       </p>
                     </div>
                   )}
                   <div>
-                    <label style={{ fontSize: '12px', fontWeight: '500', color: '#64748b', display: 'block', marginBottom: '4px' }}>Status</label>
+                    <label style={{ fontSize: '12px', fontWeight: '500', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Status</label>
                     <span style={{
                       fontSize: '12px',
                       padding: '4px 12px',
@@ -614,34 +614,34 @@ export default function PitchSubmissionsPage() {
                 </div>
 
                 <div>
-                  <label style={{ fontSize: '12px', fontWeight: '500', color: '#64748b', display: 'block', marginBottom: '4px' }}>Pitch Description</label>
-                  <p style={{ fontSize: '14px', color: '#0f172a', lineHeight: '1.6' }}>{selectedSubmission.pitch_description}</p>
+                  <label style={{ fontSize: '12px', fontWeight: '500', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Pitch Description</label>
+                  <p style={{ fontSize: '14px', color: 'var(--text-primary)', lineHeight: '1.6' }}>{selectedSubmission.pitch_description}</p>
                 </div>
 
                 {selectedSubmission.author_bio && (
                   <div>
-                    <label style={{ fontSize: '12px', fontWeight: '500', color: '#64748b', display: 'block', marginBottom: '4px' }}>Author Bio</label>
-                    <p style={{ fontSize: '14px', color: '#0f172a', lineHeight: '1.6' }}>{selectedSubmission.author_bio}</p>
+                    <label style={{ fontSize: '12px', fontWeight: '500', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Author Bio</label>
+                    <p style={{ fontSize: '14px', color: 'var(--text-primary)', lineHeight: '1.6' }}>{selectedSubmission.author_bio}</p>
                   </div>
                 )}
 
                 {selectedSubmission.topics_of_interest && (
                   <div>
-                    <label style={{ fontSize: '12px', fontWeight: '500', color: '#64748b', display: 'block', marginBottom: '4px' }}>Topics of Interest</label>
-                    <p style={{ fontSize: '14px', color: '#0f172a', lineHeight: '1.6' }}>{selectedSubmission.topics_of_interest}</p>
+                    <label style={{ fontSize: '12px', fontWeight: '500', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Topics of Interest</label>
+                    <p style={{ fontSize: '14px', color: 'var(--text-primary)', lineHeight: '1.6' }}>{selectedSubmission.topics_of_interest}</p>
                   </div>
                 )}
 
                 {selectedSubmission.previous_publications && (
                   <div>
-                    <label style={{ fontSize: '12px', fontWeight: '500', color: '#64748b', display: 'block', marginBottom: '4px' }}>Previous Publications</label>
-                    <p style={{ fontSize: '14px', color: '#0f172a', lineHeight: '1.6' }}>{selectedSubmission.previous_publications}</p>
+                    <label style={{ fontSize: '12px', fontWeight: '500', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Previous Publications</label>
+                    <p style={{ fontSize: '14px', color: 'var(--text-primary)', lineHeight: '1.6' }}>{selectedSubmission.previous_publications}</p>
                   </div>
                 )}
 
                 {selectedSubmission.article_attachment && (
                   <div>
-                    <label style={{ fontSize: '12px', fontWeight: '500', color: '#64748b', display: 'block', marginBottom: '8px' }}>Article Attachment</label>
+                    <label style={{ fontSize: '12px', fontWeight: '500', color: 'var(--text-secondary)', display: 'block', marginBottom: '8px' }}>Article Attachment</label>
                     <button
                       onClick={async () => {
                         setAttachmentError(null)
@@ -679,7 +679,7 @@ export default function PitchSubmissionsPage() {
                         background: 'linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%)',
                         border: '1px solid #e9d5ff',
                         borderRadius: '10px',
-                        color: '#667eea',
+                        color: '#7c3aed',
                         fontSize: '14px',
                         fontWeight: '500',
                         cursor: 'pointer',
@@ -687,13 +687,13 @@ export default function PitchSubmissionsPage() {
                         width: 'fit-content'
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+                        e.currentTarget.style.background = 'linear-gradient(135deg, #7c3aed 0%, #764ba2 100%)'
                         e.currentTarget.style.color = 'white'
-                        e.currentTarget.style.borderColor = '#667eea'
+                        e.currentTarget.style.borderColor = '#7c3aed'
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.background = 'linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%)'
-                        e.currentTarget.style.color = '#667eea'
+                        e.currentTarget.style.color = '#7c3aed'
                         e.currentTarget.style.borderColor = '#e9d5ff'
                       }}
                     >
@@ -703,14 +703,14 @@ export default function PitchSubmissionsPage() {
                   </div>
                 )}
 
-                <div style={{ fontSize: '12px', color: '#94a3b8' }}>
+                <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
                   Submitted on {new Date(selectedSubmission.created_at).toLocaleString()}
                 </div>
               </div>
             </div>
             <div style={{
               padding: '20px',
-              borderTop: '1px solid #e2e8f0',
+              borderTop: '1px solid var(--border-color)',
               display: 'flex',
               gap: '12px',
               justifyContent: 'flex-end'
@@ -767,9 +767,9 @@ export default function PitchSubmissionsPage() {
                 onClick={() => setShowModal(false)}
                 style={{
                   padding: '10px 20px',
-                  background: '#f8fafc',
-                  color: '#64748b',
-                  border: '1px solid #e2e8f0',
+                  background: 'var(--bg-secondary)',
+                  color: 'var(--text-secondary)',
+                  border: '1px solid var(--border-color)',
                   borderRadius: '10px',
                   fontSize: '13px',
                   fontWeight: '500',

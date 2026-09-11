@@ -1,11 +1,12 @@
 import { useState, useEffect, useContext } from 'react'
 import { Plus, Search, Edit, Trash2, User, Mail, Calendar, Award, Filter } from 'lucide-react'
 import api from '../services/api'
-import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
+import { HeaderVisibilityContext, SidebarVisibilityContext, ThemeContext } from '../components/Layout'
 
 export default function Contributors() {
   const { setHideHeader } = useContext(HeaderVisibilityContext)
   const { setHideSidebar } = useContext(SidebarVisibilityContext)
+  const { isDarkMode } = useContext(ThemeContext)
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
@@ -153,8 +154,8 @@ export default function Contributors() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#0f172a' }}>Contributors</h1>
-          <p style={{ color: '#64748b', marginTop: '2px', fontSize: '13px' }}>Manage writers and content contributors</p>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--text-primary)' }}>Contributors</h1>
+          <p style={{ color: 'var(--text-secondary)', marginTop: '2px', fontSize: '13px' }}>Manage writers and content contributors</p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
@@ -190,52 +191,58 @@ export default function Contributors() {
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: isDarkMode ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
-          padding: '12px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
+          padding: '8px',
+          border: isDarkMode ? '1px solid rgba(51, 65, 85, 0.8)' : '1px solid rgba(226, 232, 240, 0.8)',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-            <div style={{ 
-              width: '32px', 
-              height: '32px', 
-              background: 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)', 
-              borderRadius: '10px', 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center'
-            }}>
-              <User style={{ width: '16px', height: '16px', color: '#2563eb' }} />
-            </div>
+          <div style={{ 
+            width: '32px', 
+            height: '32px', 
+            background: 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)', 
+            borderRadius: '10px', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center'
+          }}>
+            <User style={{ width: '16px', height: '16px', color: '#2563eb' }} />
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{totalContributors}</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Total Contributors</p>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--text-primary)', margin: 0 }}>{totalContributors}</h3>
+            <p style={{ fontSize: '10px', color: 'var(--text-secondary)', margin: 0 }}>Total Contributors</p>
+          </div>
         </div>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: isDarkMode ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
-          padding: '12px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
+          padding: '8px',
+          border: isDarkMode ? '1px solid rgba(51, 65, 85, 0.8)' : '1px solid rgba(226, 232, 240, 0.8)',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-            <div style={{ 
-              width: '32px', 
-              height: '32px', 
-              background: 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)', 
-              borderRadius: '10px', 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center'
-            }}>
-              <Award style={{ width: '16px', height: '16px', color: '#16a34a' }} />
-            </div>
+          <div style={{ 
+            width: '32px', 
+            height: '32px', 
+            background: 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)', 
+            borderRadius: '10px', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center'
+          }}>
+            <Award style={{ width: '16px', height: '16px', color: '#16a34a' }} />
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{activeContributors}</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Active Contributors</p>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--text-primary)', margin: 0 }}>{activeContributors}</h3>
+            <p style={{ fontSize: '10px', color: 'var(--text-secondary)', margin: 0 }}>Active Contributors</p>
+          </div>
         </div>
       </div>
 
@@ -250,8 +257,8 @@ export default function Contributors() {
             style={{
               width: '100%',
               padding: '8px 12px',
-              background: '#f8fafc',
-              border: '1px solid #e2e8f0',
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
               borderRadius: '10px',
               outline: 'none',
               fontSize: '13px',
@@ -262,7 +269,7 @@ export default function Contributors() {
               e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
             }}
             onBlur={(e) => {
-              e.currentTarget.style.borderColor = '#e2e8f0'
+              e.currentTarget.style.borderColor = 'var(--border-color)'
               e.currentTarget.style.boxShadow = 'none'
             }}
           />
@@ -272,11 +279,12 @@ export default function Contributors() {
           onChange={(e) => setFilterStatus(e.target.value)}
           style={{
             padding: '8px 12px',
-            background: '#f8fafc',
-            border: '1px solid #e2e8f0',
+            background: isDarkMode ? '#0f172a' : '#f8fafc',
+            border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
             borderRadius: '10px',
             outline: 'none',
             fontSize: '13px',
+            color: isDarkMode ? '#f1f5f9' : '#0f172a',
             cursor: 'pointer',
             transition: 'all 0.2s ease'
           }}
@@ -285,7 +293,7 @@ export default function Contributors() {
             e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
           }}
           onBlur={(e) => {
-            e.currentTarget.style.borderColor = '#e2e8f0'
+            e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
             e.currentTarget.style.boxShadow = 'none'
           }}
         >
@@ -297,50 +305,50 @@ export default function Contributors() {
 
       {/* Contributors Table */}
       <div style={{
-        background: 'rgba(255, 255, 255, 0.95)',
+        background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
         backdropFilter: 'blur(20px)',
         borderRadius: '16px',
-        border: '1px solid rgba(226, 232, 240, 0.8)',
+        border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
         overflow: 'hidden'
       }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+          <thead style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}>
             <tr>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Contributor</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Role</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Followers</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Joined</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Status</th>
-              <th style={{ textAlign: 'right', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Actions</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Contributor</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Role</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Followers</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Joined</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Status</th>
+              <th style={{ textAlign: 'right', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredContributors.map((contributor) => (
-              <tr key={contributor.id} style={{ borderBottom: '1px solid #e2e8f0', transition: 'background 0.2s ease' }}
+              <tr key={contributor.id} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background 0.2s ease' }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#f8fafc'
+                e.currentTarget.style.background = 'var(--bg-secondary)'
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = 'transparent'
               }}>
                 <td style={{ padding: '12px 16px' }}>
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <span style={{ fontWeight: '500', color: '#0f172a', fontSize: '13px' }}>{contributor.name}</span>
-                    <span style={{ color: '#64748b', fontSize: '11px' }}>{contributor.email}</span>
+                    <span style={{ fontWeight: '500', color: 'var(--text-primary)', fontSize: '13px' }}>{contributor.name}</span>
+                    <span style={{ color: 'var(--text-secondary)', fontSize: '11px' }}>{contributor.email}</span>
                   </div>
                 </td>
-                <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{contributor.role}</td>
-                <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{contributor.followers || 0}</td>
-                <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{new Date(contributor.created_at).toLocaleDateString()}</td>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{contributor.role}</td>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{contributor.followers || 0}</td>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{new Date(contributor.created_at).toLocaleDateString()}</td>
                 <td style={{ padding: '12px 16px' }}>
                   <span style={{ 
                     padding: '3px 8px', 
                     borderRadius: '16px', 
                     fontSize: '11px', 
                     fontWeight: '500',
-                    background: contributor.status === 'active' ? '#dcfce7' : '#f1f5f9',
-                    color: contributor.status === 'active' ? '#166534' : '#475569'
+                    background: contributor.status === 'active' ? (isDarkMode ? 'rgba(22, 163, 74, 0.2)' : '#dcfce7') : 'var(--bg-secondary)',
+                    color: contributor.status === 'active' ? (isDarkMode ? '#4ade80' : '#166534') : 'var(--text-secondary)'
                   }}>
                     {contributor.status.charAt(0).toUpperCase() + contributor.status.slice(1)}
                   </span>
@@ -358,12 +366,12 @@ export default function Contributors() {
                         transition: 'all 0.2s ease'
                       }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = '#f1f5f9'
+                      e.currentTarget.style.background = 'var(--bg-secondary)'
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.background = 'transparent'
                     }}>
-                      <Edit style={{ width: '14px', height: '14px', color: '#64748b' }} />
+                      <Edit style={{ width: '14px', height: '14px', color: 'var(--text-secondary)' }} />
                     </button>
                     <button 
                       onClick={() => handleDeleteContributor(contributor.id)}
@@ -376,7 +384,7 @@ export default function Contributors() {
                         transition: 'all 0.2s ease'
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.background = '#fef2f2'
+                        e.currentTarget.style.background = isDarkMode ? 'rgba(239, 68, 68, 0.2)' : '#fef2f2'
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.background = 'transparent'
@@ -404,7 +412,7 @@ export default function Contributors() {
           zIndex: 50
         }}>
           <div style={{
-            background: 'white',
+            background: 'var(--bg-primary)',
             borderRadius: '16px',
             width: '100%',
             maxWidth: '600px',
@@ -414,12 +422,12 @@ export default function Contributors() {
           }}>
             <div style={{
               padding: '20px',
-              borderBottom: '1px solid #e2e8f0',
+              borderBottom: '1px solid var(--border-color)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-              <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a' }}>Edit Contributor</h2>
+              <h2 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)' }}>Edit Contributor</h2>
               <button
                 onClick={() => {
                   setShowEditModal(false)
@@ -433,16 +441,16 @@ export default function Contributors() {
                   borderRadius: '8px',
                   cursor: 'pointer',
                   fontSize: '18px',
-                  color: '#94a3b8',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f1f5f9'
-                  e.currentTarget.style.color = '#64748b'
+                  e.currentTarget.style.background = isDarkMode ? '#334155' : '#f1f5f9'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
-                  e.currentTarget.style.color = '#94a3b8'
+                  e.currentTarget.style.color = isDarkMode ? '#94a3b8' : '#94a3b8'
                 }}
               >
                 ✕
@@ -451,7 +459,7 @@ export default function Contributors() {
             <div style={{ padding: '20px', overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Name</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Name</label>
                   <input
                     type="text"
                     name="name"
@@ -461,11 +469,12 @@ export default function Contributors() {
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: isDarkMode ? '#0f172a' : '#f8fafc',
+                      border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px',
+                      color: isDarkMode ? '#f1f5f9' : '#0f172a',
                       transition: 'all 0.2s ease'
                     }}
                     onFocus={(e) => {
@@ -473,13 +482,13 @@ export default function Contributors() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = isDarkMode ? '#334155' : 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Email</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Email</label>
                   <input
                     type="email"
                     name="email"
@@ -489,11 +498,12 @@ export default function Contributors() {
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: isDarkMode ? '#0f172a' : '#f8fafc',
+                      border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px',
+                      color: isDarkMode ? '#f1f5f9' : '#0f172a',
                       transition: 'all 0.2s ease'
                     }}
                     onFocus={(e) => {
@@ -501,13 +511,13 @@ export default function Contributors() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = isDarkMode ? '#334155' : 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Role</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Role</label>
                   <select 
                     name="role"
                     value={formData.role}
@@ -515,11 +525,12 @@ export default function Contributors() {
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: isDarkMode ? '#0f172a' : '#f8fafc',
+                      border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px',
+                      color: isDarkMode ? '#f1f5f9' : '#0f172a',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease'
                     }}
@@ -528,7 +539,7 @@ export default function Contributors() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = isDarkMode ? '#334155' : 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}>
                     {roles.map((role, index) => (
@@ -538,7 +549,7 @@ export default function Contributors() {
                 </div>
               </div>
             </div>
-            <div style={{ padding: '20px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+            <div style={{ padding: '20px', borderTop: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
               <button
                 onClick={() => {
                   setShowEditModal(false)
@@ -548,16 +559,16 @@ export default function Contributors() {
                 style={{
                   padding: '8px 16px',
                   background: 'transparent',
-                  border: '1px solid #e2e8f0',
+                  border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                   borderRadius: '10px',
                   cursor: 'pointer',
                   fontSize: '13px',
                   fontWeight: '500',
-                  color: '#64748b',
+                  color: isDarkMode ? '#f1f5f9' : '#0f172a',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f8fafc'
+                  e.currentTarget.style.background = isDarkMode ? '#1e293b' : '#f8fafc'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
@@ -607,7 +618,7 @@ export default function Contributors() {
           zIndex: 50
         }}>
           <div style={{
-            background: 'white',
+            background: 'var(--bg-primary)',
             borderRadius: '16px',
             width: '100%',
             maxWidth: '600px',
@@ -617,12 +628,12 @@ export default function Contributors() {
           }}>
             <div style={{
               padding: '20px',
-              borderBottom: '1px solid #e2e8f0',
+              borderBottom: '1px solid var(--border-color)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-              <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a' }}>Add New Contributor</h2>
+              <h2 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)' }}>Add New Contributor</h2>
               <button
                 onClick={() => setShowCreateModal(false)}
                 style={{
@@ -632,12 +643,12 @@ export default function Contributors() {
                   borderRadius: '8px',
                   cursor: 'pointer',
                   fontSize: '18px',
-                  color: '#94a3b8',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = '#f1f5f9'
-                  e.currentTarget.style.color = '#64748b'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
@@ -650,7 +661,7 @@ export default function Contributors() {
             <div style={{ padding: '20px', overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Name</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Name</label>
                   <input
                     type="text"
                     name="name"
@@ -660,11 +671,12 @@ export default function Contributors() {
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: isDarkMode ? '#0f172a' : '#f8fafc',
+                      border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px',
+                      color: isDarkMode ? '#f1f5f9' : '#0f172a',
                       transition: 'all 0.2s ease'
                     }}
                     onFocus={(e) => {
@@ -672,13 +684,13 @@ export default function Contributors() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = isDarkMode ? '#334155' : 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Email</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Email</label>
                   <input
                     type="email"
                     name="email"
@@ -688,11 +700,12 @@ export default function Contributors() {
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: isDarkMode ? '#0f172a' : '#f8fafc',
+                      border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px',
+                      color: isDarkMode ? '#f1f5f9' : '#0f172a',
                       transition: 'all 0.2s ease'
                     }}
                     onFocus={(e) => {
@@ -700,13 +713,13 @@ export default function Contributors() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = isDarkMode ? '#334155' : 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Role</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Role</label>
                   <select 
                     name="role"
                     value={formData.role}
@@ -714,11 +727,12 @@ export default function Contributors() {
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: isDarkMode ? '#0f172a' : '#f8fafc',
+                      border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px',
+                      color: isDarkMode ? '#f1f5f9' : '#0f172a',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease'
                     }}
@@ -727,7 +741,7 @@ export default function Contributors() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = isDarkMode ? '#334155' : 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}>
                     {roles.map((role, index) => (
@@ -737,22 +751,22 @@ export default function Contributors() {
                 </div>
               </div>
             </div>
-            <div style={{ padding: '20px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+            <div style={{ padding: '20px', borderTop: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
               <button
                 onClick={() => setShowCreateModal(false)}
                 style={{
                   padding: '8px 16px',
                   background: 'transparent',
-                  border: '1px solid #e2e8f0',
+                  border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                   borderRadius: '10px',
                   cursor: 'pointer',
                   fontSize: '13px',
                   fontWeight: '500',
-                  color: '#64748b',
+                  color: isDarkMode ? '#f1f5f9' : '#0f172a',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f8fafc'
+                  e.currentTarget.style.background = isDarkMode ? '#1e293b' : '#f8fafc'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'

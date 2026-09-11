@@ -194,7 +194,6 @@ router.post('/', upload, optionalAuth, async (req, res) => {
           console.log('Cloud upload result:', article_attachment);
         } catch (error) {
           console.error('Cloud upload failed:', error);
-          console.error('Error details:', error.message);
           // Fallback to local storage if cloud upload fails
           console.log('Falling back to local storage');
           article_attachment = `/uploads/pitches/${req.file.filename}`;

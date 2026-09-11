@@ -1,6 +1,12 @@
 const mysql = require('mysql2');
 require('dotenv').config();
 
+// Configure SSL based on environment
+const sslConfig = process.env.DB_SSL === 'false' ? false : {
+  rejectUnauthorized: process.env.DB_SSL_REJECT_UNAUTHORIZED !== 'false',
+  ...(process.env.DB_CA_CERT && { ca: process.env.DB_CA_CERT })
+};
+
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -12,8 +18,8 @@ const pool = mysql.createPool({
   queueLimit: 0,
   enableKeepAlive: true,
   keepAliveInitialDelay: 0,
-  connectTimeout: 10000,
-  ssl: { rejectUnauthorized: false }
+  connectTimeout: 60000,
+  ssl: sslConfig
 });
 
 const promisePool = pool.promise();

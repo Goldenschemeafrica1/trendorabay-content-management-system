@@ -13,8 +13,8 @@ export default function Mission() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#0f172a' }}>Mission Page</h1>
-          <p style={{ color: '#64748b', marginTop: '2px', fontSize: '13px' }}>Configure the Mission and Vision page</p>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--text-primary)' }}>Mission Page</h1>
+          <p style={{ color: 'var(--text-secondary)', marginTop: '2px', fontSize: '13px' }}>Configure the Mission and Vision page</p>
         </div>
         <div style={{ display: 'flex', gap: '10px' }}>
           <button
@@ -75,20 +75,20 @@ export default function Mission() {
 
       {/* Mission Section */}
       <div style={{
-        background: 'rgba(255, 255, 255, 0.95)',
+        background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
         backdropFilter: 'blur(20px)',
         borderRadius: '16px',
-        border: '1px solid rgba(226, 232, 240, 0.8)',
+        border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
         padding: '20px'
       }}>
-        <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#0f172a', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <h3 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Type style={{ width: '20px', height: '20px' }} />
           Mission Statement
         </h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Mission Title</label>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Mission Title</label>
             <input
               type="text"
               value={missionTitle}
@@ -96,8 +96,8 @@ export default function Mission() {
               style={{
                 width: '100%',
                 padding: '10px 12px',
-                background: '#f8fafc',
-                border: '1px solid #e2e8f0',
+                background: 'var(--bg-secondary)',
+                border: '1px solid var(--border-color)',
                 borderRadius: '10px',
                 outline: 'none',
                 fontSize: '13px',
@@ -108,13 +108,13 @@ export default function Mission() {
                 e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
               }}
               onBlur={(e) => {
-                e.currentTarget.style.borderColor = '#e2e8f0'
+                e.currentTarget.style.borderColor = 'var(--border-color)'
                 e.currentTarget.style.boxShadow = 'none'
               }}
             />
           </div>
           <div>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Mission Content</label>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Mission Content</label>
             <textarea
               value={missionContent}
               onChange={(e) => setMissionContent(e.target.value)}
@@ -122,8 +122,8 @@ export default function Mission() {
               style={{
                 width: '100%',
                 padding: '10px 12px',
-                background: '#f8fafc',
-                border: '1px solid #e2e8f0',
+                background: 'var(--bg-secondary)',
+                border: '1px solid var(--border-color)',
                 borderRadius: '10px',
                 outline: 'none',
                 fontSize: '13px',
@@ -135,7 +135,7 @@ export default function Mission() {
                 e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
               }}
               onBlur={(e) => {
-                e.currentTarget.style.borderColor = '#e2e8f0'
+                e.currentTarget.style.borderColor = 'var(--border-color)'
                 e.currentTarget.style.boxShadow = 'none'
               }}
             />
@@ -145,20 +145,20 @@ export default function Mission() {
 
       {/* Vision Section */}
       <div style={{
-        background: 'rgba(255, 255, 255, 0.95)',
+        background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
         backdropFilter: 'blur(20px)',
         borderRadius: '16px',
-        border: '1px solid rgba(226, 232, 240, 0.8)',
+        border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
         padding: '20px'
       }}>
-        <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#0f172a', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <h3 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Eye style={{ width: '20px', height: '20px' }} />
           Vision Statement
         </h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Vision Title</label>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Vision Title</label>
             <input
               type="text"
               value={visionTitle}
@@ -166,8 +166,8 @@ export default function Mission() {
               style={{
                 width: '100%',
                 padding: '10px 12px',
-                background: '#f8fafc',
-                border: '1px solid #e2e8f0',
+                background: 'var(--bg-secondary)',
+                border: '1px solid var(--border-color)',
                 borderRadius: '10px',
                 outline: 'none',
                 fontSize: '13px',
@@ -178,13 +178,13 @@ export default function Mission() {
                 e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
               }}
               onBlur={(e) => {
-                e.currentTarget.style.borderColor = '#e2e8f0'
+                e.currentTarget.style.borderColor = 'var(--border-color)'
                 e.currentTarget.style.boxShadow = 'none'
               }}
             />
           </div>
           <div>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Vision Content</label>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Vision Content</label>
             <textarea
               value={visionContent}
               onChange={(e) => setVisionContent(e.target.value)}
@@ -192,8 +192,8 @@ export default function Mission() {
               style={{
                 width: '100%',
                 padding: '10px 12px',
-                background: '#f8fafc',
-                border: '1px solid #e2e8f0',
+                background: 'var(--bg-secondary)',
+                border: '1px solid var(--border-color)',
                 borderRadius: '10px',
                 outline: 'none',
                 fontSize: '13px',
@@ -205,7 +205,7 @@ export default function Mission() {
                 e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
               }}
               onBlur={(e) => {
-                e.currentTarget.style.borderColor = '#e2e8f0'
+                e.currentTarget.style.borderColor = 'var(--border-color)'
                 e.currentTarget.style.boxShadow = 'none'
               }}
             />
@@ -226,7 +226,7 @@ export default function Mission() {
           zIndex: 50
         }}>
           <div style={{
-            background: 'white',
+            background: 'var(--bg-primary)',
             borderRadius: '16px',
             width: '90%',
             maxWidth: '800px',
@@ -236,12 +236,12 @@ export default function Mission() {
           }}>
             <div style={{
               padding: '20px',
-              borderBottom: '1px solid #e2e8f0',
+              borderBottom: '1px solid var(--border-color)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-              <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a' }}>Mission Page Preview</h2>
+              <h2 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)' }}>Mission Page Preview</h2>
               <button
                 onClick={() => setShowPreview(false)}
                 style={{
@@ -251,26 +251,26 @@ export default function Mission() {
                   borderRadius: '8px',
                   cursor: 'pointer',
                   fontSize: '18px',
-                  color: '#94a3b8',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f1f5f9'
-                  e.currentTarget.style.color = '#64748b'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
-                  e.currentTarget.style.color = '#94a3b8'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
               >
                 ✕
               </button>
             </div>
             <div style={{ padding: '40px' }}>
-              <h1 style={{ fontSize: '32px', fontWeight: 'bold', color: '#0f172a', marginBottom: '24px' }}>{missionTitle}</h1>
-              <p style={{ fontSize: '16px', color: '#64748b', lineHeight: '1.6', marginBottom: '32px' }}>{missionContent}</p>
-              <h2 style={{ fontSize: '28px', fontWeight: 'bold', color: '#0f172a', marginBottom: '16px' }}>{visionTitle}</h2>
-              <p style={{ fontSize: '16px', color: '#64748b', lineHeight: '1.6' }}>{visionContent}</p>
+              <h1 style={{ fontSize: '32px', fontWeight: 'bold', color: 'var(--text-primary)', marginBottom: '24px' }}>{missionTitle}</h1>
+              <p style={{ fontSize: '16px', color: 'var(--text-secondary)', lineHeight: '1.6', marginBottom: '32px' }}>{missionContent}</p>
+              <h2 style={{ fontSize: '28px', fontWeight: 'bold', color: 'var(--text-primary)', marginBottom: '16px' }}>{visionTitle}</h2>
+              <p style={{ fontSize: '16px', color: 'var(--text-secondary)', lineHeight: '1.6' }}>{visionContent}</p>
             </div>
           </div>
         </div>

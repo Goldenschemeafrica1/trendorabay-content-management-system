@@ -12,9 +12,12 @@ const upload = uploadSingle('image', 'events', 5 * 1024 * 1024); // 5MB limit fo
 // Get all events (public read)
 router.get('/', optionalAuth, async (req, res) => {
   try {
+    console.log('[GET /api/events] Fetching events...');
     const [rows] = await db.query('SELECT * FROM events ORDER BY event_date DESC');
+    console.log('[GET /api/events] Successfully fetched', rows.length, 'events');
     res.json(rows);
   } catch (error) {
+    console.error('[GET /api/events] Error:', error);
     res.status(500).json({ error: error.message });
   }
 });

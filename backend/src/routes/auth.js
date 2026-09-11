@@ -4,9 +4,14 @@ const db = require('../config/database');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { registerValidation, loginValidation } = require('../middleware/validation');
+const { logSecurityEvent, SecurityEventTypes, getClientIp, getUserAgent } = require('../middleware/securityLogger');
+const { ipBlocker } = require('../middleware/ipBlocker');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
-const SALT_ROUNDS = 10;
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is required');
+}
+const SALT_ROUNDS = 8;
 
 // Register new user
 router.post('/register', registerValidation, async (req, res) => {
@@ -71,11 +76,22 @@ router.post('/register', registerValidation, async (req, res) => {
       [refreshToken, refreshExpiresAt, newUser[0].id]
     );
     
-    res.status(201).json({ 
-      user: newUser[0],
-      token,
-      refreshToken
+    // Set httpOnly cookies
+    res.cookie('auth_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
     });
+    
+    res.cookie('refresh_token', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    });
+    
+    res.status(201).json({ user: newUser[0] });
   } catch (error) {
     console.error('Registration error:', error);
     res.status(500).json({ error: 'Registration failed' });
@@ -83,10 +99,9 @@ router.post('/register', registerValidation, async (req, res) => {
 });
 
 // Login user
-router.post('/login', loginValidation, async (req, res) => {
+router.post('/login', ipBlocker, loginValidation, async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log('Login attempt for email:', email);
     
     // Find user by email (select only needed fields)
     const [users] = await db.query(
@@ -95,55 +110,131 @@ router.post('/login', loginValidation, async (req, res) => {
     );
     
     if (users.length === 0) {
+      // Log security event asynchronously (non-blocking)
+      logSecurityEvent(SecurityEventTypes.AUTH_FAILED, {
+        userEmail: email,
+        ipAddress: getClientIp(req),
+        userAgent: getUserAgent(req),
+        endpoint: '/auth/login',
+        method: 'POST',
+        severity: 'medium',
+        additionalData: { reason: 'User not found' }
+      }).catch(err => console.error('Security logging error:', err));
+      
+      // Record failed attempt for IP blocking
+      if (req.ipBlocker) {
+        await req.ipBlocker.recordFailedAttempt('User not found');
+      }
+      
       return res.status(401).json({ error: 'Invalid email or password' });
     }
     
     const user = users[0];
-    
+
     // Check if user is banned
     if (user.status === 'banned') {
+      // Log security event asynchronously (non-blocking)
+      logSecurityEvent(SecurityEventTypes.AUTH_FAILED, {
+        userId: user.id,
+        userEmail: user.email,
+        ipAddress: getClientIp(req),
+        userAgent: getUserAgent(req),
+        endpoint: '/auth/login',
+        method: 'POST',
+        severity: 'high',
+        additionalData: { reason: 'Account is banned' }
+      }).catch(err => console.error('Security logging error:', err));
+      
+      // Record failed attempt for IP blocking
+      if (req.ipBlocker) {
+        await req.ipBlocker.recordFailedAttempt('Account is banned');
+      }
+      
       return res.status(403).json({ error: 'Account is banned' });
     }
     
     // Check password using bcrypt
     const passwordMatch = await bcrypt.compare(password, user.password);
-    
+
     if (!passwordMatch) {
+      // Log security event asynchronously (non-blocking)
+      logSecurityEvent(SecurityEventTypes.AUTH_FAILED, {
+        userId: user.id,
+        userEmail: user.email,
+        ipAddress: getClientIp(req),
+        userAgent: getUserAgent(req),
+        endpoint: '/auth/login',
+        method: 'POST',
+        severity: 'medium',
+        additionalData: { reason: 'Invalid password' }
+      }).catch(err => console.error('Security logging error:', err));
+      
+      // Record failed attempt for IP blocking
+      if (req.ipBlocker) {
+        await req.ipBlocker.recordFailedAttempt('Invalid password');
+      }
+      
       return res.status(401).json({ error: 'Invalid email or password' });
     }
     
-    // Update last_active
+    // Clear failed attempts on successful login
+    if (req.ipBlocker) {
+      await req.ipBlocker.clearFailedAttempts();
+    }
+
+    // Generate tokens in parallel
+    const [token, refreshToken] = await Promise.all([
+      jwt.sign(
+        { userId: user.id, role: user.role },
+        JWT_SECRET,
+        { expiresIn: '24h' }
+      ),
+      jwt.sign(
+        { userId: user.id, type: 'refresh' },
+        JWT_SECRET,
+        { expiresIn: '7d' }
+      )
+    ]);
+
+    // Combine database updates (last_active and refresh token) into single query
+    const refreshExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
     try {
       await db.query(
-        'UPDATE cms_users SET last_active = NOW() WHERE id = ?',
-        [user.id]
+        'UPDATE cms_users SET last_active = NOW(), refresh_token = ?, refresh_token_expires_at = ? WHERE id = ?',
+        [refreshToken, refreshExpiresAt, user.id]
       );
     } catch (err) {
-      // Ignore if last_active column doesn't exist
+      // Ignore if columns don't exist
+      console.error('Database update error (ignoring):', err.message);
     }
     
-    // Generate JWT token
-    const token = jwt.sign(
-      { userId: user.id, role: user.role },
-      JWT_SECRET,
-      { expiresIn: '24h' }
-    );
+    // Set httpOnly cookies
+    res.cookie('auth_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    });
     
-    // Generate refresh token (7 days)
-    const refreshToken = jwt.sign(
-      { userId: user.id, type: 'refresh' },
-      JWT_SECRET,
-      { expiresIn: '7d' }
-    );
+    res.cookie('refresh_token', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    });
     
-    // Store refresh token in database
-    const refreshExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
-    await db.query(
-      'UPDATE cms_users SET refresh_token = ?, refresh_token_expires_at = ? WHERE id = ?',
-      [refreshToken, refreshExpiresAt, user.id]
-    );
-    
-    res.json({ 
+    // Log successful authentication asynchronously (non-blocking)
+    logSecurityEvent(SecurityEventTypes.AUTH_SUCCESS, {
+      userId: user.id,
+      userEmail: user.email,
+      ipAddress: getClientIp(req),
+      userAgent: getUserAgent(req),
+      endpoint: '/auth/login',
+      method: 'POST',
+      severity: 'low'
+    }).catch(err => console.error('Security logging error:', err));
+
+    const responseData = {
       user: {
         id: user.id,
         name: user.name,
@@ -154,14 +245,14 @@ router.post('/login', loginValidation, async (req, res) => {
         last_active: user.last_active,
         created_at: user.created_at
       },
-      token,
-      refreshToken
-    });
+      message: 'Logged in successfully',
+      token
+    };
+
+    res.json(responseData);
   } catch (error) {
     console.error('Login error:', error);
-    console.error('Error details:', error.message);
-    console.error('Error stack:', error.stack);
-    res.status(500).json({ error: 'Login failed', details: error.message });
+    res.status(500).json({ error: 'Login failed' });
   }
 });
 
@@ -208,7 +299,7 @@ router.get('/verify', async (req, res) => {
 // Refresh token endpoint
 router.post('/refresh', async (req, res) => {
   try {
-    const { refreshToken } = req.body;
+    const refreshToken = req.cookies?.refresh_token || req.body?.refreshToken;
     
     if (!refreshToken) {
       return res.status(400).json({ error: 'Refresh token required' });
@@ -257,9 +348,22 @@ router.post('/refresh', async (req, res) => {
       [newRefreshToken, refreshExpiresAt, user.id]
     );
     
+    // Set new httpOnly cookies
+    res.cookie('auth_token', newToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    });
+    
+    res.cookie('refresh_token', newRefreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    });
+    
     res.json({ 
-      token: newToken,
-      refreshToken: newRefreshToken,
       user: {
         id: user.id,
         name: user.name,
@@ -271,6 +375,38 @@ router.post('/refresh', async (req, res) => {
   } catch (error) {
     console.error('Refresh token error:', error);
     res.status(500).json({ error: 'Token refresh failed' });
+  }
+});
+
+// Logout endpoint
+router.post('/logout', async (req, res) => {
+  try {
+    // Clear httpOnly cookies
+    res.clearCookie('auth_token');
+    res.clearCookie('refresh_token');
+    
+    // Optionally clear refresh token from database
+    const token = req.cookies?.auth_token || 
+                  (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
+                    ? req.headers.authorization.substring(7) 
+                    : null);
+    
+    if (token) {
+      try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        await db.query(
+          'UPDATE cms_users SET refresh_token = NULL, refresh_token_expires_at = NULL WHERE id = ?',
+          [decoded.userId]
+        );
+      } catch (jwtError) {
+        // Token invalid, just clear cookies
+      }
+    }
+    
+    res.json({ message: 'Logged out successfully' });
+  } catch (error) {
+    console.error('Logout error:', error);
+    res.status(500).json({ error: 'Logout failed' });
   }
 });
 

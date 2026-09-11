@@ -1,11 +1,17 @@
 import { useState, useEffect, useContext, useRef } from 'react'
 import { Plus, Search, Filter, Edit, Trash2, Eye, Upload } from 'lucide-react'
-import api, { BASE_URL } from '../services/api'
-import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
+import api from '../services/api'
+import { HeaderVisibilityContext, SidebarVisibilityContext, ThemeContext } from '../components/Layout'
+
+const BASE_URL = import.meta.env.VITE_API_URL?.replace('/api', '') ||
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:5002'
+    : 'https://trendorabay-content-management-system.onrender.com');
 
 export default function Magazines() {
   const { setHideHeader } = useContext(HeaderVisibilityContext)
   const { setHideSidebar } = useContext(SidebarVisibilityContext)
+  const { isDarkMode } = useContext(ThemeContext)
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
   const [editingMagazine, setEditingMagazine] = useState(null)
@@ -325,8 +331,8 @@ export default function Magazines() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#0f172a' }}>Magazines</h1>
-          <p style={{ color: '#64748b', marginTop: '2px', fontSize: '13px' }}>Manage magazine issues and publications</p>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: isDarkMode ? '#f1f5f9' : '#0f172a' }}>Magazines</h1>
+          <p style={{ color: isDarkMode ? '#94a3b8' : '#64748b', marginTop: '2px', fontSize: '13px' }}>Manage magazine issues and publications</p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
@@ -369,11 +375,12 @@ export default function Magazines() {
           style={{
             width: '100%',
             padding: '8px 12px',
-            background: '#f8fafc',
-            border: '1px solid #e2e8f0',
+            background: isDarkMode ? '#1e293b' : '#f8fafc',
+            border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
             borderRadius: '10px',
             outline: 'none',
             fontSize: '13px',
+            color: isDarkMode ? '#f1f5f9' : '#0f172a',
             transition: 'all 0.2s ease'
           }}
           onFocus={(e) => {
@@ -381,7 +388,7 @@ export default function Magazines() {
             e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
           }}
           onBlur={(e) => {
-            e.currentTarget.style.borderColor = '#e2e8f0'
+            e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
             e.currentTarget.style.boxShadow = 'none'
           }}
         />
@@ -395,10 +402,10 @@ export default function Magazines() {
       }}>
         {filteredMagazines.map((magazine) => (
           <div key={magazine.id} style={{
-            background: 'rgba(255, 255, 255, 0.95)',
+            background: isDarkMode ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)',
             backdropFilter: 'blur(20px)',
             borderRadius: '16px',
-            border: '1px solid rgba(226, 232, 240, 0.8)',
+            border: isDarkMode ? '1px solid rgba(51, 65, 85, 0.8)' : '1px solid rgba(226, 232, 240, 0.8)',
             boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
             overflow: 'hidden',
             transition: 'all 0.3s ease'
@@ -413,7 +420,7 @@ export default function Magazines() {
           }}>
             <div style={{ 
               aspectRatio: '3/4', 
-              background: magazine.cover_image_url ? 'transparent' : 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100)', 
+              background: magazine.cover_image_url ? 'transparent' : (isDarkMode ? 'linear-gradient(135deg, #1e293b 0%, #0f172a 100)' : 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100)'), 
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center',
@@ -436,7 +443,7 @@ export default function Magazines() {
                   }}
                 />
               ) : (
-                <div style={{ textAlign: 'center', color: '#94a3b8' }}>
+                <div style={{ textAlign: 'center', color: isDarkMode ? '#64748b' : '#94a3b8' }}>
                   <Upload style={{ width: '36px', height: '36px', margin: '0 auto 6px' }} />
                   <p style={{ fontSize: '12px' }}>Cover Image</p>
                 </div>
@@ -444,7 +451,7 @@ export default function Magazines() {
             </div>
             <div style={{ padding: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '6px' }}>
-                <h3 style={{ fontWeight: '600', color: '#0f172a', fontSize: '14px', flex: 1 }}>{magazine.title}</h3>
+                <h3 style={{ fontWeight: '600', color: isDarkMode ? '#f1f5f9' : '#0f172a', fontSize: '14px', flex: 1 }}>{magazine.title}</h3>
                 <span style={{ 
                   padding: '3px 8px', 
                   borderRadius: '16px', 
@@ -458,13 +465,13 @@ export default function Magazines() {
                   {magazine.status}
                 </span>
               </div>
-              <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '6px' }}>{magazine.issue}</p>
-              <p style={{ fontSize: '11px', color: '#94a3b8', marginBottom: '12px' }}>{magazine.date}</p>
+              <p style={{ fontSize: '12px', color: isDarkMode ? '#94a3b8' : '#64748b', marginBottom: '6px' }}>{magazine.issue}</p>
+              <p style={{ fontSize: '11px', color: isDarkMode ? '#64748b' : '#94a3b8', marginBottom: '12px' }}>{magazine.date}</p>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <span style={{ 
                   padding: '3px 8px', 
-                  background: '#f1f5f9', 
-                  color: '#475569', 
+                  background: isDarkMode ? '#334155' : '#f1f5f9',
+                  color: isDarkMode ? '#94a3b8' : '#475569', 
                   borderRadius: '16px', 
                   fontSize: '11px', 
                   fontWeight: '500'
@@ -481,12 +488,12 @@ export default function Magazines() {
                     transition: 'all 0.2s ease'
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = '#f1f5f9'
+                    e.currentTarget.style.background = isDarkMode ? '#334155' : '#f1f5f9'
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.background = 'transparent'
                   }}>
-                    <Eye style={{ width: '14px', height: '14px', color: '#64748b' }} />
+                    <Eye style={{ width: '14px', height: '14px', color: isDarkMode ? '#94a3b8' : '#64748b' }} />
                   </button>
                   <button 
                     onClick={() => handleEditMagazine(magazine)}
@@ -499,12 +506,12 @@ export default function Magazines() {
                       transition: 'all 0.2s ease'
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = '#f1f5f9'
+                      e.currentTarget.style.background = isDarkMode ? '#334155' : '#f1f5f9'
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.background = 'transparent'
                     }}>
-                    <Edit style={{ width: '14px', height: '14px', color: '#64748b' }} />
+                    <Edit style={{ width: '14px', height: '14px', color: isDarkMode ? '#94a3b8' : '#64748b' }} />
                   </button>
                   <button 
                     onClick={() => handleDeleteMagazine(magazine.id)}
@@ -517,7 +524,7 @@ export default function Magazines() {
                       transition: 'all 0.2s ease'
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = '#fef2f2'
+                      e.currentTarget.style.background = isDarkMode ? 'rgba(239, 68, 68, 0.2)' : '#fef2f2'
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.background = 'transparent'
@@ -544,7 +551,7 @@ export default function Magazines() {
           zIndex: 50
         }}>
           <div style={{
-            background: 'white',
+            background: isDarkMode ? '#1e293b' : 'white',
             borderRadius: '16px',
             width: '100%',
             maxWidth: '600px',
@@ -554,12 +561,12 @@ export default function Magazines() {
           }}>
             <div style={{
               padding: '24px',
-              borderBottom: '1px solid #e2e8f0',
+              borderBottom: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-              <h2 style={{ fontSize: '20px', fontWeight: '600', color: '#0f172a' }}>Add New Magazine</h2>
+              <h2 style={{ fontSize: '20px', fontWeight: '600', color: isDarkMode ? '#f1f5f9' : '#0f172a' }}>Add New Magazine</h2>
               <button
                 onClick={() => setShowCreateModal(false)}
                 style={{
@@ -569,16 +576,16 @@ export default function Magazines() {
                   borderRadius: '8px',
                   cursor: 'pointer',
                   fontSize: '20px',
-                  color: '#94a3b8',
+                  color: isDarkMode ? '#94a3b8' : '#64748b',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f1f5f9'
-                  e.currentTarget.style.color = '#64748b'
+                  e.currentTarget.style.background = isDarkMode ? '#334155' : '#f1f5f9'
+                  e.currentTarget.style.color = isDarkMode ? '#64748b' : '#64748b'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
-                  e.currentTarget.style.color = '#94a3b8'
+                  e.currentTarget.style.color = isDarkMode ? '#94a3b8' : '#64748b'
                 }}
               >
                 ✕
@@ -587,7 +594,7 @@ export default function Magazines() {
             <div style={{ padding: '24px', overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Title</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Title</label>
                   <input
                     type="text"
                     name="title"
@@ -597,11 +604,12 @@ export default function Magazines() {
                     style={{
                       width: '100%',
                       padding: '12px 16px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: isDarkMode ? '#0f172a' : '#f8fafc',
+                      border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                       borderRadius: '12px',
                       outline: 'none',
                       fontSize: '14px',
+                      color: isDarkMode ? '#f1f5f9' : '#0f172a',
                       transition: 'all 0.2s ease'
                     }}
                     onFocus={(e) => {
@@ -609,13 +617,13 @@ export default function Magazines() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Description</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Description</label>
                   <textarea
                     name="description"
                     value={formData.description}
@@ -625,11 +633,12 @@ export default function Magazines() {
                     style={{
                       width: '100%',
                       padding: '12px 16px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: isDarkMode ? '#0f172a' : '#f8fafc',
+                      border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                       borderRadius: '12px',
                       outline: 'none',
                       fontSize: '14px',
+                      color: isDarkMode ? '#f1f5f9' : '#0f172a',
                       transition: 'all 0.2s ease',
                       resize: 'vertical'
                     }}
@@ -638,14 +647,14 @@ export default function Magazines() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Issue</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Issue</label>
                     <input
                       type="text"
                       name="issue"
@@ -655,11 +664,12 @@ export default function Magazines() {
                       style={{
                         width: '100%',
                         padding: '12px 16px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: isDarkMode ? '#0f172a' : '#f8fafc',
+                        border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                         borderRadius: '12px',
                         outline: 'none',
                         fontSize: '14px',
+                        color: isDarkMode ? '#f1f5f9' : '#0f172a',
                         transition: 'all 0.2s ease'
                       }}
                       onFocus={(e) => {
@@ -667,13 +677,13 @@ export default function Magazines() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Category</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Category</label>
                     <select 
                       name="category"
                       value={formData.category}
@@ -681,11 +691,12 @@ export default function Magazines() {
                       style={{
                         width: '100%',
                         padding: '12px 16px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: isDarkMode ? '#0f172a' : '#f8fafc',
+                        border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                         borderRadius: '12px',
                         outline: 'none',
                         fontSize: '14px',
+                        color: isDarkMode ? '#f1f5f9' : '#0f172a',
                         cursor: 'pointer',
                         transition: 'all 0.2s ease'
                       }}
@@ -694,7 +705,7 @@ export default function Magazines() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                         e.currentTarget.style.boxShadow = 'none'
                       }}>
                       <option value="">Select category...</option>
@@ -705,7 +716,7 @@ export default function Magazines() {
                   </div>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>PDF File</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>PDF File</label>
                   <input
                     type="file"
                     accept="application/pdf"
@@ -716,35 +727,35 @@ export default function Magazines() {
                   <div 
                     onClick={() => pdfFileInputRef.current?.click()}
                     style={{
-                      border: '2px dashed #e2e8f0',
+                      border: isDarkMode ? '2px dashed #334155' : '2px dashed #e2e8f0',
                       borderRadius: '12px',
                       padding: '24px',
                       textAlign: 'center',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease',
-                      background: '#f8fafc'
+                      background: isDarkMode ? '#0f172a' : '#f8fafc'
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.borderColor = '#7c3aed'
-                      e.currentTarget.style.background = '#f5f3ff'
+                      e.currentTarget.style.background = isDarkMode ? '#1e293b' : '#f5f3ff'
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
-                      e.currentTarget.style.background = '#f8fafc'
+                      e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
+                      e.currentTarget.style.background = isDarkMode ? '#0f172a' : '#f8fafc'
                     }}>
                     {pdfFileName ? (
-                      <p style={{ fontSize: '14px', color: '#64748b', fontWeight: '500' }}>{pdfFileName}</p>
+                      <p style={{ fontSize: '14px', color: isDarkMode ? '#94a3b8' : '#64748b', fontWeight: '500' }}>{pdfFileName}</p>
                     ) : (
                       <>
-                        <Upload style={{ width: '32px', height: '32px', color: '#94a3b8', margin: '0 auto 8px' }} />
-                        <p style={{ fontSize: '14px', color: '#64748b' }}>Click to upload PDF file</p>
+                        <Upload style={{ width: '32px', height: '32px', color: isDarkMode ? '#64748b' : '#94a3b8', margin: '0 auto 8px' }} />
+                        <p style={{ fontSize: '14px', color: isDarkMode ? '#94a3b8' : '#64748b' }}>Click to upload PDF file</p>
                       </>
                     )}
                   </div>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Price</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Price</label>
                     <input
                       type="number"
                       step="0.01"
@@ -756,8 +767,9 @@ export default function Magazines() {
                         width: '100%',
                         padding: '10px 12px',
                         borderRadius: '8px',
-                        border: '1px solid #e2e8f0',
+                        border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                         fontSize: '14px',
+                        color: isDarkMode ? '#f1f5f9' : '#0f172a',
                         outline: 'none',
                         transition: 'all 0.2s ease'
                       }}
@@ -766,13 +778,13 @@ export default function Magazines() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Digital Price</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Digital Price</label>
                     <input
                       type="number"
                       step="0.01"
@@ -784,8 +796,9 @@ export default function Magazines() {
                         width: '100%',
                         padding: '10px 12px',
                         borderRadius: '8px',
-                        border: '1px solid #e2e8f0',
+                        border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                         fontSize: '14px',
+                        color: isDarkMode ? '#f1f5f9' : '#0f172a',
                         outline: 'none',
                         transition: 'all 0.2s ease'
                       }}
@@ -794,13 +807,13 @@ export default function Magazines() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Print Price</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Print Price</label>
                     <input
                       type="number"
                       step="0.01"
@@ -812,8 +825,9 @@ export default function Magazines() {
                         width: '100%',
                         padding: '10px 12px',
                         borderRadius: '8px',
-                        border: '1px solid #e2e8f0',
+                        border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                         fontSize: '14px',
+                        color: isDarkMode ? '#f1f5f9' : '#0f172a',
                         outline: 'none',
                         transition: 'all 0.2s ease'
                       }}
@@ -822,13 +836,13 @@ export default function Magazines() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Subscription Price</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Subscription Price</label>
                     <input
                       type="number"
                       step="0.01"
@@ -840,8 +854,9 @@ export default function Magazines() {
                         width: '100%',
                         padding: '10px 12px',
                         borderRadius: '8px',
-                        border: '1px solid #e2e8f0',
+                        border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                         fontSize: '14px',
+                        color: isDarkMode ? '#f1f5f9' : '#0f172a',
                         outline: 'none',
                         transition: 'all 0.2s ease'
                       }}
@@ -850,7 +865,7 @@ export default function Magazines() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
@@ -858,7 +873,7 @@ export default function Magazines() {
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Pages</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Pages</label>
                     <input
                       type="number"
                       name="pages"
@@ -869,8 +884,9 @@ export default function Magazines() {
                         width: '100%',
                         padding: '10px 12px',
                         borderRadius: '8px',
-                        border: '1px solid #e2e8f0',
+                        border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                         fontSize: '14px',
+                        color: isDarkMode ? '#f1f5f9' : '#0f172a',
                         outline: 'none',
                         transition: 'all 0.2s ease'
                       }}
@@ -879,13 +895,13 @@ export default function Magazines() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Language</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Language</label>
                     <input
                       type="text"
                       name="language"
@@ -896,8 +912,9 @@ export default function Magazines() {
                         width: '100%',
                         padding: '10px 12px',
                         borderRadius: '8px',
-                        border: '1px solid #e2e8f0',
+                        border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                         fontSize: '14px',
+                        color: isDarkMode ? '#f1f5f9' : '#0f172a',
                         outline: 'none',
                         transition: 'all 0.2s ease'
                       }}
@@ -906,13 +923,13 @@ export default function Magazines() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Publisher</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Publisher</label>
                     <input
                       type="text"
                       name="publisher"
@@ -923,8 +940,9 @@ export default function Magazines() {
                         width: '100%',
                         padding: '10px 12px',
                         borderRadius: '8px',
-                        border: '1px solid #e2e8f0',
+                        border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                         fontSize: '14px',
+                        color: isDarkMode ? '#f1f5f9' : '#0f172a',
                         outline: 'none',
                         transition: 'all 0.2s ease'
                       }}
@@ -933,13 +951,13 @@ export default function Magazines() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Rating</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Rating</label>
                     <input
                       type="number"
                       step="0.01"
@@ -951,8 +969,9 @@ export default function Magazines() {
                         width: '100%',
                         padding: '10px 12px',
                         borderRadius: '8px',
-                        border: '1px solid #e2e8f0',
+                        border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                         fontSize: '14px',
+                        color: isDarkMode ? '#f1f5f9' : '#0f172a',
                         outline: 'none',
                         transition: 'all 0.2s ease'
                       }}
@@ -961,14 +980,14 @@ export default function Magazines() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
                   </div>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Table of Contents</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Table of Contents</label>
                   <textarea
                     name="table_of_contents"
                     value={formData.table_of_contents}
@@ -979,32 +998,33 @@ export default function Magazines() {
                       width: '100%',
                       padding: '14px 16px',
                       borderRadius: '12px',
-                      border: '1px solid #e2e8f0',
+                      border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                       fontSize: '14px',
                       lineHeight: '1.6',
                       outline: 'none',
                       transition: 'all 0.2s ease',
                       resize: 'vertical',
-                      background: '#fafbfc',
+                      background: isDarkMode ? '#0f172a' : '#fafbfc',
+                      color: isDarkMode ? '#f1f5f9' : '#0f172a',
                       fontFamily: 'inherit'
                     }}
                     onFocus={(e) => {
                       e.currentTarget.style.borderColor = '#7c3aed'
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                      e.currentTarget.style.background = '#ffffff'
+                      e.currentTarget.style.background = isDarkMode ? '#0f172a' : '#ffffff'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                       e.currentTarget.style.boxShadow = 'none'
-                      e.currentTarget.style.background = '#fafbfc'
+                      e.currentTarget.style.background = isDarkMode ? '#0f172a' : '#fafbfc'
                     }}
                   />
-                  <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '6px' }}>
+                  <p style={{ fontSize: '12px', color: isDarkMode ? '#64748b' : '#94a3b8', marginTop: '6px' }}>
                     Enter each item on a new line with page numbers
                   </p>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Contributors</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Contributors</label>
                   <select
                     name="contributors"
                     value={formData.contributors}
@@ -1012,11 +1032,12 @@ export default function Magazines() {
                     style={{
                       width: '100%',
                       padding: '12px 16px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: isDarkMode ? '#0f172a' : '#f8fafc',
+                      border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                       borderRadius: '12px',
                       outline: 'none',
                       fontSize: '14px',
+                      color: isDarkMode ? '#f1f5f9' : '#0f172a',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease'
                     }}
@@ -1025,7 +1046,7 @@ export default function Magazines() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                       e.currentTarget.style.boxShadow = 'none'
                     }}>
                     <option value="">Select contributor...</option>
@@ -1037,7 +1058,7 @@ export default function Magazines() {
                   </select>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Cover Image</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Cover Image</label>
                   <input
                     type="file"
                     accept="image/*"
@@ -1048,21 +1069,21 @@ export default function Magazines() {
                   <div 
                     onClick={() => coverImageInputRef.current?.click()}
                     style={{
-                      border: '2px dashed #e2e8f0',
+                      border: isDarkMode ? '2px dashed #334155' : '2px dashed #e2e8f0',
                       borderRadius: '12px',
                       padding: '32px',
                       textAlign: 'center',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease',
-                      background: '#f8fafc'
+                      background: isDarkMode ? '#0f172a' : '#f8fafc'
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.borderColor = '#7c3aed'
-                      e.currentTarget.style.background = '#f5f3ff'
+                      e.currentTarget.style.background = isDarkMode ? '#1e293b' : '#f5f3ff'
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
-                      e.currentTarget.style.background = '#f8fafc'
+                      e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
+                      e.currentTarget.style.background = isDarkMode ? '#0f172a' : '#f8fafc'
                     }}>
                     {coverImagePreview ? (
                       <img 
@@ -1072,14 +1093,14 @@ export default function Magazines() {
                       />
                     ) : (
                       <>
-                        <Upload style={{ width: '32px', height: '32px', color: '#94a3b8', margin: '0 auto 8px' }} />
-                        <p style={{ fontSize: '14px', color: '#64748b' }}>Click to upload cover image</p>
+                        <Upload style={{ width: '32px', height: '32px', color: isDarkMode ? '#64748b' : '#94a3b8', margin: '0 auto 8px' }} />
+                        <p style={{ fontSize: '14px', color: isDarkMode ? '#94a3b8' : '#64748b' }}>Click to upload cover image</p>
                       </>
                     )}
                   </div>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Preview Pages (Max 3)</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Preview Pages (Max 3)</label>
                   <input
                     type="file"
                     accept="image/*"
@@ -1091,59 +1112,59 @@ export default function Magazines() {
                   <div 
                     onClick={() => previewPagesInputRef.current?.click()}
                     style={{
-                      border: '2px dashed #e2e8f0',
+                      border: isDarkMode ? '2px dashed #334155' : '2px dashed #e2e8f0',
                       borderRadius: '12px',
                       padding: '24px',
                       textAlign: 'center',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease',
-                      background: '#f8fafc'
+                      background: isDarkMode ? '#0f172a' : '#f8fafc'
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.borderColor = '#7c3aed'
-                      e.currentTarget.style.background = '#f5f3ff'
+                      e.currentTarget.style.background = isDarkMode ? '#1e293b' : '#f5f3ff'
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
-                      e.currentTarget.style.background = '#f8fafc'
+                      e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
+                      e.currentTarget.style.background = isDarkMode ? '#0f172a' : '#f8fafc'
                     }}>
                     {previewPagesFileNames.length > 0 ? (
                       <div>
-                        <p style={{ fontSize: '14px', color: '#64748b', fontWeight: '500', marginBottom: '8px' }}>
+                        <p style={{ fontSize: '14px', color: isDarkMode ? '#94a3b8' : '#64748b', fontWeight: '500', marginBottom: '8px' }}>
                           {previewPagesFileNames.length} file(s) selected
                         </p>
                         {previewPagesFileNames.map((name, index) => (
-                          <p key={index} style={{ fontSize: '12px', color: '#94a3b8', margin: '2px 0' }}>
+                          <p key={index} style={{ fontSize: '12px', color: isDarkMode ? '#64748b' : '#94a3b8', margin: '2px 0' }}>
                             {index + 1}. {name}
                           </p>
                         ))}
                       </div>
                     ) : (
                       <>
-                        <Upload style={{ width: '32px', height: '32px', color: '#94a3b8', margin: '0 auto 8px' }} />
-                        <p style={{ fontSize: '14px', color: '#64748b' }}>Click to upload preview pages images (max 3)</p>
+                        <Upload style={{ width: '32px', height: '32px', color: isDarkMode ? '#64748b' : '#94a3b8', margin: '0 auto 8px' }} />
+                        <p style={{ fontSize: '14px', color: isDarkMode ? '#94a3b8' : '#64748b' }}>Click to upload preview pages images (max 3)</p>
                       </>
                     )}
                   </div>
                 </div>
               </div>
             </div>
-            <div style={{ padding: '12px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '-16px' }}>
+            <div style={{ padding: '12px', borderTop: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '-16px' }}>
               <button
-                onClick={() => setShowCreateModal(false)}
+                onClick={() => setShowEditModal(false)}
                 style={{
-                  padding: '10px 20px',
+                  padding: '6px 12px',
                   background: 'transparent',
-                  border: '1px solid #e2e8f0',
-                  borderRadius: '12px',
+                  border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
+                  borderRadius: '8px',
                   cursor: 'pointer',
-                  fontSize: '14px',
+                  fontSize: '13px',
+                  color: isDarkMode ? '#94a3b8' : '#64748b',
                   fontWeight: '500',
-                  color: '#64748b',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f8fafc'
+                  e.currentTarget.style.background = isDarkMode ? '#334155' : '#f8fafc'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
@@ -1157,16 +1178,16 @@ export default function Magazines() {
                 style={{
                   padding: '10px 20px',
                   background: 'transparent',
-                  border: '1px solid #e2e8f0',
+                  border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                   borderRadius: '12px',
                   cursor: 'pointer',
                   fontSize: '14px',
+                  color: isDarkMode ? '#94a3b8' : '#64748b',
                   fontWeight: '500',
-                  color: '#64748b',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f8fafc'
+                  e.currentTarget.style.background = isDarkMode ? '#334155' : '#f8fafc'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
@@ -1216,7 +1237,7 @@ export default function Magazines() {
           zIndex: 50
         }}>
           <div style={{
-            background: 'white',
+            background: isDarkMode ? '#1e293b' : 'white',
             borderRadius: '16px',
             width: '100%',
             maxWidth: '600px',
@@ -1226,12 +1247,12 @@ export default function Magazines() {
           }}>
             <div style={{
               padding: '24px',
-              borderBottom: '1px solid #e2e8f0',
+              borderBottom: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-              <h2 style={{ fontSize: '20px', fontWeight: '600', color: '#0f172a' }}>Edit Magazine</h2>
+              <h2 style={{ fontSize: '20px', fontWeight: '600', color: isDarkMode ? '#f1f5f9' : '#0f172a' }}>Edit Magazine</h2>
               <button
                 onClick={() => {
                   setShowEditModal(false)
@@ -1251,16 +1272,16 @@ export default function Magazines() {
                   borderRadius: '8px',
                   cursor: 'pointer',
                   fontSize: '20px',
-                  color: '#94a3b8',
+                  color: isDarkMode ? '#94a3b8' : '#64748b',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f1f5f9'
-                  e.currentTarget.style.color = '#64748b'
+                  e.currentTarget.style.background = isDarkMode ? '#334155' : '#f1f5f9'
+                  e.currentTarget.style.color = isDarkMode ? '#64748b' : '#64748b'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
-                  e.currentTarget.style.color = '#94a3b8'
+                  e.currentTarget.style.color = isDarkMode ? '#94a3b8' : '#64748b'
                 }}
               >
                 ✕
@@ -1269,7 +1290,7 @@ export default function Magazines() {
             <div style={{ padding: '24px', overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Title</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Title</label>
                   <input
                     type="text"
                     name="title"
@@ -1279,11 +1300,12 @@ export default function Magazines() {
                     style={{
                       width: '100%',
                       padding: '12px 16px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: isDarkMode ? '#0f172a' : '#f8fafc',
+                      border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                       borderRadius: '12px',
                       outline: 'none',
                       fontSize: '14px',
+                      color: isDarkMode ? '#f1f5f9' : '#0f172a',
                       transition: 'all 0.2s ease'
                     }}
                     onFocus={(e) => {
@@ -1291,13 +1313,13 @@ export default function Magazines() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Description</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Description</label>
                   <textarea
                     name="description"
                     value={formData.description}
@@ -1307,11 +1329,12 @@ export default function Magazines() {
                     style={{
                       width: '100%',
                       padding: '12px 16px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: isDarkMode ? '#0f172a' : '#f8fafc',
+                      border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                       borderRadius: '12px',
                       outline: 'none',
                       fontSize: '14px',
+                      color: isDarkMode ? '#f1f5f9' : '#0f172a',
                       transition: 'all 0.2s ease',
                       resize: 'vertical'
                     }}
@@ -1320,14 +1343,14 @@ export default function Magazines() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Issue</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Issue</label>
                     <input
                       type="text"
                       name="issue"
@@ -1337,11 +1360,12 @@ export default function Magazines() {
                       style={{
                         width: '100%',
                         padding: '12px 16px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: isDarkMode ? '#0f172a' : '#f8fafc',
+                        border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                         borderRadius: '12px',
                         outline: 'none',
                         fontSize: '14px',
+                        color: isDarkMode ? '#f1f5f9' : '#0f172a',
                         transition: 'all 0.2s ease'
                       }}
                       onFocus={(e) => {
@@ -1349,13 +1373,13 @@ export default function Magazines() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Category</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Category</label>
                     <select 
                       name="category"
                       value={formData.category}
@@ -1363,11 +1387,12 @@ export default function Magazines() {
                       style={{
                         width: '100%',
                         padding: '12px 16px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: isDarkMode ? '#0f172a' : '#f8fafc',
+                        border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                         borderRadius: '12px',
                         outline: 'none',
                         fontSize: '14px',
+                        color: isDarkMode ? '#f1f5f9' : '#0f172a',
                         cursor: 'pointer',
                         transition: 'all 0.2s ease'
                       }}
@@ -1376,7 +1401,7 @@ export default function Magazines() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                         e.currentTarget.style.boxShadow = 'none'
                       }}>
                       <option value="">Select category...</option>
@@ -1387,7 +1412,7 @@ export default function Magazines() {
                   </div>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>PDF File</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>PDF File</label>
                   <input
                     type="file"
                     accept="application/pdf"
@@ -1398,35 +1423,35 @@ export default function Magazines() {
                   <div 
                     onClick={() => editPdfFileInputRef.current?.click()}
                     style={{
-                      border: '2px dashed #e2e8f0',
+                      border: isDarkMode ? '2px dashed #334155' : '2px dashed #e2e8f0',
                       borderRadius: '12px',
                       padding: '24px',
                       textAlign: 'center',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease',
-                      background: '#f8fafc'
+                      background: isDarkMode ? '#0f172a' : '#f8fafc'
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.borderColor = '#7c3aed'
-                      e.currentTarget.style.background = '#f5f3ff'
+                      e.currentTarget.style.background = isDarkMode ? '#1e293b' : '#f5f3ff'
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
-                      e.currentTarget.style.background = '#f8fafc'
+                      e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
+                      e.currentTarget.style.background = isDarkMode ? '#0f172a' : '#f8fafc'
                     }}>
                     {pdfFileName ? (
-                      <p style={{ fontSize: '14px', color: '#64748b', fontWeight: '500' }}>{pdfFileName}</p>
+                      <p style={{ fontSize: '14px', color: isDarkMode ? '#94a3b8' : '#64748b', fontWeight: '500' }}>{pdfFileName}</p>
                     ) : (
                       <>
-                        <Upload style={{ width: '32px', height: '32px', color: '#94a3b8', margin: '0 auto 8px' }} />
-                        <p style={{ fontSize: '14px', color: '#64748b' }}>Click to upload PDF file</p>
+                        <Upload style={{ width: '32px', height: '32px', color: isDarkMode ? '#64748b' : '#94a3b8', margin: '0 auto 8px' }} />
+                        <p style={{ fontSize: '14px', color: isDarkMode ? '#94a3b8' : '#64748b' }}>Click to upload PDF file</p>
                       </>
                     )}
                   </div>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Price</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Price</label>
                     <input
                       type="number"
                       step="0.01"
@@ -1438,8 +1463,9 @@ export default function Magazines() {
                         width: '100%',
                         padding: '10px 12px',
                         borderRadius: '8px',
-                        border: '1px solid #e2e8f0',
+                        border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                         fontSize: '14px',
+                        color: isDarkMode ? '#f1f5f9' : '#0f172a',
                         outline: 'none',
                         transition: 'all 0.2s ease'
                       }}
@@ -1448,13 +1474,13 @@ export default function Magazines() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Digital Price</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Digital Price</label>
                     <input
                       type="number"
                       step="0.01"
@@ -1466,8 +1492,9 @@ export default function Magazines() {
                         width: '100%',
                         padding: '10px 12px',
                         borderRadius: '8px',
-                        border: '1px solid #e2e8f0',
+                        border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                         fontSize: '14px',
+                        color: isDarkMode ? '#f1f5f9' : '#0f172a',
                         outline: 'none',
                         transition: 'all 0.2s ease'
                       }}
@@ -1476,13 +1503,13 @@ export default function Magazines() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Print Price</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Print Price</label>
                     <input
                       type="number"
                       step="0.01"
@@ -1494,8 +1521,9 @@ export default function Magazines() {
                         width: '100%',
                         padding: '10px 12px',
                         borderRadius: '8px',
-                        border: '1px solid #e2e8f0',
+                        border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                         fontSize: '14px',
+                        color: isDarkMode ? '#f1f5f9' : '#0f172a',
                         outline: 'none',
                         transition: 'all 0.2s ease'
                       }}
@@ -1504,13 +1532,13 @@ export default function Magazines() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Subscription Price</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Subscription Price</label>
                     <input
                       type="number"
                       step="0.01"
@@ -1522,8 +1550,9 @@ export default function Magazines() {
                         width: '100%',
                         padding: '10px 12px',
                         borderRadius: '8px',
-                        border: '1px solid #e2e8f0',
+                        border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                         fontSize: '14px',
+                        color: isDarkMode ? '#f1f5f9' : '#0f172a',
                         outline: 'none',
                         transition: 'all 0.2s ease'
                       }}
@@ -1532,7 +1561,7 @@ export default function Magazines() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
@@ -1540,7 +1569,7 @@ export default function Magazines() {
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Pages</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Pages</label>
                     <input
                       type="number"
                       name="pages"
@@ -1551,8 +1580,9 @@ export default function Magazines() {
                         width: '100%',
                         padding: '10px 12px',
                         borderRadius: '8px',
-                        border: '1px solid #e2e8f0',
+                        border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                         fontSize: '14px',
+                        color: isDarkMode ? '#f1f5f9' : '#0f172a',
                         outline: 'none',
                         transition: 'all 0.2s ease'
                       }}
@@ -1561,13 +1591,13 @@ export default function Magazines() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Language</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Language</label>
                     <input
                       type="text"
                       name="language"
@@ -1578,8 +1608,9 @@ export default function Magazines() {
                         width: '100%',
                         padding: '10px 12px',
                         borderRadius: '8px',
-                        border: '1px solid #e2e8f0',
+                        border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                         fontSize: '14px',
+                        color: isDarkMode ? '#f1f5f9' : '#0f172a',
                         outline: 'none',
                         transition: 'all 0.2s ease'
                       }}
@@ -1588,13 +1619,13 @@ export default function Magazines() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Publisher</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Publisher</label>
                     <input
                       type="text"
                       name="publisher"
@@ -1605,8 +1636,9 @@ export default function Magazines() {
                         width: '100%',
                         padding: '10px 12px',
                         borderRadius: '8px',
-                        border: '1px solid #e2e8f0',
+                        border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                         fontSize: '14px',
+                        color: isDarkMode ? '#f1f5f9' : '#0f172a',
                         outline: 'none',
                         transition: 'all 0.2s ease'
                       }}
@@ -1615,13 +1647,13 @@ export default function Magazines() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Rating</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Rating</label>
                     <input
                       type="number"
                       step="0.01"
@@ -1633,8 +1665,9 @@ export default function Magazines() {
                         width: '100%',
                         padding: '10px 12px',
                         borderRadius: '8px',
-                        border: '1px solid #e2e8f0',
+                        border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                         fontSize: '14px',
+                        color: isDarkMode ? '#f1f5f9' : '#0f172a',
                         outline: 'none',
                         transition: 'all 0.2s ease'
                       }}
@@ -1643,14 +1676,14 @@ export default function Magazines() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
                   </div>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Table of Contents</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Table of Contents</label>
                   <textarea
                     name="table_of_contents"
                     value={formData.table_of_contents}
@@ -1661,32 +1694,33 @@ export default function Magazines() {
                       width: '100%',
                       padding: '14px 16px',
                       borderRadius: '12px',
-                      border: '1px solid #e2e8f0',
+                      border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                       fontSize: '14px',
                       lineHeight: '1.6',
                       outline: 'none',
                       transition: 'all 0.2s ease',
                       resize: 'vertical',
-                      background: '#fafbfc',
+                      background: isDarkMode ? '#0f172a' : '#fafbfc',
+                      color: isDarkMode ? '#f1f5f9' : '#0f172a',
                       fontFamily: 'inherit'
                     }}
                     onFocus={(e) => {
                       e.currentTarget.style.borderColor = '#7c3aed'
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                      e.currentTarget.style.background = '#ffffff'
+                      e.currentTarget.style.background = isDarkMode ? '#0f172a' : '#ffffff'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                       e.currentTarget.style.boxShadow = 'none'
-                      e.currentTarget.style.background = '#fafbfc'
+                      e.currentTarget.style.background = isDarkMode ? '#0f172a' : '#fafbfc'
                     }}
                   />
-                  <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '6px' }}>
+                  <p style={{ fontSize: '12px', color: isDarkMode ? '#64748b' : '#94a3b8', marginTop: '6px' }}>
                     Enter each item on a new line with page numbers
                   </p>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Preview Pages</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Preview Pages</label>
                   <textarea
                     name="preview_pages"
                     value={formData.preview_pages}
@@ -1697,8 +1731,10 @@ export default function Magazines() {
                       width: '100%',
                       padding: '10px 12px',
                       borderRadius: '8px',
-                      border: '1px solid #e2e8f0',
+                      border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                       fontSize: '14px',
+                      color: isDarkMode ? '#f1f5f9' : '#0f172a',
+                      background: isDarkMode ? '#0f172a' : '#ffffff',
                       outline: 'none',
                       transition: 'all 0.2s ease',
                       resize: 'vertical'
@@ -1708,13 +1744,13 @@ export default function Magazines() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Contributors</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Contributors</label>
                   <select
                     name="contributors"
                     value={formData.contributors}
@@ -1722,11 +1758,12 @@ export default function Magazines() {
                     style={{
                       width: '100%',
                       padding: '12px 16px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: isDarkMode ? '#0f172a' : '#f8fafc',
+                      border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
                       borderRadius: '12px',
                       outline: 'none',
                       fontSize: '14px',
+                      color: isDarkMode ? '#f1f5f9' : '#0f172a',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease'
                     }}
@@ -1735,7 +1772,7 @@ export default function Magazines() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
                       e.currentTarget.style.boxShadow = 'none'
                     }}>
                     <option value="">Select contributor...</option>
@@ -1747,7 +1784,7 @@ export default function Magazines() {
                   </select>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Cover Image</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Cover Image</label>
                   <input
                     type="file"
                     accept="image/*"
@@ -1758,21 +1795,21 @@ export default function Magazines() {
                   <div 
                     onClick={() => editCoverImageInputRef.current?.click()}
                     style={{
-                      border: '2px dashed #e2e8f0',
+                      border: isDarkMode ? '2px dashed #334155' : '2px dashed #e2e8f0',
                       borderRadius: '12px',
                       padding: '32px',
                       textAlign: 'center',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease',
-                      background: '#f8fafc'
+                      background: isDarkMode ? '#0f172a' : '#f8fafc'
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.borderColor = '#7c3aed'
-                      e.currentTarget.style.background = '#f5f3ff'
+                      e.currentTarget.style.background = isDarkMode ? '#1e293b' : '#f5f3ff'
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
-                      e.currentTarget.style.background = '#f8fafc'
+                      e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
+                      e.currentTarget.style.background = isDarkMode ? '#0f172a' : '#f8fafc'
                     }}>
                     {coverImagePreview ? (
                       <img 
@@ -1782,14 +1819,14 @@ export default function Magazines() {
                       />
                     ) : (
                       <>
-                        <Upload style={{ width: '32px', height: '32px', color: '#94a3b8', margin: '0 auto 8px' }} />
-                        <p style={{ fontSize: '14px', color: '#64748b' }}>Click to upload cover image</p>
+                        <Upload style={{ width: '32px', height: '32px', color: isDarkMode ? '#64748b' : '#94a3b8', margin: '0 auto 8px' }} />
+                        <p style={{ fontSize: '14px', color: isDarkMode ? '#94a3b8' : '#64748b' }}>Click to upload cover image</p>
                       </>
                     )}
                   </div>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Preview Pages (Max 3)</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Preview Pages (Max 3)</label>
                   <input
                     type="file"
                     accept="image/*"
@@ -1801,44 +1838,44 @@ export default function Magazines() {
                   <div 
                     onClick={() => editPreviewPagesInputRef.current?.click()}
                     style={{
-                      border: '2px dashed #e2e8f0',
+                      border: isDarkMode ? '2px dashed #334155' : '2px dashed #e2e8f0',
                       borderRadius: '12px',
                       padding: '24px',
                       textAlign: 'center',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease',
-                      background: '#f8fafc'
+                      background: isDarkMode ? '#0f172a' : '#f8fafc'
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.borderColor = '#7c3aed'
-                      e.currentTarget.style.background = '#f5f3ff'
+                      e.currentTarget.style.background = isDarkMode ? '#1e293b' : '#f5f3ff'
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
-                      e.currentTarget.style.background = '#f8fafc'
+                      e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
+                      e.currentTarget.style.background = isDarkMode ? '#0f172a' : '#f8fafc'
                     }}>
                     {previewPagesFileNames.length > 0 ? (
                       <div>
-                        <p style={{ fontSize: '14px', color: '#64748b', fontWeight: '500', marginBottom: '8px' }}>
+                        <p style={{ fontSize: '14px', color: isDarkMode ? '#94a3b8' : '#64748b', fontWeight: '500', marginBottom: '8px' }}>
                           {previewPagesFileNames.length} file(s) selected
                         </p>
                         {previewPagesFileNames.map((name, index) => (
-                          <p key={index} style={{ fontSize: '12px', color: '#94a3b8', margin: '2px 0' }}>
+                          <p key={index} style={{ fontSize: '12px', color: isDarkMode ? '#64748b' : '#94a3b8', margin: '2px 0' }}>
                             {index + 1}. {name}
                           </p>
                         ))}
                       </div>
                     ) : (
                       <>
-                        <Upload style={{ width: '32px', height: '32px', color: '#94a3b8', margin: '0 auto 8px' }} />
-                        <p style={{ fontSize: '14px', color: '#64748b' }}>Click to upload preview pages images (max 3)</p>
+                        <Upload style={{ width: '32px', height: '32px', color: isDarkMode ? '#64748b' : '#94a3b8', margin: '0 auto 8px' }} />
+                        <p style={{ fontSize: '14px', color: isDarkMode ? '#94a3b8' : '#64748b' }}>Click to upload preview pages images (max 3)</p>
                       </>
                     )}
                   </div>
                 </div>
               </div>
             </div>
-            <div style={{ padding: '12px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '-16px' }}>
+            <div style={{ padding: '12px', borderTop: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '-16px' }}>
               <button
                 onClick={() => {
                   setShowEditModal(false)
@@ -1848,18 +1885,18 @@ export default function Magazines() {
                   setCoverImagePreview(null)
                 }}
                 style={{
-                  padding: '10px 20px',
+                  padding: '6px 12px',
                   background: 'transparent',
-                  border: '1px solid #e2e8f0',
-                  borderRadius: '12px',
+                  border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
+                  borderRadius: '8px',
                   cursor: 'pointer',
-                  fontSize: '14px',
+                  fontSize: '13px',
+                  color: isDarkMode ? '#94a3b8' : '#64748b',
                   fontWeight: '500',
-                  color: '#64748b',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f8fafc'
+                  e.currentTarget.style.background = isDarkMode ? '#334155' : '#f8fafc'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
@@ -1870,18 +1907,18 @@ export default function Magazines() {
               <button
                 onClick={() => handleUpdateMagazine('draft')}
                 style={{
-                  padding: '10px 20px',
+                  padding: '6px 12px',
                   background: 'transparent',
-                  border: '1px solid #e2e8f0',
-                  borderRadius: '12px',
+                  border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
+                  borderRadius: '8px',
                   cursor: 'pointer',
-                  fontSize: '14px',
+                  fontSize: '13px',
+                  color: isDarkMode ? '#94a3b8' : '#64748b',
                   fontWeight: '500',
-                  color: '#64748b',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f8fafc'
+                  e.currentTarget.style.background = isDarkMode ? '#334155' : '#f8fafc'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
@@ -1891,12 +1928,12 @@ export default function Magazines() {
               <button
                 onClick={() => handleUpdateMagazine('published')}
                 style={{
-                  padding: '10px 20px',
+                  padding: '6px 12px',
                   background: 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)',
                   border: 'none',
-                  borderRadius: '12px',
+                  borderRadius: '8px',
                   cursor: 'pointer',
-                  fontSize: '14px',
+                  fontSize: '13px',
                   fontWeight: '500',
                   color: 'white',
                   boxShadow: '0 4px 12px rgba(124, 58, 237, 0.3)',

@@ -140,8 +140,8 @@ export default function Team() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#0f172a' }}>Team Members</h1>
-          <p style={{ color: '#64748b', marginTop: '2px', fontSize: '13px' }}>Manage your team and staff profiles</p>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--text-primary)' }}>Team Members</h1>
+          <p style={{ color: 'var(--text-secondary)', marginTop: '2px', fontSize: '13px' }}>Manage your team and staff profiles</p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
@@ -174,32 +174,66 @@ export default function Team() {
         </button>
       </div>
 
-      {/* Search */}
-      <div style={{ flex: 1 }}>
-        <input
-          type="text"
-          placeholder="Search team members..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          style={{
-            width: '100%',
-            padding: '8px 12px',
-            background: '#f8fafc',
-            border: '1px solid #e2e8f0',
-            borderRadius: '10px',
-            outline: 'none',
-            fontSize: '13px',
-            transition: 'all 0.2s ease'
-          }}
-          onFocus={(e) => {
-            e.currentTarget.style.borderColor = '#7c3aed'
-            e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-          }}
-          onBlur={(e) => {
-            e.currentTarget.style.borderColor = '#e2e8f0'
-            e.currentTarget.style.boxShadow = 'none'
-          }}
-        />
+      {/* Stats and Search */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+        {/* Stats */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', flex: 1 }}>
+          <div style={{
+            background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
+            backdropFilter: 'blur(20px)',
+            borderRadius: '16px',
+            padding: '8px',
+            border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px'
+          }}>
+            <div style={{ 
+              width: '32px', 
+              height: '32px', 
+              background: 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)', 
+              borderRadius: '10px', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center'
+            }}>
+              <Users style={{ width: '16px', height: '16px', color: '#2563eb' }} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--text-primary)', margin: 0 }}>{teamMembers.length}</h3>
+              <p style={{ fontSize: '10px', color: 'var(--text-secondary)', margin: 0 }}>Total Members</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Search */}
+        <div style={{ flex: 1 }}>
+          <input
+            type="text"
+            placeholder="Search team members..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '8px 12px',
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
+              borderRadius: '10px',
+              outline: 'none',
+              fontSize: '13px',
+              transition: 'all 0.2s ease'
+            }}
+            onFocus={(e) => {
+              e.currentTarget.style.borderColor = '#7c3aed'
+              e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.borderColor = 'var(--border-color)'
+              e.currentTarget.style.boxShadow = 'none'
+            }}
+          />
+        </div>
       </div>
 
       {/* Team Grid */}
@@ -210,10 +244,10 @@ export default function Team() {
       }}>
         {filteredMembers.map((member) => (
           <div key={member.id} style={{
-            background: 'rgba(255, 255, 255, 0.95)',
+            background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
             backdropFilter: 'blur(20px)',
             borderRadius: '12px',
-            border: '1px solid rgba(226, 232, 240, 0.8)',
+            border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
             boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
             overflow: 'hidden',
             transition: 'all 0.3s ease'
@@ -238,9 +272,9 @@ export default function Team() {
               {!member.avatar_url && <Users style={{ width: '36px', height: '36px', color: '#94a3b8' }} />}
             </div>
             <div style={{ padding: '12px' }}>
-              <h3 style={{ fontWeight: '600', color: '#0f172a', fontSize: '14px', marginBottom: '3px' }}>{member.name}</h3>
+              <h3 style={{ fontWeight: '600', color: 'var(--text-primary)', fontSize: '14px', marginBottom: '3px' }}>{member.name}</h3>
               <p style={{ fontSize: '12px', color: '#7c3aed', fontWeight: '500', marginBottom: '6px' }}>{member.role}</p>
-              <p style={{ fontSize: '11px', color: '#64748b', marginBottom: '10px', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', lineHeight: '1.4', maxHeight: '2.8em' }}>{member.bio}</p>
+              <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '10px', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', lineHeight: '1.4', maxHeight: '2.8em' }}>{member.bio}</p>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <button 
                   onClick={() => handleEditMember(member)}
@@ -253,12 +287,12 @@ export default function Team() {
                     transition: 'all 0.2s ease'
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = '#f1f5f9'
+                    e.currentTarget.style.background = 'var(--bg-secondary)'
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.background = 'transparent'
                   }}>
-                  <Edit style={{ width: '12px', height: '12px', color: '#64748b' }} />
+                  <Edit style={{ width: '12px', height: '12px', color: 'var(--text-secondary)' }} />
                 </button>
                 <button 
                   onClick={() => handleDeleteMember(member.id)}
@@ -271,7 +305,7 @@ export default function Team() {
                     transition: 'all 0.2s ease'
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = '#fef2f2'
+                    e.currentTarget.style.background = 'color-mix(in srgb, #dc2626 10%, transparent)'
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.background = 'transparent'
@@ -297,7 +331,7 @@ export default function Team() {
           zIndex: 50
         }}>
           <div style={{
-            background: 'white',
+            background: 'var(--bg-primary)',
             borderRadius: '16px',
             width: '100%',
             maxWidth: '600px',
@@ -307,12 +341,12 @@ export default function Team() {
           }}>
             <div style={{
               padding: '20px',
-              borderBottom: '1px solid #e2e8f0',
+              borderBottom: '1px solid var(--border-color)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-              <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a' }}>
+              <h2 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)' }}>
                 {editingMember ? 'Edit Team Member' : 'Add Team Member'}
               </h2>
               <button
@@ -328,16 +362,16 @@ export default function Team() {
                   borderRadius: '8px',
                   cursor: 'pointer',
                   fontSize: '18px',
-                  color: '#94a3b8',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f1f5f9'
-                  e.currentTarget.style.color = '#64748b'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
-                  e.currentTarget.style.color = '#94a3b8'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
               >
                 ✕
@@ -346,7 +380,7 @@ export default function Team() {
             <div style={{ padding: '20px', overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Avatar</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Avatar</label>
                   <input
                     type="file"
                     accept="image/*"
@@ -354,8 +388,8 @@ export default function Team() {
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px'
@@ -363,12 +397,12 @@ export default function Team() {
                   />
                   {formData.avatar_url && (
                     <div style={{ marginTop: '12px' }}>
-                      <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '6px' }}>Current Avatar:</p>
+                      <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '6px' }}>Current Avatar:</p>
                       <div style={{
                         width: '100%',
                         height: '150px',
-                        background: '#f8fafc',
-                        border: '2px dashed #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '2px dashed var(--border-color)',
                         borderRadius: '12px',
                         display: 'flex',
                         alignItems: 'center',
@@ -389,7 +423,7 @@ export default function Team() {
                   )}
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Name</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Name</label>
                   <input
                     type="text"
                     name="name"
@@ -399,8 +433,8 @@ export default function Team() {
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px',
@@ -411,13 +445,13 @@ export default function Team() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Role</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Role</label>
                   <input
                     type="text"
                     name="role"
@@ -427,8 +461,8 @@ export default function Team() {
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px',
@@ -439,13 +473,13 @@ export default function Team() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Email</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Email</label>
                   <input
                     type="email"
                     name="email"
@@ -455,8 +489,8 @@ export default function Team() {
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px',
@@ -467,13 +501,13 @@ export default function Team() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Bio</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Bio</label>
                   <textarea
                     name="bio"
                     value={formData.bio}
@@ -483,8 +517,8 @@ export default function Team() {
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px',
@@ -496,7 +530,7 @@ export default function Team() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
@@ -509,16 +543,16 @@ export default function Team() {
                 style={{
                   padding: '8px 16px',
                   background: 'transparent',
-                  border: '1px solid #e2e8f0',
+                  borderTop: '1px solid var(--border-color)',
                   borderRadius: '10px',
                   cursor: 'pointer',
                   fontSize: '13px',
                   fontWeight: '500',
-                  color: '#64748b',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f8fafc'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'

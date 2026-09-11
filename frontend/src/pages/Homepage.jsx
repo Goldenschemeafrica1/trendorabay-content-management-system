@@ -189,8 +189,8 @@ export default function Homepage() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#0f172a' }}>Homepage Management</h1>
-          <p style={{ color: '#64748b', marginTop: '2px', fontSize: '13px' }}>Configure and manage homepage content and layout</p>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--text-primary)' }}>Homepage Management</h1>
+          <p style={{ color: 'var(--text-secondary)', marginTop: '2px', fontSize: '13px' }}>Configure and manage homepage content and layout</p>
         </div>
         <button
           onClick={handleSave}
@@ -262,10 +262,10 @@ export default function Homepage() {
 
       {/* Tab Content */}
       <div style={{
-        background: 'rgba(255, 255, 255, 0.95)',
+        background: 'var(--bg-primary)',
         backdropFilter: 'blur(20px)',
         borderRadius: '16px',
-        border: '1px solid rgba(226, 232, 240, 0.8)',
+        border: '1px solid var(--border-color)',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
         padding: '24px'
       }}>
@@ -274,12 +274,12 @@ export default function Homepage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             {/* Story Selection */}
             <div>
-              <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a', marginBottom: '16px' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>
                 Story Selection
               </h3>
               <div style={{ display: 'flex', gap: '12px', marginBottom: '16px' }}>
                 <div style={{ flex: 1, position: 'relative' }}>
-                  <Search style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', width: '16px', height: '16px', color: '#94a3b8' }} />
+                  <Search style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', width: '16px', height: '16px', color: 'var(--text-secondary)' }} />
                   <input
                     type="text"
                     placeholder="Search articles..."
@@ -289,7 +289,7 @@ export default function Homepage() {
                       width: '100%',
                       padding: '10px 12px 10px 40px',
                       borderRadius: '10px',
-                      border: '1px solid #e2e8f0',
+                      border: '1px solid var(--border-color)',
                       fontSize: '13px',
                       outline: 'none'
                     }}
@@ -301,9 +301,9 @@ export default function Homepage() {
                   style={{
                     padding: '10px 12px',
                     borderRadius: '10px',
-                    border: '1px solid #e2e8f0',
+                    border: '1px solid var(--border-color)',
                     fontSize: '13px',
-                    color: '#475569',
+                    color: 'var(--text-secondary)',
                     minWidth: '150px'
                   }}
                 >
@@ -339,24 +339,24 @@ export default function Homepage() {
                   (s.title?.toLowerCase().includes(searchQuery.toLowerCase()) || s.content?.toLowerCase().includes(searchQuery.toLowerCase()))
                 ).slice(0, 5).map((story, index) => (
                   <div key={story.id || `story-select-${index}`} style={{
-                    background: '#f8fafc',
+                    background: 'var(--bg-secondary)',
                     borderRadius: '10px',
                     padding: '12px 16px',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '12px',
-                    border: '1px solid #e2e8f0'
+                    border: '1px solid var(--border-color)'
                   }}>
                     <input type="checkbox" style={{ width: '16px', height: '16px' }} />
                     <div style={{ flex: 1 }}>
-                      <p style={{ fontSize: '14px', fontWeight: '500', color: '#0f172a' }}>{story.title}</p>
-                      <p style={{ fontSize: '12px', color: '#64748b', marginTop: '2px' }}>{story.category || 'No category'}</p>
+                      <p style={{ fontSize: '14px', fontWeight: '500', color: 'var(--text-primary)' }}>{story.title}</p>
+                      <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>{story.category || 'No category'}</p>
                     </div>
                     <button
                       style={{
                         padding: '6px 12px',
-                        background: '#f1f5f9',
-                        border: '1px solid #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '8px',
                         fontSize: '12px',
                         cursor: 'pointer',
@@ -365,7 +365,7 @@ export default function Homepage() {
                         gap: '4px'
                       }}
                     >
-                      <Pin style={{ width: '14px', height: '14px', color: '#64748b' }} />
+                      <Pin style={{ width: '14px', height: '14px', color: 'var(--text-secondary)' }} />
                       Pin
                     </button>
                   </div>
@@ -375,7 +375,7 @@ export default function Homepage() {
 
             {/* Position Management */}
             <div>
-              <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a', marginBottom: '16px' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>
                 Position Management
               </h3>
               
@@ -383,32 +383,32 @@ export default function Homepage() {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr 1fr', gap: '16px', marginBottom: '24px' }}>
                 {/* Left Column - Stories */}
                 <div style={{
-                  background: '#f8fafc',
-                  border: '2px dashed #cbd5e1',
+                  background: 'var(--bg-secondary)',
+                  border: '2px dashed var(--border-color)',
                   borderRadius: '12px',
                   padding: '16px',
                   minHeight: '400px',
                   display: 'flex',
                   flexDirection: 'column'
                 }}>
-                  <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#0f172a', marginBottom: '12px' }}>
+                  <h4 style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '12px' }}>
                     Stories
                   </h4>
                   <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     {featuredStories.slice(0, 4).map((story, index) => (
                       <div key={story.id || `featured-story-${index}`} style={{
-                        background: 'white',
+                        background: 'var(--bg-primary)',
                         borderRadius: '8px',
                         padding: '10px',
-                        border: '1px solid #e2e8f0',
+                        border: '1px solid var(--border-color)',
                         cursor: 'grab'
                       }}>
-                        <p style={{ fontSize: '12px', fontWeight: '500', color: '#0f172a' }}>{story.title}</p>
-                        <p style={{ fontSize: '10px', color: '#64748b', marginTop: '2px' }}>{story.category || 'No category'}</p>
+                        <p style={{ fontSize: '12px', fontWeight: '500', color: 'var(--text-primary)' }}>{story.title}</p>
+                        <p style={{ fontSize: '10px', color: 'var(--text-secondary)', marginTop: '2px' }}>{story.category || 'No category'}</p>
                       </div>
                     ))}
                     {featuredStories.length === 0 && (
-                      <div style={{ textAlign: 'center', color: '#94a3b8', padding: '20px' }}>
+                      <div style={{ textAlign: 'center', color: 'var(--text-secondary)', padding: '20px' }}>
                         <ImageIcon style={{ width: '24px', height: '24px', margin: '0 auto 8px' }} />
                         <p style={{ fontSize: '12px' }}>Add stories here</p>
                       </div>
@@ -418,8 +418,8 @@ export default function Homepage() {
 
                 {/* Center Column - Cover Image */}
                 <div style={{
-                  background: '#f8fafc',
-                  border: '2px dashed #cbd5e1',
+                  background: 'var(--bg-secondary)',
+                  border: '2px dashed var(--border-color)',
                   borderRadius: '12px',
                   padding: '16px',
                   minHeight: '400px',
@@ -454,8 +454,8 @@ export default function Homepage() {
                           }}
                         />
                       )}
-                      <p style={{ fontSize: '16px', fontWeight: '600', color: '#0f172a' }}>{mainCoverStory.title}</p>
-                      <p style={{ fontSize: '13px', color: '#64748b', marginTop: '4px' }}>{mainCoverStory.category || 'No category'}</p>
+                      <p style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)' }}>{mainCoverStory.title}</p>
+                      <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px' }}>{mainCoverStory.category || 'No category'}</p>
                       <button
                         style={{
                           marginTop: '12px',
@@ -473,45 +473,45 @@ export default function Homepage() {
                     </div>
                   ) : (
                     <div style={{ textAlign: 'center' }}>
-                      <ImageIcon style={{ width: '48px', height: '48px', color: '#94a3b8', margin: '0 auto 16px' }} />
-                      <p style={{ fontSize: '14px', color: '#64748b', marginBottom: '8px' }}>Main Cover Story</p>
-                      <p style={{ fontSize: '12px', color: '#94a3b8' }}>Large center image</p>
+                      <ImageIcon style={{ width: '48px', height: '48px', color: 'var(--text-secondary)', margin: '0 auto 16px' }} />
+                      <p style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '8px' }}>Main Cover Story</p>
+                      <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Large center image</p>
                     </div>
                   )}
                 </div>
 
                 {/* Right Column - Trending */}
                 <div style={{
-                  background: '#f8fafc',
-                  border: '2px dashed #cbd5e1',
+                  background: 'var(--bg-secondary)',
+                  border: '2px dashed var(--border-color)',
                   borderRadius: '12px',
                   padding: '16px',
                   minHeight: '400px',
                   display: 'flex',
                   flexDirection: 'column'
                 }}>
-                  <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#0f172a', marginBottom: '12px' }}>
+                  <h4 style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '12px' }}>
                     Trending
                   </h4>
                   <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     {trendingStories.slice(0, 4).map((story, index) => (
                       <div key={story.id || `trending-story-${index}`} style={{
-                        background: 'white',
+                        background: 'var(--bg-primary)',
                         borderRadius: '8px',
                         padding: '10px',
-                        border: '1px solid #e2e8f0',
+                        border: '1px solid var(--border-color)',
                         cursor: 'grab'
                       }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
                           <TrendingUp style={{ width: '12px', height: '12px', color: '#ef4444' }} />
                           <span style={{ fontSize: '10px', color: '#ef4444', fontWeight: '600' }}>#{index + 1}</span>
                         </div>
-                        <p style={{ fontSize: '12px', fontWeight: '500', color: '#0f172a' }}>{story.title}</p>
-                        <p style={{ fontSize: '10px', color: '#64748b', marginTop: '2px' }}>{story.views || 0} views</p>
+                        <p style={{ fontSize: '12px', fontWeight: '500', color: 'var(--text-primary)' }}>{story.title}</p>
+                        <p style={{ fontSize: '10px', color: 'var(--text-secondary)', marginTop: '2px' }}>{story.views || 0} views</p>
                       </div>
                     ))}
                     {trendingStories.length === 0 && (
-                      <div style={{ textAlign: 'center', color: '#94a3b8', padding: '20px' }}>
+                      <div style={{ textAlign: 'center', color: 'var(--text-secondary)', padding: '20px' }}>
                         <TrendingUp style={{ width: '24px', height: '24px', margin: '0 auto 8px' }} />
                         <p style={{ fontSize: '12px' }}>Add trending stories</p>
                       </div>
@@ -522,12 +522,12 @@ export default function Homepage() {
 
               {/* Horizontal Stories */}
               <div>
-                <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#0f172a', marginBottom: '12px' }}>
+                <h4 style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '12px' }}>
                   Horizontal Stories
                 </h4>
                 <div style={{
-                  background: '#f8fafc',
-                  border: '2px dashed #cbd5e1',
+                  background: 'var(--bg-secondary)',
+                  border: '2px dashed var(--border-color)',
                   borderRadius: '12px',
                   padding: '16px',
                   minHeight: '120px',
@@ -538,18 +538,18 @@ export default function Homepage() {
                   {moreToExplore.slice(0, 6).map((story, index) => (
                     <div key={story.id || `explore-story-${index}`} style={{
                       minWidth: '200px',
-                      background: 'white',
+                      background: 'var(--bg-primary)',
                       borderRadius: '8px',
                       padding: '12px',
-                      border: '1px solid #e2e8f0',
+                      border: '1px solid var(--border-color)',
                       flexShrink: 0
                     }}>
-                      <p style={{ fontSize: '13px', fontWeight: '500', color: '#0f172a' }}>{story.title}</p>
-                      <p style={{ fontSize: '11px', color: '#64748b', marginTop: '4px' }}>{story.category || 'No category'}</p>
+                      <p style={{ fontSize: '13px', fontWeight: '500', color: 'var(--text-primary)' }}>{story.title}</p>
+                      <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '4px' }}>{story.category || 'No category'}</p>
                     </div>
                   ))}
                   {moreToExplore.length === 0 && (
-                    <div style={{ textAlign: 'center', color: '#94a3b8', padding: '20px', width: '100%' }}>
+                    <div style={{ textAlign: 'center', color: 'var(--text-secondary)', padding: '20px', width: '100%' }}>
                       <ImageIcon style={{ width: '24px', height: '24px', margin: '0 auto 8px' }} />
                       <p style={{ fontSize: '12px' }}>Add horizontal stories</p>
                     </div>
@@ -560,19 +560,19 @@ export default function Homepage() {
 
             {/* Secondary Stories */}
             <div>
-              <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a', marginBottom: '16px' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>
                 Secondary Stories
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 {featuredStories.map((story, index) => (
                   <div key={story.id || `secondary-story-${index}`} style={{
-                    background: '#f8fafc',
+                    background: 'var(--bg-secondary)',
                     borderRadius: '12px',
                     padding: '16px',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '16px',
-                    border: '1px solid #e2e8f0'
+                    border: '1px solid var(--border-color)'
                   }}>
                     <span style={{ 
                       fontSize: '14px', 
@@ -581,14 +581,14 @@ export default function Homepage() {
                       minWidth: '30px' 
                     }}>#{index + 1}</span>
                     <div style={{ flex: 1 }}>
-                      <p style={{ fontSize: '14px', fontWeight: '500', color: '#0f172a' }}>{story.title}</p>
-                      <p style={{ fontSize: '12px', color: '#64748b', marginTop: '2px' }}>{story.category || 'No category'}</p>
+                      <p style={{ fontSize: '14px', fontWeight: '500', color: 'var(--text-primary)' }}>{story.title}</p>
+                      <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>{story.category || 'No category'}</p>
                     </div>
                     <select
                       style={{
                         padding: '6px 12px',
                         borderRadius: '8px',
-                        border: '1px solid #e2e8f0',
+                        border: '1px solid var(--border-color)',
                         fontSize: '12px',
                         color: '#475569'
                       }}
@@ -604,13 +604,13 @@ export default function Homepage() {
                         style={{
                           padding: '6px',
                           background: '#f1f5f9',
-                          border: '1px solid #e2e8f0',
+                          border: '1px solid var(--border-color)',
                           borderRadius: '6px',
                           cursor: index === 0 ? 'not-allowed' : 'pointer',
                           opacity: index === 0 ? 0.5 : 1
                         }}
                       >
-                        <MoveUp style={{ width: '16px', height: '16px', color: '#64748b' }} />
+                        <MoveUp style={{ width: '16px', height: '16px', color: 'var(--text-secondary)' }} />
                       </button>
                       <button
                         onClick={() => moveStory(index, 'down')}
@@ -618,13 +618,13 @@ export default function Homepage() {
                         style={{
                           padding: '6px',
                           background: '#f1f5f9',
-                          border: '1px solid #e2e8f0',
+                          border: '1px solid var(--border-color)',
                           borderRadius: '6px',
                           cursor: index === featuredStories.length - 1 ? 'not-allowed' : 'pointer',
                           opacity: index === featuredStories.length - 1 ? 0.5 : 1
                         }}
                       >
-                        <MoveDown style={{ width: '16px', height: '16px', color: '#64748b' }} />
+                        <MoveDown style={{ width: '16px', height: '16px', color: 'var(--text-secondary)' }} />
                       </button>
                       <button
                         style={{
@@ -645,7 +645,7 @@ export default function Homepage() {
 
             {/* Display Settings */}
             <div>
-              <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a', marginBottom: '16px' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>
                 Display Settings
               </h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
@@ -662,9 +662,9 @@ export default function Homepage() {
                     alignItems: 'center',
                     gap: '8px',
                     padding: '12px',
-                    background: '#f8fafc',
+                    background: 'var(--bg-secondary)',
                     borderRadius: '10px',
-                    border: '1px solid #e2e8f0',
+                    border: '1px solid var(--border-color)',
                     cursor: 'pointer'
                   }}>
                     <input
@@ -681,12 +681,12 @@ export default function Homepage() {
 
             {/* Scheduling */}
             <div>
-              <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a', marginBottom: '16px' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>
                 Scheduling
               </h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
                 <div>
-                  <label style={{ fontSize: '12px', color: '#64748b', display: 'block', marginBottom: '4px' }}>Publish Date</label>
+                  <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Publish Date</label>
                   <input
                     type="date"
                     value={storyPublishDate}
@@ -695,13 +695,13 @@ export default function Homepage() {
                       width: '100%',
                       padding: '8px 12px',
                       borderRadius: '8px',
-                      border: '1px solid #e2e8f0',
+                      border: '1px solid var(--border-color)',
                       fontSize: '13px'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ fontSize: '12px', color: '#64748b', display: 'block', marginBottom: '4px' }}>Expiry Date</label>
+                  <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Expiry Date</label>
                   <input
                     type="date"
                     value={storyExpiryDate}
@@ -710,13 +710,13 @@ export default function Homepage() {
                       width: '100%',
                       padding: '8px 12px',
                       borderRadius: '8px',
-                      border: '1px solid #e2e8f0',
+                      border: '1px solid var(--border-color)',
                       fontSize: '13px'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ fontSize: '12px', color: '#64748b', display: 'block', marginBottom: '4px' }}>Auto Replace</label>
+                  <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Auto Replace</label>
                   <select
                     value={autoReplace ? 'enabled' : 'disabled'}
                     onChange={(e) => setAutoReplace(e.target.value === 'enabled')}
@@ -724,7 +724,7 @@ export default function Homepage() {
                       width: '100%',
                       padding: '8px 12px',
                       borderRadius: '8px',
-                      border: '1px solid #e2e8f0',
+                      border: '1px solid var(--border-color)',
                       fontSize: '13px'
                     }}
                   >
@@ -742,7 +742,7 @@ export default function Homepage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             {/* Magazine Selection */}
             <div>
-              <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a', marginBottom: '16px' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>
                 Magazine Selection
               </h3>
               <div style={{ display: 'flex', gap: '12px', marginBottom: '16px' }}>
@@ -770,10 +770,10 @@ export default function Homepage() {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '12px' }}>
                 {allMagazines.slice(0, 6).map((magazine, index) => (
                   <div key={magazine.id || `magazine-${index}`} style={{
-                    background: '#f8fafc',
+                    background: 'var(--bg-secondary)',
                     borderRadius: '10px',
                     padding: '12px',
-                    border: '1px solid #e2e8f0',
+                    border: '1px solid var(--border-color)',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '12px'
@@ -792,8 +792,8 @@ export default function Homepage() {
                       />
                     )}
                     <div style={{ flex: 1 }}>
-                      <p style={{ fontSize: '13px', fontWeight: '500', color: '#0f172a' }}>{magazine.title}</p>
-                      <p style={{ fontSize: '11px', color: '#64748b' }}>{magazine.category_name || magazine.category || 'No category'}</p>
+                      <p style={{ fontSize: '13px', fontWeight: '500', color: 'var(--text-primary)' }}>{magazine.title}</p>
+                      <p style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{magazine.category_name || magazine.category || 'No category'}</p>
                     </div>
                     <button
                       style={{
@@ -815,12 +815,12 @@ export default function Homepage() {
 
             {/* Display Settings */}
             <div>
-              <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a', marginBottom: '16px' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>
                 Display Settings
               </h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
                 <div>
-                  <label style={{ fontSize: '12px', color: '#64748b', display: 'block', marginBottom: '4px' }}>Number of Magazines</label>
+                  <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Number of Magazines</label>
                   <input
                     type="number"
                     value={magazinesLimit}
@@ -829,13 +829,13 @@ export default function Homepage() {
                       width: '100%',
                       padding: '8px 12px',
                       borderRadius: '8px',
-                      border: '1px solid #e2e8f0',
+                      border: '1px solid var(--border-color)',
                       fontSize: '13px'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ fontSize: '12px', color: '#64748b', display: 'block', marginBottom: '4px' }}>Sort By</label>
+                  <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Sort By</label>
                   <select
                     value={magazinesSortBy}
                     onChange={(e) => setMagazinesSortBy(e.target.value)}
@@ -843,7 +843,7 @@ export default function Homepage() {
                       width: '100%',
                       padding: '8px 12px',
                       borderRadius: '8px',
-                      border: '1px solid #e2e8f0',
+                      border: '1px solid var(--border-color)',
                       fontSize: '13px'
                     }}
                   >
@@ -854,7 +854,7 @@ export default function Homepage() {
                   </select>
                 </div>
                 <div>
-                  <label style={{ fontSize: '12px', color: '#64748b', display: 'block', marginBottom: '4px' }}>Layout</label>
+                  <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Layout</label>
                   <select
                     value={magazinesLayout}
                     onChange={(e) => setMagazinesLayout(e.target.value)}
@@ -862,7 +862,7 @@ export default function Homepage() {
                       width: '100%',
                       padding: '8px 12px',
                       borderRadius: '8px',
-                      border: '1px solid #e2e8f0',
+                      border: '1px solid var(--border-color)',
                       fontSize: '13px'
                     }}
                   >
@@ -871,7 +871,7 @@ export default function Homepage() {
                   </select>
                 </div>
                 <div>
-                  <label style={{ fontSize: '12px', color: '#64748b', display: 'block', marginBottom: '4px' }}>Filter by Category</label>
+                  <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Filter by Category</label>
                   <select
                     value={magazinesFilterCategory}
                     onChange={(e) => setMagazinesFilterCategory(e.target.value)}
@@ -879,7 +879,7 @@ export default function Homepage() {
                       width: '100%',
                       padding: '8px 12px',
                       borderRadius: '8px',
-                      border: '1px solid #e2e8f0',
+                      border: '1px solid var(--border-color)',
                       fontSize: '13px'
                     }}
                   >
@@ -894,16 +894,16 @@ export default function Homepage() {
 
             {/* Featured Magazines Preview */}
             <div>
-              <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a', marginBottom: '16px' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>
                 Featured Magazines Preview
               </h3>
               <div style={{ display: 'grid', gridTemplateColumns: magazinesLayout === 'grid' ? 'repeat(auto-fit, minmax(250px, 1fr))' : 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px' }}>
                 {featuredMagazines.map((magazine, index) => (
                   <div key={magazine.id || `featured-magazine-${index}`} style={{
-                    background: '#f8fafc',
+                    background: 'var(--bg-secondary)',
                     borderRadius: '12px',
                     padding: '16px',
-                    border: '1px solid #e2e8f0'
+                    border: '1px solid var(--border-color)'
                   }}>
                     <div style={{
                       width: '100%',
@@ -944,9 +944,9 @@ export default function Homepage() {
                         Featured
                       </span>
                     </div>
-                    <p style={{ fontSize: '14px', fontWeight: '500', color: '#0f172a' }}>{magazine.title}</p>
+                    <p style={{ fontSize: '14px', fontWeight: '500', color: 'var(--text-primary)' }}>{magazine.title}</p>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '8px' }}>
-                      <span style={{ fontSize: '12px', color: '#64748b' }}>{magazine.category || 'No category'}</span>
+                      <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{magazine.category || 'No category'}</span>
                       <span style={{ fontSize: '14px', fontWeight: '600', color: '#10b981' }}>${magazine.price || '0'}</span>
                     </div>
                     <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
@@ -983,7 +983,7 @@ export default function Homepage() {
 
             {/* Magazine Information */}
             <div>
-              <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a', marginBottom: '16px' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>
                 Magazine Information Settings
               </h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
@@ -1001,9 +1001,9 @@ export default function Homepage() {
                     alignItems: 'center',
                     gap: '8px',
                     padding: '12px',
-                    background: '#f8fafc',
+                    background: 'var(--bg-secondary)',
                     borderRadius: '10px',
-                    border: '1px solid #e2e8f0',
+                    border: '1px solid var(--border-color)',
                     cursor: 'pointer'
                   }}>
                     <input
@@ -1024,7 +1024,7 @@ export default function Homepage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             {/* Story Source */}
             <div>
-              <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a', marginBottom: '16px' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>
                 Story Source
               </h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
@@ -1040,9 +1040,9 @@ export default function Homepage() {
                     alignItems: 'center',
                     gap: '12px',
                     padding: '16px',
-                    background: exploreSource === source.id ? '#7c3aed' : '#f8fafc',
+                    background: exploreSource === source.id ? '#7c3aed' : 'var(--bg-secondary)',
                     borderRadius: '10px',
-                    border: exploreSource === source.id ? '2px solid #7c3aed' : '1px solid #e2e8f0',
+                    border: exploreSource === source.id ? '2px solid #7c3aed' : '1px solid var(--border-color)',
                     cursor: 'pointer',
                     transition: 'all 0.2s ease'
                   }}>
@@ -1062,12 +1062,12 @@ export default function Homepage() {
 
             {/* Display Settings */}
             <div>
-              <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a', marginBottom: '16px' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>
                 Display Settings
               </h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
                 <div>
-                  <label style={{ fontSize: '12px', color: '#64748b', display: 'block', marginBottom: '4px' }}>Number of Stories</label>
+                  <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Number of Stories</label>
                   <input
                     type="number"
                     value={exploreLimit}
@@ -1076,21 +1076,21 @@ export default function Homepage() {
                       width: '100%',
                       padding: '8px 12px',
                       borderRadius: '8px',
-                      border: '1px solid #e2e8f0',
+                      border: '1px solid var(--border-color)',
                       fontSize: '13px'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ fontSize: '12px', color: '#64748b', display: 'block', marginBottom: '4px' }}>Display Mode</label>
+                  <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Display Mode</label>
                   <div style={{ display: 'flex', gap: '8px' }}>
                     <button
                       onClick={() => setExploreDisplayMode('grid')}
                       style={{
                         flex: 1,
                         padding: '8px 12px',
-                        background: exploreDisplayMode === 'grid' ? '#7c3aed' : '#f1f5f9',
-                        border: exploreDisplayMode === 'grid' ? '1px solid #7c3aed' : '1px solid #e2e8f0',
+                        background: exploreDisplayMode === 'grid' ? '#7c3aed' : 'var(--bg-secondary)',
+                        border: exploreDisplayMode === 'grid' ? '1px solid #7c3aed' : '1px solid var(--border-color)',
                         borderRadius: '8px',
                         color: exploreDisplayMode === 'grid' ? 'white' : '#475569',
                         fontSize: '12px',
@@ -1109,8 +1109,8 @@ export default function Homepage() {
                       style={{
                         flex: 1,
                         padding: '8px 12px',
-                        background: exploreDisplayMode === 'list' ? '#7c3aed' : '#f1f5f9',
-                        border: exploreDisplayMode === 'list' ? '1px solid #7c3aed' : '1px solid #e2e8f0',
+                        background: exploreDisplayMode === 'list' ? '#7c3aed' : 'var(--bg-secondary)',
+                        border: exploreDisplayMode === 'list' ? '1px solid #7c3aed' : '1px solid var(--border-color)',
                         borderRadius: '8px',
                         color: exploreDisplayMode === 'list' ? 'white' : '#475569',
                         fontSize: '12px',
@@ -1127,13 +1127,13 @@ export default function Homepage() {
                   </div>
                 </div>
                 <div>
-                  <label style={{ fontSize: '12px', color: '#64748b', display: 'block', marginBottom: '4px' }}>Load More Option</label>
+                  <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Load More Option</label>
                   <select
                     style={{
                       width: '100%',
                       padding: '8px 12px',
                       borderRadius: '8px',
-                      border: '1px solid #e2e8f0',
+                      border: '1px solid var(--border-color)',
                       fontSize: '13px'
                     }}
                   >
@@ -1147,12 +1147,12 @@ export default function Homepage() {
 
             {/* Filters */}
             <div>
-              <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a', marginBottom: '16px' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>
                 Filters
               </h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
                 <div>
-                  <label style={{ fontSize: '12px', color: '#64748b', display: 'block', marginBottom: '4px' }}>Category</label>
+                  <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Category</label>
                   <select
                     value={exploreFilterCategory}
                     onChange={(e) => setExploreFilterCategory(e.target.value)}
@@ -1160,7 +1160,7 @@ export default function Homepage() {
                       width: '100%',
                       padding: '8px 12px',
                       borderRadius: '8px',
-                      border: '1px solid #e2e8f0',
+                      border: '1px solid var(--border-color)',
                       fontSize: '13px'
                     }}
                   >
@@ -1171,7 +1171,7 @@ export default function Homepage() {
                   </select>
                 </div>
                 <div>
-                  <label style={{ fontSize: '12px', color: '#64748b', display: 'block', marginBottom: '4px' }}>Tag</label>
+                  <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Tag</label>
                   <input
                     type="text"
                     placeholder="Filter by tag..."
@@ -1179,13 +1179,13 @@ export default function Homepage() {
                       width: '100%',
                       padding: '8px 12px',
                       borderRadius: '8px',
-                      border: '1px solid #e2e8f0',
+                      border: '1px solid var(--border-color)',
                       fontSize: '13px'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ fontSize: '12px', color: '#64748b', display: 'block', marginBottom: '4px' }}>Author</label>
+                  <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Author</label>
                   <input
                     type="text"
                     placeholder="Filter by author..."
@@ -1193,7 +1193,7 @@ export default function Homepage() {
                       width: '100%',
                       padding: '8px 12px',
                       borderRadius: '8px',
-                      border: '1px solid #e2e8f0',
+                      border: '1px solid var(--border-color)',
                       fontSize: '13px'
                     }}
                   />
@@ -1203,16 +1203,16 @@ export default function Homepage() {
 
             {/* Preview */}
             <div>
-              <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a', marginBottom: '16px' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>
                 Preview
               </h3>
               <div style={{ display: exploreDisplayMode === 'grid' ? 'grid' : 'flex', gridTemplateColumns: exploreDisplayMode === 'grid' ? 'repeat(auto-fit, minmax(250px, 1fr))' : '1fr', flexDirection: exploreDisplayMode === 'list' ? 'column' : 'row', gap: '12px' }}>
                 {moreToExplore.slice(0, exploreLimit).map((story, index) => (
                   <div key={story.id || `explore-preview-${index}`} style={{
-                    background: '#f8fafc',
+                    background: 'var(--bg-secondary)',
                     borderRadius: '10px',
                     padding: exploreDisplayMode === 'grid' ? '16px' : '12px',
-                    border: '1px solid #e2e8f0',
+                    border: '1px solid var(--border-color)',
                     display: exploreDisplayMode === 'list' ? 'flex' : 'block',
                     alignItems: exploreDisplayMode === 'list' ? 'center' : 'flex-start',
                     gap: exploreDisplayMode === 'list' ? '12px' : '0',
@@ -1232,9 +1232,9 @@ export default function Homepage() {
                       <ImageIcon style={{ width: exploreDisplayMode === 'grid' ? '24px' : '16px', height: exploreDisplayMode === 'grid' ? '24px' : '16px', color: '#94a3b8' }} />
                     </div>
                     <div style={{ flex: 1 }}>
-                      <p style={{ fontSize: '13px', fontWeight: '500', color: '#0f172a', lineHeight: 1.4 }}>{story.title}</p>
+                      <p style={{ fontSize: '13px', fontWeight: '500', color: 'var(--text-primary)', lineHeight: 1.4 }}>{story.title}</p>
                       {exploreDisplayMode === 'list' && (
-                        <p style={{ fontSize: '11px', color: '#64748b', marginTop: '4px' }}>{story.view_count || 0} views</p>
+                        <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '4px' }}>{story.view_count || 0} views</p>
                       )}
                     </div>
                   </div>
@@ -1247,31 +1247,31 @@ export default function Homepage() {
         {/* Ads Tab */}
         {activeTab === 'ads' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)' }}>
               Advertisement Management
             </h3>
             
             {/* Ad Locations */}
             <div>
-              <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#0f172a', marginBottom: '12px' }}>
+              <h4 style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '12px' }}>
                 Homepage Ad Locations
               </h4>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '12px' }}>
                 {adLocations.map((ad, index) => (
                   <div key={ad.id || `ad-location-${index}`} style={{
-                    background: '#f8fafc',
+                    background: 'var(--bg-secondary)',
                     borderRadius: '12px',
                     padding: '16px',
-                    border: ad.enabled ? '2px solid #7c3aed' : '2px solid #e2e8f0'
+                    border: ad.enabled ? '2px solid #7c3aed' : '2px solid var(--border-color)'
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-                      <h5 style={{ fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>{ad.name}</h5>
+                      <h5 style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>{ad.name}</h5>
                       <button
                         onClick={() => setAdLocations(adLocations.map(a => a.id === ad.id ? { ...a, enabled: !a.enabled } : a))}
                         style={{
                           padding: '4px 8px',
                           background: ad.enabled ? '#dcfce7' : '#f1f5f9',
-                          border: ad.enabled ? '1px solid #bbf7d0' : '1px solid #e2e8f0',
+                          border: ad.enabled ? '1px solid #bbf7d0' : '1px solid var(--border-color)',
                           borderRadius: '6px',
                           fontSize: '11px',
                           cursor: 'pointer',
@@ -1284,7 +1284,7 @@ export default function Homepage() {
                     
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginTop: '12px' }}>
                       <div>
-                        <label style={{ fontSize: '11px', color: '#64748b', display: 'block', marginBottom: '2px' }}>Advertiser</label>
+                        <label style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', marginBottom: '2px' }}>Advertiser</label>
                         <input
                           type="text"
                           value={ad.advertiser}
@@ -1294,13 +1294,13 @@ export default function Homepage() {
                             width: '100%',
                             padding: '6px 8px',
                             borderRadius: '6px',
-                            border: '1px solid #e2e8f0',
+                            border: '1px solid var(--border-color)',
                             fontSize: '11px'
                           }}
                         />
                       </div>
                       <div>
-                        <label style={{ fontSize: '11px', color: '#64748b', display: 'block', marginBottom: '2px' }}>Campaign</label>
+                        <label style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', marginBottom: '2px' }}>Campaign</label>
                         <input
                           type="text"
                           value={ad.campaign}
@@ -1310,13 +1310,13 @@ export default function Homepage() {
                             width: '100%',
                             padding: '6px 8px',
                             borderRadius: '6px',
-                            border: '1px solid #e2e8f0',
+                            border: '1px solid var(--border-color)',
                             fontSize: '11px'
                           }}
                         />
                       </div>
                       <div>
-                        <label style={{ fontSize: '11px', color: '#64748b', display: 'block', marginBottom: '2px' }}>Priority</label>
+                        <label style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', marginBottom: '2px' }}>Priority</label>
                         <input
                           type="number"
                           value={ad.priority}
@@ -1327,13 +1327,13 @@ export default function Homepage() {
                             width: '100%',
                             padding: '6px 8px',
                             borderRadius: '6px',
-                            border: '1px solid #e2e8f0',
+                            border: '1px solid var(--border-color)',
                             fontSize: '11px'
                           }}
                         />
                       </div>
                       <div>
-                        <label style={{ fontSize: '11px', color: '#64748b', display: 'block', marginBottom: '2px' }}>Rotation</label>
+                        <label style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', marginBottom: '2px' }}>Rotation</label>
                         <select
                           value={ad.rotation ? 'enabled' : 'disabled'}
                           onChange={(e) => setAdLocations(adLocations.map(a => a.id === ad.id ? { ...a, rotation: e.target.value === 'enabled' } : a))}
@@ -1341,7 +1341,7 @@ export default function Homepage() {
                             width: '100%',
                             padding: '6px 8px',
                             borderRadius: '6px',
-                            border: '1px solid #e2e8f0',
+                            border: '1px solid var(--border-color)',
                             fontSize: '11px'
                           }}
                         >
@@ -1357,18 +1357,18 @@ export default function Homepage() {
 
             {/* Ad Settings */}
             <div>
-              <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#0f172a', marginBottom: '12px' }}>
+              <h4 style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '12px' }}>
                 Advertisement Settings
               </h4>
               <div style={{
-                background: '#f8fafc',
+                background: 'var(--bg-secondary)',
                 borderRadius: '12px',
                 padding: '20px',
-                border: '2px dashed #cbd5e1'
+                border: '2px dashed var(--border-color)'
               }}>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
                   <div>
-                    <label style={{ fontSize: '12px', color: '#64748b', display: 'block', marginBottom: '4px' }}>Upload Image</label>
+                    <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Upload Image</label>
                     <div style={{
                       width: '100%',
                       height: '80px',
@@ -1383,7 +1383,7 @@ export default function Homepage() {
                     </div>
                   </div>
                   <div>
-                    <label style={{ fontSize: '12px', color: '#64748b', display: 'block', marginBottom: '4px' }}>Mobile Image</label>
+                    <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Mobile Image</label>
                     <div style={{
                       width: '100%',
                       height: '80px',
@@ -1398,7 +1398,7 @@ export default function Homepage() {
                     </div>
                   </div>
                   <div>
-                    <label style={{ fontSize: '12px', color: '#64748b', display: 'block', marginBottom: '4px' }}>Destination URL</label>
+                    <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Destination URL</label>
                     <input
                       type="url"
                       placeholder="https://example.com"
@@ -1406,7 +1406,7 @@ export default function Homepage() {
                         width: '100%',
                         padding: '8px 12px',
                         borderRadius: '8px',
-                        border: '1px solid #e2e8f0',
+                        border: '1px solid var(--border-color)',
                         fontSize: '12px'
                       }}
                     />
@@ -1417,38 +1417,38 @@ export default function Homepage() {
 
             {/* Scheduling */}
             <div>
-              <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#0f172a', marginBottom: '12px' }}>
+              <h4 style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '12px' }}>
                 Scheduling
               </h4>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
                 <div>
-                  <label style={{ fontSize: '12px', color: '#64748b', display: 'block', marginBottom: '4px' }}>Start Date</label>
+                  <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Start Date</label>
                   <input
                     type="date"
                     style={{
                       width: '100%',
                       padding: '8px 12px',
                       borderRadius: '8px',
-                      border: '1px solid #e2e8f0',
+                      border: '1px solid var(--border-color)',
                       fontSize: '13px'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ fontSize: '12px', color: '#64748b', display: 'block', marginBottom: '4px' }}>End Date</label>
+                  <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>End Date</label>
                   <input
                     type="date"
                     style={{
                       width: '100%',
                       padding: '8px 12px',
                       borderRadius: '8px',
-                      border: '1px solid #e2e8f0',
+                      border: '1px solid var(--border-color)',
                       fontSize: '13px'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ fontSize: '12px', color: '#64748b', display: 'block', marginBottom: '4px' }}>Daily Budget (Optional)</label>
+                  <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Daily Budget (Optional)</label>
                   <input
                     type="number"
                     placeholder="$0.00"
@@ -1456,7 +1456,7 @@ export default function Homepage() {
                       width: '100%',
                       padding: '8px 12px',
                       borderRadius: '8px',
-                      border: '1px solid #e2e8f0',
+                      border: '1px solid var(--border-color)',
                       fontSize: '13px'
                     }}
                   />
@@ -1466,35 +1466,35 @@ export default function Homepage() {
 
             {/* CTR Analytics */}
             <div>
-              <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#0f172a', marginBottom: '12px' }}>
+              <h4 style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '12px' }}>
                 CTR Analytics
               </h4>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
                 <div style={{
-                  background: '#f8fafc',
+                  background: 'var(--bg-secondary)',
                   borderRadius: '10px',
                   padding: '16px',
-                  border: '1px solid #e2e8f0'
+                  border: '1px solid var(--border-color)'
                 }}>
-                  <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '4px' }}>Impressions</p>
-                  <p style={{ fontSize: '24px', fontWeight: 'bold', color: '#0f172a' }}>12,458</p>
+                  <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>Impressions</p>
+                  <p style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--text-primary)' }}>12,458</p>
                 </div>
                 <div style={{
-                  background: '#f8fafc',
+                  background: 'var(--bg-secondary)',
                   borderRadius: '10px',
                   padding: '16px',
-                  border: '1px solid #e2e8f0'
+                  border: '1px solid var(--border-color)'
                 }}>
-                  <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '4px' }}>Clicks</p>
-                  <p style={{ fontSize: '24px', fontWeight: 'bold', color: '#0f172a' }}>1,234</p>
+                  <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>Clicks</p>
+                  <p style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--text-primary)' }}>1,234</p>
                 </div>
                 <div style={{
-                  background: '#f8fafc',
+                  background: 'var(--bg-secondary)',
                   borderRadius: '10px',
                   padding: '16px',
-                  border: '1px solid #e2e8f0'
+                  border: '1px solid var(--border-color)'
                 }}>
-                  <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '4px' }}>CTR</p>
+                  <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>CTR</p>
                   <p style={{ fontSize: '24px', fontWeight: 'bold', color: '#10b981' }}>9.9%</p>
                 </div>
               </div>
@@ -1507,7 +1507,7 @@ export default function Homepage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             {/* Section Visibility */}
             <div>
-              <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a', marginBottom: '16px' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>
                 Section Visibility
               </h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
@@ -1517,9 +1517,9 @@ export default function Homepage() {
                     alignItems: 'center',
                     gap: '12px',
                     padding: '16px',
-                    background: section.enabled ? '#f8fafc' : '#fee2e2',
+                    background: section.enabled ? 'var(--bg-secondary)' : 'color-mix(in srgb, #dc2626 10%, transparent)',
                     borderRadius: '10px',
-                    border: section.enabled ? '1px solid #e2e8f0' : '1px solid #fecaca',
+                    border: section.enabled ? '1px solid var(--border-color)' : '1px solid #fecaca',
                     cursor: 'pointer'
                   }}>
                     <input
@@ -1528,7 +1528,7 @@ export default function Homepage() {
                       onChange={() => toggleSection(section.id)}
                       style={{ width: '18px', height: '18px' }}
                     />
-                    <span style={{ fontSize: '14px', fontWeight: '500', color: '#475569' }}>{section.name}</span>
+                    <span style={{ fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)' }}>{section.name}</span>
                     {section.enabled ? <Eye style={{ width: '16px', height: '16px', color: '#10b981', marginLeft: 'auto' }} /> : <EyeOff style={{ width: '16px', height: '16px', color: '#64748b', marginLeft: 'auto' }} />}
                   </label>
                 ))}
@@ -1537,24 +1537,24 @@ export default function Homepage() {
 
             {/* Section Order */}
             <div>
-              <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a', marginBottom: '16px' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>
                 Section Order
               </h3>
-              <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '12px' }}>Drag-and-drop to reorder sections</p>
+              <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '12px' }}>Drag-and-drop to reorder sections</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {sections.map((section, index) => (
                   <div key={section.id || `section-order-${index}`} style={{
-                    background: '#f8fafc',
+                    background: 'var(--bg-secondary)',
                     borderRadius: '10px',
                     padding: '12px 16px',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '12px',
-                    border: '1px solid #e2e8f0',
+                    border: '1px solid var(--border-color)',
                     cursor: 'move'
                   }}>
-                    <span style={{ color: '#94a3b8', fontSize: '18px' }}>☰</span>
-                    <span style={{ fontSize: '14px', fontWeight: '500', color: '#0f172a', flex: 1 }}>{section.name}</span>
+                    <span style={{ color: 'var(--text-secondary)', fontSize: '18px' }}>☰</span>
+                    <span style={{ fontSize: '14px', fontWeight: '500', color: 'var(--text-primary)', flex: 1 }}>{section.name}</span>
                     <div style={{ display: 'flex', gap: '4px' }}>
                       <button
                         onClick={() => moveSection(index, 'up')}
@@ -1562,13 +1562,13 @@ export default function Homepage() {
                         style={{
                           padding: '6px',
                           background: '#f1f5f9',
-                          border: '1px solid #e2e8f0',
+                          border: '1px solid var(--border-color)',
                           borderRadius: '6px',
                           cursor: index === 0 ? 'not-allowed' : 'pointer',
                           opacity: index === 0 ? 0.5 : 1
                         }}
                       >
-                        <MoveUp style={{ width: '16px', height: '16px', color: '#64748b' }} />
+                        <MoveUp style={{ width: '16px', height: '16px', color: 'var(--text-secondary)' }} />
                       </button>
                       <button
                         onClick={() => moveSection(index, 'down')}
@@ -1576,13 +1576,13 @@ export default function Homepage() {
                         style={{
                           padding: '6px',
                           background: '#f1f5f9',
-                          border: '1px solid #e2e8f0',
+                          border: '1px solid var(--border-color)',
                           borderRadius: '6px',
                           cursor: index === sections.length - 1 ? 'not-allowed' : 'pointer',
                           opacity: index === sections.length - 1 ? 0.5 : 1
                         }}
                       >
-                        <MoveDown style={{ width: '16px', height: '16px', color: '#64748b' }} />
+                        <MoveDown style={{ width: '16px', height: '16px', color: 'var(--text-secondary)' }} />
                       </button>
                     </div>
                   </div>
@@ -1592,20 +1592,20 @@ export default function Homepage() {
 
             {/* Section Titles */}
             <div>
-              <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a', marginBottom: '16px' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>
                 Section Titles
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 {sections.map((section, index) => (
                   <div key={section.id || `section-title-${index}`} style={{
-                    background: '#f8fafc',
+                    background: 'var(--bg-secondary)',
                     borderRadius: '10px',
                     padding: '12px 16px',
-                    border: '1px solid #e2e8f0'
+                    border: '1px solid var(--border-color)'
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                      <span style={{ fontSize: '14px', fontWeight: '500', color: '#0f172a' }}>{section.name}</span>
-                      <span style={{ fontSize: '12px', color: '#94a3b8' }}>✦</span>
+                      <span style={{ fontSize: '14px', fontWeight: '500', color: 'var(--text-primary)' }}>{section.name}</span>
+                      <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>✦</span>
                     </div>
                     <input
                       type="text"
@@ -1616,7 +1616,7 @@ export default function Homepage() {
                         width: '100%',
                         padding: '8px 12px',
                         borderRadius: '8px',
-                        border: '1px solid #e2e8f0',
+                        border: '1px solid var(--border-color)',
                         fontSize: '13px'
                       }}
                     />
@@ -1630,12 +1630,12 @@ export default function Homepage() {
         {/* Content Tab */}
         {activeTab === 'content' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)' }}>
               Homepage Content
             </h3>
             
             <div>
-              <label style={{ fontSize: '13px', fontWeight: '500', color: '#0f172a', display: 'block', marginBottom: '8px' }}>
+              <label style={{ fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', display: 'block', marginBottom: '8px' }}>
                 Hero Section Title
               </label>
               <input
@@ -1646,15 +1646,15 @@ export default function Homepage() {
                   width: '100%',
                   padding: '10px 14px',
                   borderRadius: '8px',
-                  border: '1px solid #e2e8f0',
+                  border: '1px solid var(--border-color)',
                   fontSize: '14px',
-                  color: '#0f172a'
+                  color: 'var(--text-primary)'
                 }}
               />
             </div>
 
             <div>
-              <label style={{ fontSize: '13px', fontWeight: '500', color: '#0f172a', display: 'block', marginBottom: '8px' }}>
+              <label style={{ fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', display: 'block', marginBottom: '8px' }}>
                 Hero Section Subtitle
               </label>
               <input
@@ -1665,22 +1665,22 @@ export default function Homepage() {
                   width: '100%',
                   padding: '10px 14px',
                   borderRadius: '8px',
-                  border: '1px solid #e2e8f0',
+                  border: '1px solid var(--border-color)',
                   fontSize: '14px',
-                  color: '#0f172a'
+                  color: 'var(--text-primary)'
                 }}
               />
             </div>
 
             <div>
-              <label style={{ fontSize: '13px', fontWeight: '500', color: '#0f172a', display: 'block', marginBottom: '8px' }}>
+              <label style={{ fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', display: 'block', marginBottom: '8px' }}>
                 Background Image
               </label>
               <div style={{
                 width: '100%',
                 height: '120px',
-                background: '#f8fafc',
-                border: '2px dashed #cbd5e1',
+                background: 'var(--bg-secondary)',
+                border: '2px dashed var(--border-color)',
                 borderRadius: '8px',
                 display: 'flex',
                 alignItems: 'center',
@@ -1688,8 +1688,8 @@ export default function Homepage() {
                 cursor: 'pointer'
               }}>
                 <div style={{ textAlign: 'center' }}>
-                  <Upload style={{ width: '24px', height: '24px', color: '#94a3b8', margin: '0 auto 8px' }} />
-                  <p style={{ fontSize: '13px', color: '#64748b' }}>Click to upload background image</p>
+                  <Upload style={{ width: '24px', height: '24px', color: 'var(--text-secondary)', margin: '0 auto 8px' }} />
+                  <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Click to upload background image</p>
                 </div>
               </div>
             </div>

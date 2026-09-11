@@ -6,6 +6,7 @@ const { deleteFromS3 } = require('../config/s3');
 const { authenticate, optionalAuth } = require('../middleware/auth');
 const { isEditor, hasRole } = require('../middleware/authorize');
 const { storyValidation, storyIdValidation } = require('../middleware/validation');
+const { logAuditEvent } = require('../middleware/securityLogger');
 
 // Configure upload for stories with multiple image support
 const upload = uploadFields([
@@ -126,8 +127,7 @@ router.post('/', authenticate, isEditor, upload, storyValidation, async (req, re
     res.status(201).json({ id: result.insertId, message: 'Story created successfully' });
   } catch (error) {
     console.error('Error creating story:', error);
-    console.error('Error details:', error.message);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: 'Failed to create story' });
   }
 });
 
@@ -208,7 +208,21 @@ router.delete('/:id', authenticate, storyIdValidation, async (req, res) => {
       return res.status(403).json({ error: 'Admin access required to delete stories' });
     }
     
+    // Get story details before deletion for audit logging
+    const [storyToDelete] = await db.query('SELECT id, title FROM stories WHERE id = ?', [req.params.id]);
+    
     await db.query('DELETE FROM stories WHERE id = ?', [req.params.id]);
+
+    // Log audit event
+    await logAuditEvent(
+      'STORY_DELETED',
+      'story',
+      req.params.id,
+      { ...req.user, req },
+      storyToDelete.length > 0 ? { title: storyToDelete[0].title } : null,
+      null
+    );
+
     res.json({ message: 'Story deleted successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });

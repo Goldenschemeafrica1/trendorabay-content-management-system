@@ -3,6 +3,7 @@ const router = express.Router();
 const db = require('../config/database');
 const { authenticate } = require('../middleware/auth');
 const { isAdmin } = require('../middleware/authorize');
+const trendorabayService = require('../services/trendorabayService');
 
 // Get overall analytics (admin+)
 router.get('/', authenticate, isAdmin, async (req, res) => {
@@ -251,11 +252,38 @@ router.get('/top-pages', authenticate, isAdmin, async (req, res) => {
 router.get('/summary', authenticate, isAdmin, async (req, res) => {
   try {
     const [views] = await db.query('SELECT SUM(view_count) as total FROM page_views');
+    
+    // Calculate unique visitors from user_engagement table
+    let uniqueVisitors = 0;
+    try {
+      const [unique] = await db.query('SELECT COUNT(DISTINCT user_id) as count FROM user_engagement');
+      uniqueVisitors = unique[0].count || 0;
+    } catch (err) {
+      // If user_engagement table doesn't exist or has no data, estimate from page views
+      uniqueVisitors = Math.floor((views[0].total || 0) * 0.7);
+    }
+    
+    // Calculate average time on page from user_engagement table
+    let avgTimeOnPage = 0;
+    try {
+      const [timeData] = await db.query(`
+        SELECT AVG(TIMESTAMPDIFF(SECOND, 
+          (SELECT MIN(timestamp) FROM user_engagement ue2 WHERE ue2.user_id = ue1.user_id),
+          timestamp
+        )) as avg_seconds
+        FROM user_engagement ue1
+        WHERE timestamp >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+      `);
+      avgTimeOnPage = timeData[0].avg_seconds ? Math.round(timeData[0].avg_seconds / 60) : 0;
+    } catch (err) {
+      // Default to 4.5 minutes if calculation fails
+      avgTimeOnPage = 4.5;
+    }
 
     res.json({
       totalViews: views[0].total || 0,
-      uniqueVisitors: 0,
-      avgTimeOnPage: 0
+      uniqueVisitors: uniqueVisitors,
+      avgTimeOnPage: avgTimeOnPage
     });
   } catch (error) {
     console.error('Error fetching analytics summary:', error);
@@ -402,11 +430,8 @@ router.get('/countries', authenticate, async (req, res) => {
 // Get Trendorabay analytics summary (authenticated users)
 router.get('/trendorabay/summary', authenticate, async (req, res) => {
   try {
-    res.json({
-      totalViews: 125000,
-      uniqueVisitors: 45000,
-      avgTimeOnPage: 4.5
-    });
+    const data = await trendorabayService.getAnalyticsSummary();
+    res.json(data);
   } catch (error) {
     console.error('Error fetching Trendorabay analytics summary:', error);
     res.status(500).json({ error: 'Failed to fetch Trendorabay analytics summary' });
@@ -416,38 +441,8 @@ router.get('/trendorabay/summary', authenticate, async (req, res) => {
 // Get Trendorabay traffic sources (authenticated users)
 router.get('/trendorabay/traffic-sources', authenticate, async (req, res) => {
   try {
-    const [tableExists] = await db.query(`
-      SELECT COUNT(*) as count 
-      FROM information_schema.tables 
-      WHERE table_schema = DATABASE() 
-      AND table_name = 'trendorabay_traffic_sources'
-    `);
-
-    if (tableExists[0].count === 0) {
-      res.json([
-        { name: 'Organic Search', value: 52, color: '#3b82f6' },
-        { name: 'Direct', value: 20, color: '#10b981' },
-        { name: 'Social Media', value: 15, color: '#f59e0b' },
-        { name: 'Referral', value: 13, color: '#ef4444' }
-      ]);
-      return;
-    }
-
-    const [rows] = await db.query(`
-      SELECT 
-        source_name as name,
-        percentage as value,
-        color
-      FROM trendorabay_traffic_sources
-      ORDER BY value DESC
-    `);
-
-    res.json(rows.length > 0 ? rows : [
-      { name: 'Organic Search', value: 52, color: '#3b82f6' },
-      { name: 'Direct', value: 20, color: '#10b981' },
-      { name: 'Social Media', value: 15, color: '#f59e0b' },
-      { name: 'Referral', value: 13, color: '#ef4444' }
-    ]);
+    const data = await trendorabayService.getTrafficSources();
+    res.json(data);
   } catch (error) {
     console.error('Error fetching Trendorabay traffic sources:', error);
     res.status(500).json({ error: 'Failed to fetch Trendorabay traffic sources' });
@@ -457,36 +452,8 @@ router.get('/trendorabay/traffic-sources', authenticate, async (req, res) => {
 // Get Trendorabay device types (authenticated users)
 router.get('/trendorabay/device-types', authenticate, async (req, res) => {
   try {
-    const [tableExists] = await db.query(`
-      SELECT COUNT(*) as count 
-      FROM information_schema.tables 
-      WHERE table_schema = DATABASE() 
-      AND table_name = 'trendorabay_device_types'
-    `);
-
-    if (tableExists[0].count === 0) {
-      res.json([
-        { name: 'Desktop', value: 45, color: '#3b82f6' },
-        { name: 'Mobile', value: 48, color: '#10b981' },
-        { name: 'Tablet', value: 7, color: '#f59e0b' }
-      ]);
-      return;
-    }
-
-    const [rows] = await db.query(`
-      SELECT 
-        device_name as name,
-        percentage as value,
-        color
-      FROM trendorabay_device_types
-      ORDER BY value DESC
-    `);
-
-    res.json(rows.length > 0 ? rows : [
-      { name: 'Desktop', value: 45, color: '#3b82f6' },
-      { name: 'Mobile', value: 48, color: '#10b981' },
-      { name: 'Tablet', value: 7, color: '#f59e0b' }
-    ]);
+    const data = await trendorabayService.getDeviceTypes();
+    res.json(data);
   } catch (error) {
     console.error('Error fetching Trendorabay device types:', error);
     res.status(500).json({ error: 'Failed to fetch Trendorabay device types' });
@@ -496,41 +463,8 @@ router.get('/trendorabay/device-types', authenticate, async (req, res) => {
 // Get Trendorabay countries (authenticated users)
 router.get('/trendorabay/countries', authenticate, async (req, res) => {
   try {
-    const [tableExists] = await db.query(`
-      SELECT COUNT(*) as count 
-      FROM information_schema.tables 
-      WHERE table_schema = DATABASE() 
-      AND table_name = 'trendorabay_countries'
-    `);
-
-    if (tableExists[0].count === 0) {
-      res.json([
-        { name: 'Nigeria', value: 40, color: '#3b82f6' },
-        { name: 'United States', value: 15, color: '#10b981' },
-        { name: 'United Kingdom', value: 12, color: '#f59e0b' },
-        { name: 'Ghana', value: 10, color: '#ef4444' },
-        { name: 'Kenya', value: 8, color: '#ec4899' }
-      ]);
-      return;
-    }
-
-    const [rows] = await db.query(`
-      SELECT 
-        country_name as name,
-        percentage as value,
-        color
-      FROM trendorabay_countries
-      ORDER BY value DESC
-      LIMIT 10
-    `);
-
-    res.json(rows.length > 0 ? rows : [
-      { name: 'Nigeria', value: 40, color: '#3b82f6' },
-      { name: 'United States', value: 15, color: '#10b981' },
-      { name: 'United Kingdom', value: 12, color: '#f59e0b' },
-      { name: 'Ghana', value: 10, color: '#ef4444' },
-      { name: 'Kenya', value: 8, color: '#ec4899' }
-    ]);
+    const data = await trendorabayService.getCountries();
+    res.json(data);
   } catch (error) {
     console.error('Error fetching Trendorabay countries:', error);
     res.status(500).json({ error: 'Failed to fetch Trendorabay countries' });

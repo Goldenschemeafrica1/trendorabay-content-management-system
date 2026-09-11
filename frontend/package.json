@@ -7,7 +7,13 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "audit": "npm audit",
+    "audit:fix": "npm audit fix",
+    "audit:fix:force": "npm audit fix --force",
+    "outdated": "npm outdated",
+    "update": "npm update",
+    "update:check": "ncu"
   },
   "dependencies": {
     "@tiptap/react": "^3.27.1",

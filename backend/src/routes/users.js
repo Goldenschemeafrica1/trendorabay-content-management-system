@@ -5,6 +5,8 @@ const bcrypt = require('bcrypt');
 const { authenticate } = require('../middleware/auth');
 const { isAdmin, isSuperAdmin, hasRole } = require('../middleware/authorize');
 const { updateUserValidation, idValidation } = require('../middleware/validation');
+const { logAuditEvent } = require('../middleware/securityLogger');
+const { verifyRequestSignature } = require('../middleware/requestSignature');
 
 const SALT_ROUNDS = 10;
 
@@ -102,7 +104,7 @@ router.get('/:id', authenticate, async (req, res) => {
 });
 
 // Create user (admin only)
-router.post('/', authenticate, isAdmin, async (req, res) => {
+router.post('/', authenticate, isAdmin, verifyRequestSignature, async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
     
@@ -141,8 +143,29 @@ router.post('/', authenticate, isAdmin, async (req, res) => {
        VALUES (?, ?, ?, ?)`,
       [cmsResult.insertId, name, email, userRole]
     );
+
+    // Log audit event
+    await logAuditEvent(
+      'USER_CREATED',
+      'user',
+      result.insertId.toString(),
+      { ...req.user, req },
+      null,
+      { name, email, role: userRole }
+    );
+
     res.status(201).json({ id: result.insertId, message: 'User created successfully' });
   } catch (error) {
+    await logAuditEvent(
+      'USER_CREATED',
+      'user',
+      null,
+      { ...req.user, req },
+      null,
+      { name: req.body.name, email: req.body.email, role: req.body.role },
+      'failure',
+      error.message
+    );
     res.status(500).json({ error: error.message });
   }
 });
@@ -152,6 +175,9 @@ router.put('/:id', authenticate, async (req, res) => {
   try {
     const { name, email, role, profile_image_url, password } = req.body;
     const cmsUserId = parseInt(req.params.id);
+    
+    // Get old values for audit logging
+    const [oldUser] = await db.query('SELECT id, name, email, role FROM cms_users WHERE id = ?', [cmsUserId]);
     
     // Check permissions
     const isOwnProfile = req.user.id === cmsUserId;
@@ -244,6 +270,18 @@ router.put('/:id', authenticate, async (req, res) => {
         usersUpdateValues
       );
     }
+
+    // Log audit event for role changes
+    if (role !== undefined && oldUser.length > 0 && oldUser[0].role !== userRole) {
+      await logAuditEvent(
+        'USER_ROLE_CHANGED',
+        'user',
+        cmsUserId.toString(),
+        { ...req.user, req },
+        { role: oldUser[0].role },
+        { role: userRole }
+      );
+    }
     
     res.json({ message: 'User updated successfully' });
   } catch (error) {
@@ -253,7 +291,7 @@ router.put('/:id', authenticate, async (req, res) => {
 });
 
 // Delete user (superadmin only)
-router.delete('/:id', authenticate, isSuperAdmin, async (req, res) => {
+router.delete('/:id', authenticate, isSuperAdmin, verifyRequestSignature, async (req, res) => {
   try {
     console.log('Delete user request for ID:', req.params.id);
     
@@ -280,6 +318,16 @@ router.delete('/:id', authenticate, isSuperAdmin, async (req, res) => {
       console.log('Deleting from cms_users with ID:', userToDelete[0].cms_user_id);
       await db.query('DELETE FROM cms_users WHERE id = ?', [userToDelete[0].cms_user_id]);
     }
+
+    // Log audit event
+    await logAuditEvent(
+      'USER_DELETED',
+      'user',
+      req.params.id,
+      { ...req.user, req },
+      { cms_user_id: userToDelete[0].cms_user_id },
+      null
+    );
     
     res.json({ message: 'User deleted successfully' });
   } catch (error) {

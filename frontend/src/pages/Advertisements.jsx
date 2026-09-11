@@ -240,8 +240,8 @@ export default function Advertisements() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#0f172a' }}>Advertisements</h1>
-          <p style={{ color: '#64748b', marginTop: '2px', fontSize: '13px' }}>Manage advertisement campaigns and placements</p>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--text-primary)' }}>Advertisements</h1>
+          <p style={{ color: 'var(--text-secondary)', marginTop: '2px', fontSize: '13px' }}>Manage advertisement campaigns and placements</p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
@@ -277,52 +277,58 @@ export default function Advertisements() {
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
-          padding: '12px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
+          padding: '8px',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-            <div style={{ 
-              width: '32px', 
-              height: '32px', 
-              background: 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)', 
-              borderRadius: '10px', 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center'
-            }}>
-              <Image style={{ width: '16px', height: '16px', color: '#2563eb' }} />
-            </div>
+          <div style={{ 
+            width: '32px', 
+            height: '32px', 
+            background: 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)', 
+            borderRadius: '10px', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center'
+          }}>
+            <Image style={{ width: '16px', height: '16px', color: '#2563eb' }} />
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{totalAds}</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Total Advertisements</p>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--text-primary)', margin: 0 }}>{totalAds}</h3>
+            <p style={{ fontSize: '10px', color: 'var(--text-secondary)', margin: 0 }}>Total Advertisements</p>
+          </div>
         </div>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
-          padding: '12px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
+          padding: '8px',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-            <div style={{ 
-              width: '32px', 
-              height: '32px', 
-              background: 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)', 
-              borderRadius: '10px', 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center'
-            }}>
-              <TrendingUp style={{ width: '16px', height: '16px', color: '#16a34a' }} />
-            </div>
+          <div style={{ 
+            width: '32px', 
+            height: '32px', 
+            background: 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)', 
+            borderRadius: '10px', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center'
+          }}>
+            <TrendingUp style={{ width: '16px', height: '16px', color: '#16a34a' }} />
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{activeAds}</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Active Ads</p>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--text-primary)', margin: 0 }}>{activeAds}</h3>
+            <p style={{ fontSize: '10px', color: 'var(--text-secondary)', margin: 0 }}>Active Ads</p>
+          </div>
         </div>
       </div>
 
@@ -337,8 +343,8 @@ export default function Advertisements() {
             style={{
               width: '100%',
               padding: '8px 12px',
-              background: '#f8fafc',
-              border: '1px solid #e2e8f0',
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
               borderRadius: '10px',
               outline: 'none',
               fontSize: '13px',
@@ -349,7 +355,7 @@ export default function Advertisements() {
               e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
             }}
             onBlur={(e) => {
-              e.currentTarget.style.borderColor = '#e2e8f0'
+              e.currentTarget.style.borderColor = 'var(--border-color)'
               e.currentTarget.style.boxShadow = 'none'
             }}
           />
@@ -359,8 +365,8 @@ export default function Advertisements() {
           onChange={(e) => setFilterStatus(e.target.value)}
           style={{
             padding: '8px 12px',
-            background: '#f8fafc',
-            border: '1px solid #e2e8f0',
+            background: 'var(--bg-secondary)',
+            border: '1px solid var(--border-color)',
             borderRadius: '10px',
             outline: 'none',
             fontSize: '13px',
@@ -376,31 +382,31 @@ export default function Advertisements() {
 
       {/* Advertisements Table */}
       <div style={{
-        background: 'rgba(255, 255, 255, 0.95)',
+        background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
         backdropFilter: 'blur(20px)',
         borderRadius: '16px',
-        border: '1px solid rgba(226, 232, 240, 0.8)',
+        border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
         overflow: 'hidden'
       }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+          <thead style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}>
             <tr>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Advertisement</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Advertiser</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Campaign</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Location</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Duration</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Priority</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Status</th>
-              <th style={{ textAlign: 'right', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Actions</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Advertisement</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Advertiser</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Campaign</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Location</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Duration</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Priority</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Status</th>
+              <th style={{ textAlign: 'right', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredAdvertisements.map((ad) => (
-              <tr key={ad.id} style={{ borderBottom: '1px solid #e2e8f0', transition: 'background 0.2s ease' }}
+              <tr key={ad.id} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background 0.2s ease' }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#f8fafc'
+                e.currentTarget.style.background = 'var(--bg-secondary)'
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = 'transparent'
@@ -410,29 +416,29 @@ export default function Advertisements() {
                     <div style={{
                       width: '48px',
                       height: '48px',
-                      background: '#e2e8f0',
+                      background: 'var(--border-color)',
                       borderRadius: '8px',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       flexShrink: 0
                     }}>
-                      <Image style={{ width: '20px', height: '20px', color: '#94a3b8' }} />
+                      <Image style={{ width: '20px', height: '20px', color: 'var(--text-secondary)' }} />
                     </div>
                     <div>
-                      <p style={{ fontWeight: '500', color: '#0f172a', fontSize: '13px' }}>{ad.title}</p>
+                      <p style={{ fontWeight: '500', color: 'var(--text-primary)', fontSize: '13px' }}>{ad.title}</p>
                       {ad.destination_url && (
-                        <p style={{ fontSize: '11px', color: '#64748b', marginTop: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '150px' }}>
+                        <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '150px' }}>
                           {ad.destination_url}
                         </p>
                       )}
                     </div>
                   </div>
                 </td>
-                <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>
                   {ad.advertiser || '-'}
                 </td>
-                <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>
                   {ad.campaign || '-'}
                 </td>
                 <td style={{ padding: '12px 16px' }}>
@@ -441,13 +447,13 @@ export default function Advertisements() {
                     borderRadius: '6px',
                     fontSize: '11px',
                     fontWeight: '500',
-                    background: '#f1f5f9',
-                    color: '#475569'
+                    background: 'var(--bg-secondary)',
+                    color: 'var(--text-secondary)'
                   }}>
                     {ad.location?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || '-'}
                   </span>
                 </td>
-                <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>
                   {ad.startDate || ad.start_date}{ad.endDate || ad.end_date ? ` - ${ad.endDate || ad.end_date}` : ''}
                 </td>
                 <td style={{ padding: '12px 16px' }}>
@@ -457,7 +463,7 @@ export default function Advertisements() {
                     fontSize: '11px',
                     fontWeight: '500',
                     background: (ad.priority >= 7) ? '#dbeafe' : (ad.priority >= 4) ? '#fef3c7' : '#f1f5f9',
-                    color: (ad.priority >= 7) ? '#1e40af' : (ad.priority >= 4) ? '#92400e' : '#475569'
+                    color: (ad.priority >= 7) ? '#1e40af' : (ad.priority >= 4) ? '#92400e' : 'var(--text-secondary)'
                   }}>
                     {ad.priority || ad.priority_level || '-'}
                   </span>
@@ -472,7 +478,7 @@ export default function Advertisements() {
                       borderRadius: '6px',
                       fontSize: '11px',
                       cursor: 'pointer',
-                      color: ad.active ? '#166534' : '#64748b',
+                      color: ad.active ? '#166534' : 'var(--text-secondary)',
                       transition: 'all 0.2s ease'
                     }}
                     onMouseEnter={(e) => {
@@ -503,7 +509,7 @@ export default function Advertisements() {
                       onMouseLeave={(e) => {
                         e.currentTarget.style.background = 'transparent'
                     }}>
-                      <Edit style={{ width: '14px', height: '14px', color: '#64748b' }} />
+                      <Edit style={{ width: '14px', height: '14px', color: 'var(--text-secondary)' }} />
                     </button>
                     <button 
                       onClick={() => handleDeleteAdvertisement(ad.id)}
@@ -544,7 +550,7 @@ export default function Advertisements() {
           zIndex: 50
         }}>
           <div style={{
-            background: 'white',
+            background: 'var(--bg-primary)',
             borderRadius: '16px',
             width: '100%',
             maxWidth: '600px',
@@ -554,12 +560,12 @@ export default function Advertisements() {
           }}>
             <div style={{
               padding: '20px',
-              borderBottom: '1px solid #e2e8f0',
+              borderBottom: '1px solid var(--border-color)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-              <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a' }}>
+              <h2 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)' }}>
                 {editingAd ? 'Edit Advertisement' : 'Add New Advertisement'}
               </h2>
               <button
@@ -589,16 +595,16 @@ export default function Advertisements() {
                   borderRadius: '8px',
                   cursor: 'pointer',
                   fontSize: '18px',
-                  color: '#94a3b8',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = '#f1f5f9'
-                  e.currentTarget.style.color = '#64748b'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
-                  e.currentTarget.style.color = '#94a3b8'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
               >
                 ✕
@@ -607,7 +613,7 @@ export default function Advertisements() {
             <div style={{ padding: '20px', overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Title</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Title</label>
                   <input
                     type="text"
                     name="title"
@@ -617,8 +623,8 @@ export default function Advertisements() {
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px'
@@ -626,7 +632,7 @@ export default function Advertisements() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Advertiser</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Advertiser</label>
                   <input
                     type="text"
                     name="advertiser_name"
@@ -636,8 +642,8 @@ export default function Advertisements() {
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px'
@@ -645,7 +651,7 @@ export default function Advertisements() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Campaign</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Campaign</label>
                   <input
                     type="text"
                     name="campaign_name"
@@ -655,8 +661,8 @@ export default function Advertisements() {
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px'
@@ -665,7 +671,7 @@ export default function Advertisements() {
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Location</label>
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Location</label>
                     <select
                       name="location"
                       value={formData.location}
@@ -673,8 +679,8 @@ export default function Advertisements() {
                       style={{
                         width: '100%',
                         padding: '10px 12px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '10px',
                         outline: 'none',
                         fontSize: '13px'
@@ -689,7 +695,7 @@ export default function Advertisements() {
                     </select>
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Priority</label>
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Priority</label>
                     <input
                       type="number"
                       name="priority"
@@ -700,8 +706,8 @@ export default function Advertisements() {
                       style={{
                         width: '100%',
                         padding: '10px 12px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '10px',
                         outline: 'none',
                         fontSize: '13px'
@@ -710,7 +716,7 @@ export default function Advertisements() {
                   </div>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Destination URL</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Destination URL</label>
                   <input
                     type="url"
                     name="destination_url"
@@ -720,8 +726,8 @@ export default function Advertisements() {
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px'
@@ -729,7 +735,7 @@ export default function Advertisements() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Desktop Image</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Desktop Image</label>
                   <input
                     type="file"
                     accept="image/*"
@@ -737,8 +743,8 @@ export default function Advertisements() {
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px'
@@ -746,12 +752,12 @@ export default function Advertisements() {
                   />
                   {formData.image_url && (
                     <div style={{ marginTop: '12px' }}>
-                      <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '6px' }}>Current Image:</p>
+                      <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '6px' }}>Current Image:</p>
                       <div style={{
                         width: '100%',
                         height: '200px',
-                        background: '#f8fafc',
-                        border: '2px dashed #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '2px dashed var(--border-color)',
                         borderRadius: '12px',
                         display: 'flex',
                         alignItems: 'center',
@@ -772,7 +778,7 @@ export default function Advertisements() {
                   )}
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Mobile Image</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Mobile Image</label>
                   <input
                     type="file"
                     accept="image/*"
@@ -780,8 +786,8 @@ export default function Advertisements() {
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px'
@@ -789,12 +795,12 @@ export default function Advertisements() {
                   />
                   {formData.mobile_image_url && (
                     <div style={{ marginTop: '12px' }}>
-                      <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '6px' }}>Current Image:</p>
+                      <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '6px' }}>Current Image:</p>
                       <div style={{
                         width: '100%',
                         height: '200px',
-                        background: '#f8fafc',
-                        border: '2px dashed #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '2px dashed var(--border-color)',
                         borderRadius: '12px',
                         display: 'flex',
                         alignItems: 'center',
@@ -816,7 +822,7 @@ export default function Advertisements() {
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Start Date</label>
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Start Date</label>
                     <input
                       type="date"
                       name="start_date"
@@ -825,8 +831,8 @@ export default function Advertisements() {
                       style={{
                         width: '100%',
                         padding: '10px 12px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '10px',
                         outline: 'none',
                         fontSize: '13px'
@@ -834,7 +840,7 @@ export default function Advertisements() {
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>End Date</label>
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>End Date</label>
                     <input
                       type="date"
                       name="end_date"
@@ -843,8 +849,8 @@ export default function Advertisements() {
                       style={{
                         width: '100%',
                         padding: '10px 12px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '10px',
                         outline: 'none',
                         fontSize: '13px'
@@ -853,7 +859,7 @@ export default function Advertisements() {
                   </div>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Budget</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Budget</label>
                   <input
                     type="number"
                     name="budget"
@@ -863,8 +869,8 @@ export default function Advertisements() {
                     style={{
                       width: '100%',
                       padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '10px',
                       outline: 'none',
                       fontSize: '13px'
@@ -880,7 +886,7 @@ export default function Advertisements() {
                       onChange={handleInputChange}
                       style={{ width: '16px', height: '16px' }}
                     />
-                    <span style={{ fontSize: '13px', color: '#475569' }}>Enable Rotation</span>
+                    <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Enable Rotation</span>
                   </label>
                   <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
                     <input
@@ -890,12 +896,12 @@ export default function Advertisements() {
                       onChange={handleInputChange}
                       style={{ width: '16px', height: '16px' }}
                     />
-                    <span style={{ fontSize: '13px', color: '#475569' }}>Active</span>
+                    <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Active</span>
                   </label>
                 </div>
               </div>
             </div>
-            <div style={{ padding: '20px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+            <div style={{ padding: '20px', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
               <button
                 onClick={() => {
                   setShowCreateModal(false)
@@ -919,12 +925,12 @@ export default function Advertisements() {
                 style={{
                   padding: '8px 16px',
                   background: 'transparent',
-                  border: '1px solid #e2e8f0',
+                  border: '1px solid var(--border-color)',
                   borderRadius: '10px',
                   cursor: 'pointer',
                   fontSize: '13px',
                   fontWeight: '500',
-                  color: '#64748b'
+                  color: 'var(--text-secondary)'
                 }}
               >
                 Cancel

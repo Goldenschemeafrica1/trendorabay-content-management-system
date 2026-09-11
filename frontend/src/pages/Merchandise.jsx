@@ -197,8 +197,8 @@ export default function Merchandise() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: '#0f172a' }}>Store</h1>
-          <p style={{ color: '#64748b', marginTop: '4px' }}>Manage products and inventory</p>
+          <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: 'var(--text-primary)' }}>Store</h1>
+          <p style={{ color: 'var(--text-secondary)', marginTop: '4px' }}>Manage products and inventory</p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
@@ -234,11 +234,11 @@ export default function Merchandise() {
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
           padding: '12px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
@@ -254,15 +254,15 @@ export default function Merchandise() {
               <Package style={{ width: '16px', height: '16px', color: '#2563eb' }} />
             </div>
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{products.length}</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Total Products</p>
+          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>{products.length}</h3>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>Total Products</p>
         </div>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
           padding: '12px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
@@ -278,15 +278,15 @@ export default function Merchandise() {
               <DollarSign style={{ width: '16px', height: '16px', color: '#16a34a' }} />
             </div>
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>${totalValue.toLocaleString()}</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Total Inventory Value</p>
+          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>${totalValue.toLocaleString()}</h3>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>Total Inventory Value</p>
         </div>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
           padding: '12px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
@@ -302,8 +302,8 @@ export default function Merchandise() {
               <TrendingUp style={{ width: '16px', height: '16px', color: '#9333ea' }} />
             </div>
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{totalStock}</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Total Units in Stock</p>
+          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>{totalStock}</h3>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>Total Units in Stock</p>
         </div>
       </div>
 
@@ -318,8 +318,8 @@ export default function Merchandise() {
             style={{
               width: '100%',
               padding: '10px 16px',
-              background: '#f8fafc',
-              border: '1px solid #e2e8f0',
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
               borderRadius: '12px',
               outline: 'none',
               fontSize: '14px',
@@ -330,7 +330,7 @@ export default function Merchandise() {
               e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
             }}
             onBlur={(e) => {
-              e.currentTarget.style.borderColor = '#e2e8f0'
+              e.currentTarget.style.borderColor = 'var(--border-color)'
               e.currentTarget.style.boxShadow = 'none'
             }}
           />
@@ -340,8 +340,8 @@ export default function Merchandise() {
           onChange={(e) => setFilterStatus(e.target.value)}
           style={{
             padding: '10px 16px',
-            background: '#f8fafc',
-            border: '1px solid #e2e8f0',
+            background: 'var(--bg-secondary)',
+            border: '1px solid var(--border-color)',
             borderRadius: '12px',
             outline: 'none',
             fontSize: '14px',
@@ -353,7 +353,7 @@ export default function Merchandise() {
             e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
           }}
           onBlur={(e) => {
-            e.currentTarget.style.borderColor = '#e2e8f0'
+            e.currentTarget.style.borderColor = 'var(--border-color)'
             e.currentTarget.style.boxShadow = 'none'
           }}
         >
@@ -365,49 +365,49 @@ export default function Merchandise() {
 
       {/* Products Table */}
       <div style={{
-        background: 'rgba(255, 255, 255, 0.95)',
+        background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
         backdropFilter: 'blur(20px)',
         borderRadius: '16px',
-        border: '1px solid rgba(226, 232, 240, 0.8)',
+        border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
         overflow: 'hidden'
       }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+          <thead style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}>
             <tr>
-              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '14px', fontWeight: '600', color: '#0f172a' }}>Product</th>
-              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '14px', fontWeight: '600', color: '#0f172a' }}>SKU</th>
-              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '14px', fontWeight: '600', color: '#0f172a' }}>Price</th>
-              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '14px', fontWeight: '600', color: '#0f172a' }}>Stock</th>
-              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '14px', fontWeight: '600', color: '#0f172a' }}>Category</th>
-              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '14px', fontWeight: '600', color: '#0f172a' }}>Status</th>
-              <th style={{ textAlign: 'right', padding: '16px 24px', fontSize: '14px', fontWeight: '600', color: '#0f172a' }}>Actions</th>
+              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>Product</th>
+              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>SKU</th>
+              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>Price</th>
+              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>Stock</th>
+              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>Category</th>
+              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>Status</th>
+              <th style={{ textAlign: 'right', padding: '16px 24px', fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredProducts.map((product) => (
-              <tr key={product.id} style={{ borderBottom: '1px solid #e2e8f0', transition: 'background 0.2s ease' }}
+              <tr key={product.id} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background 0.2s ease' }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#f8fafc'
+                e.currentTarget.style.background = 'var(--bg-secondary)'
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = 'transparent'
               }}>
                 <td style={{ padding: '16px 24px' }}>
-                  <span style={{ fontWeight: '500', color: '#0f172a' }}>{product.name}</span>
+                  <span style={{ fontWeight: '500', color: 'var(--text-primary)' }}>{product.name}</span>
                 </td>
-                <td style={{ padding: '16px 24px', color: '#64748b' }}>{product.sku}</td>
-                <td style={{ padding: '16px 24px', color: '#64748b' }}>${product.price.toFixed(2)}</td>
+                <td style={{ padding: '16px 24px', color: 'var(--text-secondary)' }}>{product.sku}</td>
+                <td style={{ padding: '16px 24px', color: 'var(--text-secondary)' }}>${product.price.toFixed(2)}</td>
                 <td style={{ padding: '16px 24px' }}>
-                  <span style={{ fontWeight: '500', color: product.stock === 0 ? '#dc2626' : '#0f172a' }}>
+                  <span style={{ fontWeight: '500', color: product.stock === 0 ? '#dc2626' : 'var(--text-primary)' }}>
                     {product.stock}
                   </span>
                 </td>
                 <td style={{ padding: '16px 24px' }}>
                   <span style={{ 
                     padding: '4px 12px', 
-                    background: '#f1f5f9', 
-                    color: '#475569', 
+                    background: 'var(--bg-secondary)', 
+                    color: 'var(--text-secondary)', 
                     borderRadius: '20px', 
                     fontSize: '12px', 
                     fontWeight: '500'
@@ -440,12 +440,12 @@ export default function Merchandise() {
                         transition: 'all 0.2s ease'
                       }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = '#f1f5f9'
+                      e.currentTarget.style.background = 'var(--bg-secondary)'
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.background = 'transparent'
                     }}>
-                      <Edit style={{ width: '16px', height: '16px', color: '#64748b' }} />
+                      <Edit style={{ width: '16px', height: '16px', color: 'var(--text-secondary)' }} />
                     </button>
                     <button 
                       onClick={() => handleDeleteProduct(product.id)}
@@ -486,7 +486,7 @@ export default function Merchandise() {
           zIndex: 50
         }}>
           <div style={{
-            background: 'white',
+            background: 'var(--bg-primary)',
             borderRadius: '16px',
             width: '100%',
             maxWidth: '600px',
@@ -496,12 +496,12 @@ export default function Merchandise() {
           }}>
             <div style={{
               padding: '24px',
-              borderBottom: '1px solid #e2e8f0',
+              borderBottom: '1px solid var(--border-color)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-              <h2 style={{ fontSize: '20px', fontWeight: '600', color: '#0f172a' }}>Edit Product</h2>
+              <h2 style={{ fontSize: '20px', fontWeight: '600', color: 'var(--text-primary)' }}>Edit Product</h2>
               <button
                 onClick={() => {
                   setShowEditModal(false)
@@ -517,16 +517,16 @@ export default function Merchandise() {
                   borderRadius: '8px',
                   cursor: 'pointer',
                   fontSize: '20px',
-                  color: '#94a3b8',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f1f5f9'
-                  e.currentTarget.style.color = '#64748b'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
-                  e.currentTarget.style.color = '#94a3b8'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
               >
                 ✕
@@ -535,7 +535,7 @@ export default function Merchandise() {
             <div style={{ padding: '24px', overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Product Name</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Product Name</label>
                   <input
                     type="text"
                     name="name"
@@ -545,8 +545,8 @@ export default function Merchandise() {
                     style={{
                       width: '100%',
                       padding: '12px 16px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '12px',
                       outline: 'none',
                       fontSize: '14px',
@@ -557,14 +557,14 @@ export default function Merchandise() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Price</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Price</label>
                     <input
                       type="number"
                       name="price"
@@ -575,8 +575,8 @@ export default function Merchandise() {
                       style={{
                         width: '100%',
                         padding: '12px 16px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '12px',
                         outline: 'none',
                         fontSize: '14px',
@@ -587,13 +587,13 @@ export default function Merchandise() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Stock</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Stock</label>
                     <input
                       type="number"
                       name="stock"
@@ -603,8 +603,8 @@ export default function Merchandise() {
                       style={{
                         width: '100%',
                         padding: '12px 16px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '12px',
                         outline: 'none',
                         fontSize: '14px',
@@ -615,13 +615,13 @@ export default function Merchandise() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Status</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Status</label>
                     <select
                       name="status"
                       value={formData.status}
@@ -629,8 +629,8 @@ export default function Merchandise() {
                       style={{
                         width: '100%',
                         padding: '12px 16px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '12px',
                         outline: 'none',
                         fontSize: '14px',
@@ -642,7 +642,7 @@ export default function Merchandise() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}>
                       <option value="active">Active</option>
@@ -651,7 +651,7 @@ export default function Merchandise() {
                   </div>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Category</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Category</label>
                   <input
                     type="text"
                     name="category"
@@ -661,8 +661,8 @@ export default function Merchandise() {
                     style={{
                       width: '100%',
                       padding: '12px 16px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '12px',
                       outline: 'none',
                       fontSize: '14px',
@@ -673,37 +673,37 @@ export default function Merchandise() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Product Image</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Product Image</label>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                     <div
                       style={{
-                        border: '2px dashed #e2e8f0',
+                        border: '2px dashed var(--border-color)',
                         borderRadius: '12px',
                         padding: '24px',
                         textAlign: 'center',
                         cursor: 'pointer',
                         transition: 'all 0.2s ease',
-                        background: '#f8fafc'
+                        background: 'var(--bg-secondary)'
                       }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.borderColor = '#7c3aed'
-                        e.currentTarget.style.background = '#f1f5f9'
+                        e.currentTarget.style.background = 'var(--bg-secondary)'
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
-                        e.currentTarget.style.background = '#f8fafc'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
+                        e.currentTarget.style.background = 'var(--bg-secondary)'
                       }}
                       onClick={() => productImageInputEditRef.current?.click()}
                     >
-                      <Upload style={{ width: '32px', height: '32px', color: '#64748b', margin: '0 auto 8px' }} />
-                      <p style={{ fontSize: '14px', color: '#64748b', margin: 0 }}>Click to upload image</p>
-                      <p style={{ fontSize: '12px', color: '#94a3b8', margin: '4px 0 0 0' }}>PNG, JPG up to 5MB</p>
+                      <Upload style={{ width: '32px', height: '32px', color: 'var(--text-secondary)', margin: '0 auto 8px' }} />
+                      <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0 }}>Click to upload image</p>
+                      <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: '4px 0 0 0' }}>PNG, JPG up to 5MB</p>
                     </div>
                     <input
                       ref={productImageInputEditRef}
@@ -713,7 +713,7 @@ export default function Merchandise() {
                       style={{ display: 'none' }}
                     />
                     {imagePreview && (
-                      <div style={{ position: 'relative', width: '100%', height: '200px', borderRadius: '12px', overflow: 'hidden', border: '1px solid #e2e8f0' }}>
+                      <div style={{ position: 'relative', width: '100%', height: '200px', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
                         <img
                           src={imagePreview}
                           alt="Product preview"
@@ -746,7 +746,7 @@ export default function Merchandise() {
                 </div>
               </div>
             </div>
-            <div style={{ padding: '24px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+            <div style={{ padding: '24px', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
               <button
                 onClick={() => {
                   setShowEditModal(false)
@@ -758,16 +758,16 @@ export default function Merchandise() {
                 style={{
                   padding: '10px 20px',
                   background: 'transparent',
-                  border: '1px solid #e2e8f0',
+                  border: '1px solid var(--border-color)',
                   borderRadius: '12px',
                   cursor: 'pointer',
                   fontSize: '14px',
                   fontWeight: '500',
-                  color: '#64748b',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f8fafc'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
@@ -817,7 +817,7 @@ export default function Merchandise() {
           zIndex: 50
         }}>
           <div style={{
-            background: 'white',
+            background: 'var(--bg-primary)',
             borderRadius: '16px',
             width: '100%',
             maxWidth: '600px',
@@ -827,12 +827,12 @@ export default function Merchandise() {
           }}>
             <div style={{
               padding: '24px',
-              borderBottom: '1px solid #e2e8f0',
+              borderBottom: '1px solid var(--border-color)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-              <h2 style={{ fontSize: '20px', fontWeight: '600', color: '#0f172a' }}>Add New Product</h2>
+              <h2 style={{ fontSize: '20px', fontWeight: '600', color: 'var(--text-primary)' }}>Add New Product</h2>
               <button
                 onClick={() => {
                   setShowCreateModal(false)
@@ -847,16 +847,16 @@ export default function Merchandise() {
                   borderRadius: '8px',
                   cursor: 'pointer',
                   fontSize: '20px',
-                  color: '#94a3b8',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f1f5f9'
-                  e.currentTarget.style.color = '#64748b'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
-                  e.currentTarget.style.color = '#94a3b8'
+                  e.currentTarget.style.color = 'var(--text-secondary)'
                 }}
               >
                 ✕
@@ -865,7 +865,7 @@ export default function Merchandise() {
             <div style={{ padding: '24px', overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Product Name</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Product Name</label>
                   <input
                     type="text"
                     name="name"
@@ -875,8 +875,8 @@ export default function Merchandise() {
                     style={{
                       width: '100%',
                       padding: '12px 16px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '12px',
                       outline: 'none',
                       fontSize: '14px',
@@ -887,14 +887,14 @@ export default function Merchandise() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Price</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Price</label>
                     <input
                       type="number"
                       name="price"
@@ -905,8 +905,8 @@ export default function Merchandise() {
                       style={{
                         width: '100%',
                         padding: '12px 16px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '12px',
                         outline: 'none',
                         fontSize: '14px',
@@ -917,13 +917,13 @@ export default function Merchandise() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Stock</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Stock</label>
                     <input
                       type="number"
                       name="stock"
@@ -933,8 +933,8 @@ export default function Merchandise() {
                       style={{
                         width: '100%',
                         padding: '12px 16px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '12px',
                         outline: 'none',
                         fontSize: '14px',
@@ -945,13 +945,13 @@ export default function Merchandise() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Status</label>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Status</label>
                     <select
                       name="status"
                       value={formData.status}
@@ -959,8 +959,8 @@ export default function Merchandise() {
                       style={{
                         width: '100%',
                         padding: '12px 16px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '12px',
                         outline: 'none',
                         fontSize: '14px',
@@ -972,7 +972,7 @@ export default function Merchandise() {
                         e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                       }}
                       onBlur={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
                         e.currentTarget.style.boxShadow = 'none'
                       }}>
                       <option value="active">Active</option>
@@ -981,7 +981,7 @@ export default function Merchandise() {
                   </div>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Category</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Category</label>
                   <input
                     type="text"
                     name="category"
@@ -991,8 +991,8 @@ export default function Merchandise() {
                     style={{
                       width: '100%',
                       padding: '12px 16px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '12px',
                       outline: 'none',
                       fontSize: '14px',
@@ -1003,37 +1003,37 @@ export default function Merchandise() {
                       e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                     }}
                     onBlur={(e) => {
-                      e.currentTarget.style.borderColor = '#e2e8f0'
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '8px' }}>Product Image</label>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Product Image</label>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                     <div
                       style={{
-                        border: '2px dashed #e2e8f0',
+                        border: '2px dashed var(--border-color)',
                         borderRadius: '12px',
                         padding: '24px',
                         textAlign: 'center',
                         cursor: 'pointer',
                         transition: 'all 0.2s ease',
-                        background: '#f8fafc'
+                        background: 'var(--bg-secondary)'
                       }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.borderColor = '#7c3aed'
-                        e.currentTarget.style.background = '#f1f5f9'
+                        e.currentTarget.style.background = 'var(--bg-secondary)'
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0'
-                        e.currentTarget.style.background = '#f8fafc'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
+                        e.currentTarget.style.background = 'var(--bg-secondary)'
                       }}
                       onClick={() => productImageInputRef.current?.click()}
                     >
-                      <Upload style={{ width: '32px', height: '32px', color: '#64748b', margin: '0 auto 8px' }} />
-                      <p style={{ fontSize: '14px', color: '#64748b', margin: 0 }}>Click to upload image</p>
-                      <p style={{ fontSize: '12px', color: '#94a3b8', margin: '4px 0 0 0' }}>PNG, JPG up to 5MB</p>
+                      <Upload style={{ width: '32px', height: '32px', color: 'var(--text-secondary)', margin: '0 auto 8px' }} />
+                      <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0 }}>Click to upload image</p>
+                      <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: '4px 0 0 0' }}>PNG, JPG up to 5MB</p>
                     </div>
                     <input
                       ref={productImageInputRef}
@@ -1043,7 +1043,7 @@ export default function Merchandise() {
                       style={{ display: 'none' }}
                     />
                     {imagePreview && (
-                      <div style={{ position: 'relative', width: '100%', height: '200px', borderRadius: '12px', overflow: 'hidden', border: '1px solid #e2e8f0' }}>
+                      <div style={{ position: 'relative', width: '100%', height: '200px', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
                         <img
                           src={imagePreview}
                           alt="Product preview"
@@ -1076,7 +1076,7 @@ export default function Merchandise() {
                 </div>
               </div>
             </div>
-            <div style={{ padding: '24px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+            <div style={{ padding: '24px', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
               <button
                 onClick={() => {
                   setShowCreateModal(false)
@@ -1087,16 +1087,16 @@ export default function Merchandise() {
                 style={{
                   padding: '10px 20px',
                   background: 'transparent',
-                  border: '1px solid #e2e8f0',
+                  border: '1px solid var(--border-color)',
                   borderRadius: '12px',
                   cursor: 'pointer',
                   fontSize: '14px',
                   fontWeight: '500',
-                  color: '#64748b',
+                  color: 'var(--text-secondary)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f8fafc'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'

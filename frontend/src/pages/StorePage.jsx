@@ -71,29 +71,29 @@ export default function StorePage() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#0f172a' }}>Store Page</h1>
-          <p style={{ color: '#64748b', marginTop: '2px', fontSize: '13px' }}>Configure the store page content and featured products</p>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--text-primary)' }}>Store Page</h1>
+          <p style={{ color: 'var(--text-secondary)', marginTop: '2px', fontSize: '13px' }}>Configure the store page content and featured products</p>
         </div>
         <div style={{ display: 'flex', gap: '10px' }}>
           <button
             onClick={() => setShowPreview(!showPreview)}
             style={{
               padding: '8px 16px',
-              background: '#f8fafc',
-              color: '#64748b',
+              background: 'var(--bg-secondary)',
+              color: 'var(--text-secondary)',
               padding: '8px 16px',
               borderRadius: '10px',
-              border: '1px solid #e2e8f0',
+              border: '1px solid var(--border-color)',
               cursor: 'pointer',
               fontSize: '13px',
               fontWeight: '500',
               transition: 'all 0.2s ease'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = '#f1f5f9'
+              e.currentTarget.style.background = 'var(--bg-secondary)'
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = '#f8fafc'
+              e.currentTarget.style.background = 'var(--bg-secondary)'
             }}
           >
             <Eye style={{ width: '16px', height: '16px' }} />
@@ -130,20 +130,20 @@ export default function StorePage() {
 
       {/* Store Settings */}
       <div style={{
-        background: 'rgba(255, 255, 255, 0.95)',
+        background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
         backdropFilter: 'blur(20px)',
         borderRadius: '16px',
-        border: '1px solid rgba(226, 232, 240, 0.8)',
+        border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
         padding: '20px'
       }}>
-        <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#0f172a', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <h3 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Settings style={{ width: '20px', height: '20px' }} />
           Store Settings
         </h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Store Title</label>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Store Title</label>
             <input
               type="text"
               value={storeTitle}
@@ -151,8 +151,8 @@ export default function StorePage() {
               style={{
                 width: '100%',
                 padding: '10px 12px',
-                background: '#f8fafc',
-                border: '1px solid #e2e8f0',
+                background: 'var(--bg-secondary)',
+                border: '1px solid var(--border-color)',
                 borderRadius: '10px',
                 outline: 'none',
                 fontSize: '13px',
@@ -163,13 +163,13 @@ export default function StorePage() {
                 e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
               }}
               onBlur={(e) => {
-                e.currentTarget.style.borderColor = '#e2e8f0'
+                e.currentTarget.style.borderColor = 'var(--border-color)'
                 e.currentTarget.style.boxShadow = 'none'
               }}
             />
           </div>
           <div>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Store Description</label>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Store Description</label>
             <textarea
               value={storeDescription}
               onChange={(e) => setStoreDescription(e.target.value)}
@@ -177,8 +177,8 @@ export default function StorePage() {
               style={{
                 width: '100%',
                 padding: '10px 12px',
-                background: '#f8fafc',
-                border: '1px solid #e2e8f0',
+                background: 'var(--bg-secondary)',
+                border: '1px solid var(--border-color)',
                 borderRadius: '10px',
                 outline: 'none',
                 fontSize: '13px',
@@ -190,7 +190,7 @@ export default function StorePage() {
                 e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
               }}
               onBlur={(e) => {
-                e.currentTarget.style.borderColor = '#e2e8f0'
+                e.currentTarget.style.borderColor = 'var(--border-color)'
                 e.currentTarget.style.boxShadow = 'none'
               }}
             />
@@ -200,20 +200,20 @@ export default function StorePage() {
 
       {loading ? (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
-          <p style={{ color: '#64748b' }}>Loading products...</p>
+          <p style={{ color: 'var(--text-secondary)' }}>Loading products...</p>
         </div>
       ) : (
         <>
       {/* Best Selling */}
       <div style={{
-        background: 'rgba(255, 255, 255, 0.95)',
+        background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
         backdropFilter: 'blur(20px)',
         borderRadius: '16px',
-        border: '1px solid rgba(226, 232, 240, 0.8)',
+        border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
         padding: '20px'
       }}>
-        <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#0f172a', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <h3 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <TrendingUp style={{ width: '20px', height: '20px' }} />
             Best Selling
@@ -240,13 +240,13 @@ export default function StorePage() {
         <div style={{ display: 'flex', flexDirection: 'row', gap: '16px', justifyContent: 'space-between' }}>
           {bestSellingProducts.map((product, index) => (
             <div key={product.id || `best-selling-${index}`} style={{
-              background: '#f8fafc',
+              background: 'var(--bg-secondary)',
               borderRadius: '10px',
               padding: '12px',
               display: 'flex',
               flexDirection: 'column',
               gap: '12px',
-              border: '1px solid #e2e8f0',
+              border: '1px solid var(--border-color)',
               flex: '0 0 calc(25% - 12px)',
               minWidth: '200px'
             }}>
@@ -271,107 +271,14 @@ export default function StorePage() {
                 )}
               </div>
               <div>
-                <p style={{ fontSize: '14px', fontWeight: '500', color: '#0f172a' }}>{product.name}</p>
+                <p style={{ fontSize: '14px', fontWeight: '500', color: 'var(--text-primary)' }}>{product.name}</p>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '4px' }}>
-                  <span style={{ fontSize: '12px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <span style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                     <DollarSign style={{ width: '12px', height: '12px' }} />
                     {product.price}
                   </span>
-                  <span style={{ fontSize: '12px', color: '#64748b', background: '#10b981', color: 'white', padding: '2px 8px', borderRadius: '4px' }}>
+                  <span style={{ fontSize: '12px', color: 'white', background: '#10b981', padding: '2px 8px', borderRadius: '4px' }}>
                     {product.sales} sold
-                  </span>
-                </div>
-              </div>
-              <button
-                style={{
-                  padding: '6px',
-                  border: 'none',
-                  borderRadius: '6px',
-                  cursor: 'pointer'
-                }}
-              >
-                <Trash2 style={{ width: '16px', height: '16px', color: '#dc2626' }} />
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Our Collection */}
-      <div style={{
-        background: 'rgba(255, 255, 255, 0.95)',
-        backdropFilter: 'blur(20px)',
-        borderRadius: '16px',
-        border: '1px solid rgba(226, 232, 240, 0.8)',
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-        padding: '20px'
-      }}>
-        <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#0f172a', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <ShoppingBag style={{ width: '20px', height: '20px' }} />
-            Our Collection
-          </div>
-          <button
-            style={{
-              padding: '8px 16px',
-              background: 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)',
-              border: 'none',
-              borderRadius: '10px',
-              color: 'white',
-              fontSize: '13px',
-              fontWeight: '500',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}
-          >
-            <Plus style={{ width: '16px', height: '16px' }} />
-            Add Product
-          </button>
-        </h3>
-        <div style={{ display: 'flex', flexDirection: 'row', gap: '16px', flexWrap: 'wrap' }}>
-          {ourCollection.map((product, index) => (
-            <div key={product.id || `collection-${index}`} style={{
-              background: '#f8fafc',
-              borderRadius: '10px',
-              padding: '12px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '12px',
-              border: '1px solid #e2e8f0',
-              flex: '0 0 calc(25% - 12px)',
-              minWidth: '200px'
-            }}>
-              <div style={{
-                width: '100%',
-                height: '160px',
-                ...(product.image ? {
-                  backgroundImage: `url(${product.image})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                } : {
-                  background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
-                }),
-                borderRadius: '8px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                position: 'relative'
-              }}>
-                {!product.image && (
-                  <Package style={{ width: '32px', height: '32px', color: 'white' }} />
-                )}
-              </div>
-              <div>
-                <p style={{ fontSize: '14px', fontWeight: '500', color: '#0f172a' }}>{product.name}</p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '4px' }}>
-                  <span style={{ fontSize: '12px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <DollarSign style={{ width: '12px', height: '12px' }} />
-                    {product.price}
-                  </span>
-                  <span style={{ fontSize: '12px', color: '#64748b', background: '#e2e8f0', padding: '2px 8px', borderRadius: '4px' }}>
-                    {product.category}
                   </span>
                 </div>
               </div>
@@ -403,7 +310,7 @@ export default function StorePage() {
           zIndex: 1000
         }}>
           <div style={{
-            background: 'white',
+            background: 'var(--bg-primary)',
             borderRadius: '16px',
             maxWidth: '800px',
             width: '90%',
@@ -412,35 +319,35 @@ export default function StorePage() {
             padding: '24px'
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-              <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>Store Page Preview</h2>
+              <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>Store Page Preview</h2>
               <button
                 onClick={() => setShowPreview(false)}
                 style={{
                   padding: '8px',
-                  background: '#f1f5f9',
+                  background: 'var(--bg-secondary)',
                   border: 'none',
                   borderRadius: '8px',
                   cursor: 'pointer'
                 }}
               >
-                <Trash2 style={{ width: '20px', height: '20px', color: '#64748b' }} />
+                <Trash2 style={{ width: '20px', height: '20px', color: 'var(--text-secondary)' }} />
               </button>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
               <div>
-                <h1 style={{ fontSize: '32px', fontWeight: 'bold', color: '#0f172a' }}>{storeTitle}</h1>
-                <p style={{ color: '#64748b', marginTop: '8px' }}>{storeDescription}</p>
+                <h1 style={{ fontSize: '32px', fontWeight: 'bold', color: 'var(--text-primary)' }}>{storeTitle}</h1>
+                <p style={{ color: 'var(--text-secondary)', marginTop: '8px' }}>{storeDescription}</p>
               </div>
               <div style={{ display: 'flex', flexDirection: 'row', gap: '16px', flexWrap: 'wrap' }}>
                 {featuredProducts.map((product, index) => (
                   <div key={product.id || `featured-${index}`} style={{
-                    background: '#f8fafc',
+                    background: 'var(--bg-secondary)',
                     borderRadius: '10px',
                     padding: '12px',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '12px',
-                    border: '1px solid #e2e8f0',
+                    border: '1px solid var(--border-color)',
                     flex: '1',
                     minWidth: '250px'
                   }}>
@@ -464,13 +371,13 @@ export default function StorePage() {
                       )}
                     </div>
                     <div>
-                      <p style={{ fontSize: '14px', fontWeight: '500', color: '#0f172a' }}>{product.name}</p>
+                      <p style={{ fontSize: '14px', fontWeight: '500', color: 'var(--text-primary)' }}>{product.name}</p>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '4px' }}>
-                        <span style={{ fontSize: '12px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <span style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                           <DollarSign style={{ width: '12px', height: '12px' }} />
                           {product.price}
                         </span>
-                        <span style={{ fontSize: '12px', color: '#64748b', background: '#e2e8f0', padding: '2px 8px', borderRadius: '4px' }}>
+                        <span style={{ fontSize: '12px', color: 'var(--text-secondary)', background: 'var(--border-color)', padding: '2px 8px', borderRadius: '4px' }}>
                           {product.category}
                         </span>
                       </div>

@@ -7,6 +7,8 @@ const { deleteFromCloudinary } = require('../config/cloudinary');
 const { authenticate, optionalAuth } = require('../middleware/auth');
 const { isSuperAdmin, isEditor, hasRole } = require('../middleware/authorize');
 const { mediaIdValidation } = require('../middleware/validation');
+const { logAuditEvent } = require('../middleware/securityLogger');
+const { verifyRequestSignature } = require('../middleware/requestSignature');
 
 // Configure upload for media with single file support
 const upload = uploadSingle('file', 'media', 10 * 1024 * 1024); // Single file, 10MB
@@ -51,8 +53,8 @@ router.get('/:id', authenticate, isSuperAdmin, mediaIdValidation, async (req, re
   }
 });
 
-// Create media (public for gallery use)
-router.post('/', upload, async (req, res) => {
+// Create media (editor and above)
+router.post('/', authenticate, isEditor, upload, async (req, res) => {
   try {
     const { folder } = req.body;
     const file = req.file;
@@ -68,11 +70,28 @@ router.post('/', upload, async (req, res) => {
       file_url = file.location || `/uploads/media/${file.filename}`;
     }
     
-    // Skip database insertion for now and just return the URL
+    // Insert into database
+    const [result] = await db.query(
+      `INSERT INTO media (file_url, original_name, file_type, file_size, folder, created_at) 
+       VALUES (?, ?, ?, ?, ?, NOW())`,
+      [
+        file_url,
+        file.originalname,
+        file.mimetype,
+        file.size,
+        folder || 'media'
+      ]
+    );
+    
     res.status(201).json({ 
       message: 'File uploaded successfully', 
       media: {
-        file_url: file_url
+        id: result.insertId,
+        file_url: file_url,
+        original_name: file.originalname,
+        file_type: file.mimetype,
+        file_size: file.size,
+        folder: folder || 'media'
       }
     });
   } catch (error) {
@@ -82,7 +101,7 @@ router.post('/', upload, async (req, res) => {
 });
 
 // Delete media (superadmin only)
-router.delete('/:id', authenticate, isSuperAdmin, mediaIdValidation, async (req, res) => {
+router.delete('/:id', authenticate, isSuperAdmin, mediaIdValidation, verifyRequestSignature, async (req, res) => {
   try {
     // Get media file info before deletion
     const [rows] = await db.query('SELECT * FROM media WHERE id = ?', [req.params.id]);
@@ -114,6 +133,16 @@ router.delete('/:id', authenticate, isSuperAdmin, mediaIdValidation, async (req,
     
     // Delete from database
     await db.query('DELETE FROM media WHERE id = ?', [req.params.id]);
+
+    // Log audit event
+    await logAuditEvent(
+      'MEDIA_DELETED',
+      'media',
+      req.params.id,
+      { ...req.user, req },
+      { file_url: media.file_url, file_type: media.file_type },
+      null
+    );
     
     res.json({ message: 'Media deleted successfully' });
   } catch (error) {

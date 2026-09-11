@@ -7,6 +7,8 @@ const roleHierarchy = {
   user: 0
 };
 
+const { logSecurityEvent, SecurityEventTypes, getClientIp, getUserAgent } = require('./securityLogger');
+
 // Check if user has required role or higher
 const hasRole = (userRole, requiredRole) => {
   return roleHierarchy[userRole] >= roleHierarchy[requiredRole];
@@ -14,12 +16,33 @@ const hasRole = (userRole, requiredRole) => {
 
 // Authorization middleware factory
 const authorize = (...allowedRoles) => {
-  return (req, res, next) => {
+  return async (req, res, next) => {
     if (!req.user) {
+      await logSecurityEvent(SecurityEventTypes.UNAUTHORIZED_ACCESS, {
+        ipAddress: getClientIp(req),
+        userAgent: getUserAgent(req),
+        endpoint: req.path,
+        method: req.method,
+        severity: 'medium',
+        additionalData: { reason: 'No authentication provided' }
+      });
       return res.status(401).json({ error: 'Authentication required' });
     }
     
     if (!allowedRoles.includes(req.user.role)) {
+      await logSecurityEvent(SecurityEventTypes.UNAUTHORIZED_ACCESS, {
+        userId: req.user.id,
+        userEmail: req.user.email,
+        ipAddress: getClientIp(req),
+        userAgent: getUserAgent(req),
+        endpoint: req.path,
+        method: req.method,
+        severity: 'high',
+        additionalData: { 
+          required: allowedRoles,
+          current: req.user.role 
+        }
+      });
       return res.status(403).json({ 
         error: 'Insufficient permissions',
         required: allowedRoles,
@@ -33,12 +56,33 @@ const authorize = (...allowedRoles) => {
 
 // Authorize if user has role or higher
 const authorizeOrHigher = (minRole) => {
-  return (req, res, next) => {
+  return async (req, res, next) => {
     if (!req.user) {
+      await logSecurityEvent(SecurityEventTypes.UNAUTHORIZED_ACCESS, {
+        ipAddress: getClientIp(req),
+        userAgent: getUserAgent(req),
+        endpoint: req.path,
+        method: req.method,
+        severity: 'medium',
+        additionalData: { reason: 'No authentication provided' }
+      });
       return res.status(401).json({ error: 'Authentication required' });
     }
     
     if (!hasRole(req.user.role, minRole)) {
+      await logSecurityEvent(SecurityEventTypes.UNAUTHORIZED_ACCESS, {
+        userId: req.user.id,
+        userEmail: req.user.email,
+        ipAddress: getClientIp(req),
+        userAgent: getUserAgent(req),
+        endpoint: req.path,
+        method: req.method,
+        severity: 'high',
+        additionalData: { 
+          required: minRole,
+          current: req.user.role 
+        }
+      });
       return res.status(403).json({ 
         error: 'Insufficient permissions',
         required: minRole,

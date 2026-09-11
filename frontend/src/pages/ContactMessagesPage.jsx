@@ -83,8 +83,8 @@ export default function ContactMessagesPage() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#0f172a' }}>Contact Messages</h1>
-          <p style={{ color: '#64748b', marginTop: '2px', fontSize: '13px' }}>Manage messages from website visitors</p>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--text-primary)' }}>Contact Messages</h1>
+          <p style={{ color: 'var(--text-secondary)', marginTop: '2px', fontSize: '13px' }}>Manage messages from website visitors</p>
         </div>
         <div style={{ display: 'flex', gap: '10px' }}>
           <button
@@ -93,11 +93,11 @@ export default function ContactMessagesPage() {
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              background: '#f8fafc',
-              color: '#64748b',
+              background: 'var(--bg-secondary)',
+              color: 'var(--text-secondary)',
               padding: '8px 16px',
               borderRadius: '10px',
-              border: '1px solid #e2e8f0',
+              border: '1px solid var(--border-color)',
               cursor: 'pointer',
               fontSize: '13px',
               fontWeight: '500',
@@ -112,10 +112,10 @@ export default function ContactMessagesPage() {
 
       {/* Filters */}
       <div style={{
-        background: 'rgba(255, 255, 255, 0.95)',
+        background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
         backdropFilter: 'blur(20px)',
         borderRadius: '16px',
-        border: '1px solid rgba(226, 232, 240, 0.8)',
+        border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
         padding: '20px',
         display: 'flex',
@@ -123,7 +123,7 @@ export default function ContactMessagesPage() {
         alignItems: 'center'
       }}>
         <div style={{ flex: 1, position: 'relative' }}>
-          <Search style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', width: '16px', height: '16px', color: '#94a3b8' }} />
+          <Search style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', width: '16px', height: '16px', color: 'var(--text-secondary)' }} />
           <input
             type="text"
             placeholder="Search messages..."
@@ -132,8 +132,8 @@ export default function ContactMessagesPage() {
             style={{
               width: '100%',
               padding: '10px 12px 10px 40px',
-              background: '#f8fafc',
-              border: '1px solid #e2e8f0',
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
               borderRadius: '10px',
               outline: 'none',
               fontSize: '13px',
@@ -148,9 +148,9 @@ export default function ContactMessagesPage() {
               onClick={() => setFilterStatus(status)}
               style={{
                 padding: '8px 16px',
-                background: filterStatus === status ? 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)' : '#f8fafc',
-                color: filterStatus === status ? 'white' : '#64748b',
-                border: filterStatus === status ? 'none' : '1px solid #e2e8f0',
+                background: filterStatus === status ? 'var(--bg-primary)' : 'var(--bg-secondary)',
+                color: filterStatus === status ? 'white' : 'var(--text-secondary)',
+                border: filterStatus === status ? 'none' : '1px solid var(--border-color)',
                 borderRadius: '10px',
                 fontSize: '13px',
                 fontWeight: '500',
@@ -167,21 +167,21 @@ export default function ContactMessagesPage() {
       {/* Messages List */}
       {loading ? (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
-          <p style={{ color: '#64748b' }}>Loading messages...</p>
+          <p style={{ color: 'var(--text-secondary)' }}>Loading messages...</p>
         </div>
       ) : (
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'var(--bg-primary)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid var(--border-color)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
           padding: '20px'
         }}>
           {filteredMessages.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '60px 20px' }}>
-              <Inbox style={{ width: '48px', height: '48px', color: '#cbd5e1', margin: '0 auto 16px' }} />
-              <p style={{ color: '#64748b', fontSize: '14px' }}>No messages found</p>
+              <Inbox style={{ width: '48px', height: '48px', color: 'var(--text-secondary)', margin: '0 auto 16px' }} />
+              <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>No messages found</p>
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -189,10 +189,10 @@ export default function ContactMessagesPage() {
                 <div
                   key={message.id || `message-${index}`}
                   style={{
-                    background: (message.status === 'unread' || message.status === 'pending') ? '#f0f9ff' : '#f8fafc',
+                    background: (message.status === 'unread' || message.status === 'pending') ? 'var(--bg-secondary)' : 'var(--bg-primary)',
                     borderRadius: '12px',
                     padding: '16px',
-                    border: (message.status === 'unread' || message.status === 'pending') ? '2px solid #3b82f6' : '1px solid #e2e8f0',
+                    border: (message.status === 'unread' || message.status === 'pending') ? '2px solid var(--status-unread)' : '1px solid var(--border-color)',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '16px',
@@ -202,7 +202,7 @@ export default function ContactMessagesPage() {
                   <div style={{
                     width: '48px',
                     height: '48px',
-                    background: (message.status === 'unread' || message.status === 'pending') ? 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)' : 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)',
+                    background: (message.status === 'unread' || message.status === 'pending') ? 'var(--status-unread)' : 'var(--status-read)',
                     borderRadius: '50%',
                     display: 'flex',
                     alignItems: 'center',
@@ -213,7 +213,7 @@ export default function ContactMessagesPage() {
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                      <p style={{ fontSize: '14px', fontWeight: '600', color: '#0f172a' }}>{message.name}</p>
+                      <p style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>{message.name}</p>
                       <span style={{
                         fontSize: '11px',
                         padding: '2px 8px',
@@ -226,22 +226,22 @@ export default function ContactMessagesPage() {
                       </span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
-                      <span style={{ fontSize: '12px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <span style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                         <Mail style={{ width: '12px', height: '12px' }} />
                         {message.email}
                       </span>
                       {message.subject && (
-                        <span style={{ fontSize: '12px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <span style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                           <MessageSquare style={{ width: '12px', height: '12px' }} />
                           {message.subject}
                         </span>
                       )}
-                      <span style={{ fontSize: '12px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <span style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                         <Calendar style={{ width: '12px', height: '12px' }} />
                         {new Date(message.created_at).toLocaleDateString()}
                       </span>
                     </div>
-                    <p style={{ fontSize: '12px', color: '#475569', marginTop: '4px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '4px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                       {message.message}
                     </p>
                   </div>
@@ -256,30 +256,30 @@ export default function ContactMessagesPage() {
                       }}
                       style={{
                         padding: '8px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '8px',
                         cursor: 'pointer',
                         transition: 'all 0.2s ease'
                       }}
                       title="View Details"
                     >
-                      <Eye style={{ width: '16px', height: '16px', color: '#64748b' }} />
+                      <Eye style={{ width: '16px', height: '16px', color: 'var(--text-secondary)' }} />
                     </button>
                     {(message.status === 'read' || message.status === 'pending') && (
                       <button
                         onClick={() => handleStatusUpdate(message.id, 'replied')}
                         style={{
                           padding: '8px',
-                          background: '#ecfdf5',
-                          border: '1px solid #a7f3d0',
+                          background: 'var(--bg-secondary)',
+                          border: '1px solid var(--border-color)',
                           borderRadius: '8px',
                           cursor: 'pointer',
                           transition: 'all 0.2s ease'
                         }}
                         title="Mark as Replied"
                       >
-                        <Reply style={{ width: '16px', height: '16px', color: '#10b981' }} />
+                        <Reply style={{ width: '16px', height: '16px', color: 'var(--text-secondary)' }} />
                       </button>
                     )}
                     {message.status !== 'archived' && (
@@ -287,30 +287,30 @@ export default function ContactMessagesPage() {
                         onClick={() => handleStatusUpdate(message.id, 'archived')}
                         style={{
                           padding: '8px',
-                          background: '#f8fafc',
-                          border: '1px solid #e2e8f0',
+                          background: 'var(--bg-secondary)',
+                          border: '1px solid var(--border-color)',
                           borderRadius: '8px',
                           cursor: 'pointer',
                           transition: 'all 0.2s ease'
                         }}
                         title="Archive"
                       >
-                        <Archive style={{ width: '16px', height: '16px', color: '#64748b' }} />
+                        <Archive style={{ width: '16px', height: '16px', color: 'var(--text-secondary)' }} />
                       </button>
                     )}
                     <button
                       onClick={() => handleDelete(message.id)}
                       style={{
                         padding: '8px',
-                        background: '#fef2f2',
-                        border: '1px solid #fecaca',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '8px',
                         cursor: 'pointer',
                         transition: 'all 0.2s ease'
                       }}
                       title="Delete"
                     >
-                      <Trash2 style={{ width: '16px', height: '16px', color: '#ef4444' }} />
+                      <Trash2 style={{ width: '16px', height: '16px', color: 'var(--text-secondary)' }} />
                     </button>
                   </div>
                 </div>
@@ -333,7 +333,7 @@ export default function ContactMessagesPage() {
           zIndex: 50
         }}>
           <div style={{
-            background: 'white',
+            background: 'var(--bg-primary)',
             borderRadius: '16px',
             width: '90%',
             maxWidth: '700px',
@@ -343,12 +343,12 @@ export default function ContactMessagesPage() {
           }}>
             <div style={{
               padding: '20px',
-              borderBottom: '1px solid #e2e8f0',
+              borderBottom: '1px solid var(--border-color)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-              <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a' }}>Message Details</h2>
+              <h2 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)' }}>Message Details</h2>
               <button
                 onClick={() => setShowModal(false)}
                 style={{
@@ -358,7 +358,7 @@ export default function ContactMessagesPage() {
                   borderRadius: '8px',
                   cursor: 'pointer',
                   fontSize: '18px',
-                  color: '#94a3b8'
+                  color: 'var(--text-secondary)'
                 }}
               >
                 ×
@@ -370,7 +370,7 @@ export default function ContactMessagesPage() {
                   <div style={{
                     width: '64px',
                     height: '64px',
-                    background: (selectedMessage.status === 'unread' || selectedMessage.status === 'pending') ? 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)' : 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)',
+                    background: (selectedMessage.status === 'unread' || selectedMessage.status === 'pending') ? 'var(--status-unread)' : 'var(--status-read)',
                     borderRadius: '50%',
                     display: 'flex',
                     alignItems: 'center',
@@ -379,36 +379,36 @@ export default function ContactMessagesPage() {
                     <MessageSquare style={{ width: '32px', height: '32px', color: 'white' }} />
                   </div>
                   <div>
-                    <h3 style={{ fontSize: '20px', fontWeight: '600', color: '#0f172a' }}>{selectedMessage.name}</h3>
-                    <p style={{ fontSize: '14px', color: '#64748b' }}>{selectedMessage.email}</p>
+                    <h3 style={{ fontSize: '20px', fontWeight: '600', color: 'var(--text-primary)' }}>{selectedMessage.name}</h3>
+                    <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>{selectedMessage.email}</p>
                   </div>
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
                   <div>
-                    <label style={{ fontSize: '12px', fontWeight: '500', color: '#64748b', display: 'block', marginBottom: '4px' }}>Email</label>
-                    <p style={{ fontSize: '14px', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Email</label>
+                    <h3 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <Mail style={{ width: '14px', height: '14px' }} />
                       {selectedMessage.email}
-                    </p>
+                    </h3>
                   </div>
                   {selectedMessage.phone && (
                     <div>
-                      <label style={{ fontSize: '12px', fontWeight: '500', color: '#64748b', display: 'block', marginBottom: '4px' }}>Phone</label>
-                      <p style={{ fontSize: '14px', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Phone</label>
+                      <h3 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <Phone style={{ width: '14px', height: '14px' }} />
                         {selectedMessage.phone}
-                      </p>
+                      </h3>
                     </div>
                   )}
                   {selectedMessage.subject && (
                     <div style={{ gridColumn: 'span 2' }}>
-                      <label style={{ fontSize: '12px', fontWeight: '500', color: '#64748b', display: 'block', marginBottom: '4px' }}>Subject</label>
-                      <p style={{ fontSize: '14px', color: '#0f172a', fontWeight: '500' }}>{selectedMessage.subject}</p>
+                      <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Subject</label>
+                      <p style={{ fontSize: '14px', color: 'var(--text-primary)', fontWeight: '500' }}>{selectedMessage.subject}</p>
                     </div>
                   )}
                   <div>
-                    <label style={{ fontSize: '12px', fontWeight: '500', color: '#64748b', display: 'block', marginBottom: '4px' }}>Status</label>
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Status</label>
                     <span style={{
                       fontSize: '12px',
                       padding: '4px 12px',
@@ -421,32 +421,32 @@ export default function ContactMessagesPage() {
                     </span>
                   </div>
                   <div>
-                    <label style={{ fontSize: '12px', fontWeight: '500', color: '#64748b', display: 'block', marginBottom: '4px' }}>Received</label>
-                    <p style={{ fontSize: '14px', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Received</label>
+                    <h3 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <Calendar style={{ width: '14px', height: '14px' }} />
                       {new Date(selectedMessage.created_at).toLocaleString()}
-                    </p>
+                    </h3>
                   </div>
                 </div>
 
                 <div>
-                  <label style={{ fontSize: '12px', fontWeight: '500', color: '#64748b', display: 'block', marginBottom: '4px' }}>Message</label>
-                  <p style={{ fontSize: '14px', color: '#0f172a', lineHeight: '1.6', background: '#f8fafc', padding: '16px', borderRadius: '8px' }}>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Message</label>
+                  <span style={{ fontSize: '12px', color: 'var(--text-secondary)', background: 'var(--border-color)', padding: '2px 8px', borderRadius: '4px' }}>
                     {selectedMessage.message}
-                  </p>
+                  </span>
                 </div>
 
                 {selectedMessage.admin_notes && (
                   <div>
-                    <label style={{ fontSize: '12px', fontWeight: '500', color: '#64748b', display: 'block', marginBottom: '4px' }}>Admin Notes</label>
-                    <p style={{ fontSize: '14px', color: '#0f172a', lineHeight: '1.6' }}>{selectedMessage.admin_notes}</p>
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Admin Notes</label>
+                    <p style={{ fontSize: '14px', color: 'var(--text-primary)', lineHeight: '1.6' }}>{selectedMessage.admin_notes}</p>
                   </div>
                 )}
               </div>
             </div>
             <div style={{
               padding: '20px',
-              borderTop: '1px solid #e2e8f0',
+              borderTop: '1px solid var(--border-color)',
               display: 'flex',
               gap: '12px',
               justifyContent: 'flex-end'
@@ -459,9 +459,9 @@ export default function ContactMessagesPage() {
                   }}
                   style={{
                     padding: '10px 20px',
-                    background: '#10b981',
-                    color: 'white',
-                    border: 'none',
+                    background: 'var(--bg-secondary)',
+                    color: 'var(--text-primary)',
+                    border: '1px solid var(--border-color)',
                     borderRadius: '10px',
                     fontSize: '13px',
                     fontWeight: '500',
@@ -483,9 +483,9 @@ export default function ContactMessagesPage() {
                   }}
                   style={{
                     padding: '10px 20px',
-                    background: '#64748b',
-                    color: 'white',
-                    border: 'none',
+                    background: 'var(--bg-secondary)',
+                    color: 'var(--text-primary)',
+                    border: '1px solid var(--border-color)',
                     borderRadius: '10px',
                     fontSize: '13px',
                     fontWeight: '500',
@@ -503,9 +503,9 @@ export default function ContactMessagesPage() {
                 onClick={() => setShowModal(false)}
                 style={{
                   padding: '10px 20px',
-                  background: '#f8fafc',
-                  color: '#64748b',
-                  border: '1px solid #e2e8f0',
+                  background: 'var(--bg-secondary)',
+                  color: 'var(--text-secondary)',
+                  border: '1px solid var(--border-color)',
                   borderRadius: '10px',
                   fontSize: '13px',
                   fontWeight: '500',

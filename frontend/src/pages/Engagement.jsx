@@ -60,16 +60,16 @@ export default function Engagement() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#0f172a' }}>User Engagement</h1>
-          <p style={{ color: '#64748b', marginTop: '2px', fontSize: '13px' }}>Track user interactions and engagement metrics</p>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--text-primary)' }}>User Engagement</h1>
+          <p style={{ color: 'var(--text-secondary)', marginTop: '2px', fontSize: '13px' }}>Track user interactions and engagement metrics</p>
         </div>
         <select
           value={timeRange}
           onChange={(e) => setTimeRange(e.target.value)}
           style={{
             padding: '8px 12px',
-            background: '#f8fafc',
-            border: '1px solid #e2e8f0',
+            background: 'var(--bg-secondary)',
+            border: '1px solid var(--border-color)',
             borderRadius: '10px',
             outline: 'none',
             fontSize: '13px',
@@ -81,7 +81,7 @@ export default function Engagement() {
             e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
           }}
           onBlur={(e) => {
-            e.currentTarget.style.borderColor = '#e2e8f0'
+            e.currentTarget.style.borderColor = 'var(--border-color)'
             e.currentTarget.style.boxShadow = 'none'
           }}
         >
@@ -94,11 +94,11 @@ export default function Engagement() {
       {/* Stats Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' }}>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
           padding: '12px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
@@ -124,15 +124,15 @@ export default function Engagement() {
               +15.2%
             </span>
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{totalLikes.toLocaleString()}</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Total Likes</p>
+          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>{totalLikes.toLocaleString()}</h3>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>Total Likes</p>
         </div>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
           padding: '12px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
@@ -158,15 +158,15 @@ export default function Engagement() {
               +12.8%
             </span>
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{totalComments.toLocaleString()}</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Total Comments</p>
+          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>{totalComments.toLocaleString()}</h3>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>Total Comments</p>
         </div>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
           padding: '12px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
@@ -192,15 +192,15 @@ export default function Engagement() {
               +18.5%
             </span>
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{totalShares.toLocaleString()}</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Total Shares</p>
+          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>{totalShares.toLocaleString()}</h3>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>Total Shares</p>
         </div>
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
           padding: '12px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
@@ -226,13 +226,13 @@ export default function Engagement() {
               +5.3%
             </span>
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{engagementRate}%</h3>
-          <p style={{ fontSize: '11px', color: '#64748b', marginTop: '1px' }}>Engagement Rate</p>
+          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>{engagementRate}%</h3>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>Engagement Rate</p>
         </div>
       </div>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: '4px', borderBottom: '1px solid #e2e8f0' }}>
+      <div style={{ display: 'flex', gap: '4px', borderBottom: '1px solid var(--border-color)' }}>
         <button
           onClick={() => setSelectedTab('overview')}
           style={{
@@ -243,12 +243,12 @@ export default function Engagement() {
             cursor: 'pointer',
             fontSize: '13px',
             fontWeight: '500',
-            color: selectedTab === 'overview' ? 'white' : '#64748b',
+            color: selectedTab === 'overview' ? 'white' : 'var(--text-secondary)',
             transition: 'all 0.2s ease'
           }}
           onMouseEnter={(e) => {
             if (selectedTab !== 'overview') {
-              e.currentTarget.style.background = '#f1f5f9'
+              e.currentTarget.style.background = 'var(--bg-secondary)'
             }
           }}
           onMouseLeave={(e) => {
@@ -269,12 +269,12 @@ export default function Engagement() {
             cursor: 'pointer',
             fontSize: '13px',
             fontWeight: '500',
-            color: selectedTab === 'content' ? 'white' : '#64748b',
+            color: selectedTab === 'content' ? 'white' : 'var(--text-secondary)',
             transition: 'all 0.2s ease'
           }}
           onMouseEnter={(e) => {
             if (selectedTab !== 'content') {
-              e.currentTarget.style.background = '#f1f5f9'
+              e.currentTarget.style.background = 'var(--bg-secondary)'
             }
           }}
           onMouseLeave={(e) => {
@@ -295,12 +295,12 @@ export default function Engagement() {
             cursor: 'pointer',
             fontSize: '13px',
             fontWeight: '500',
-            color: selectedTab === 'users' ? 'white' : '#64748b',
+            color: selectedTab === 'users' ? 'white' : 'var(--text-secondary)',
             transition: 'all 0.2s ease'
           }}
           onMouseEnter={(e) => {
             if (selectedTab !== 'users') {
-              e.currentTarget.style.background = '#f1f5f9'
+              e.currentTarget.style.background = 'var(--bg-secondary)'
             }
           }}
           onMouseLeave={(e) => {
@@ -316,15 +316,15 @@ export default function Engagement() {
       {/* Content */}
       {selectedTab === 'overview' && (
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
           padding: '20px'
         }}>
-          <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#0f172a', marginBottom: '16px' }}>Engagement Trend</h3>
-          <div style={{ display: 'flex', alignItems: 'flex-end', gap: '16px', height: '200px', paddingBottom: '20px', borderBottom: '1px solid #e2e8f0' }}>
+          <h3 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '16px' }}>Engagement Trend</h3>
+          <div style={{ display: 'flex', alignItems: 'flex-end', gap: '16px', height: '200px', paddingBottom: '20px', borderBottom: '1px solid var(--border-color)' }}>
             {engagementData.map((data, index) => (
               <div key={index} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
                 <div style={{
@@ -340,7 +340,7 @@ export default function Engagement() {
                 onMouseLeave={(e) => {
                   e.currentTarget.style.opacity = '1'
                 }} />
-                <span style={{ fontSize: '11px', color: '#64748b' }}>{data.date}</span>
+                <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{data.date}</span>
               </div>
             ))}
           </div>
@@ -349,34 +349,34 @@ export default function Engagement() {
 
       {selectedTab === 'content' && (
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
           overflow: 'hidden'
         }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+            <thead style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}>
               <tr>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Content</th>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Type</th>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Likes</th>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Comments</th>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Shares</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Content</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Type</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Likes</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Comments</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Shares</th>
               </tr>
             </thead>
             <tbody>
               {topContent.map((content, index) => (
-                <tr key={index} style={{ borderBottom: '1px solid #e2e8f0', transition: 'background 0.2s ease' }}
+                <tr key={index} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background 0.2s ease' }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f8fafc'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
                 }}>
                   <td style={{ padding: '12px 16px' }}>
-                    <span style={{ fontWeight: '500', color: '#0f172a', fontSize: '13px' }}>{content.title}</span>
+                    <span style={{ fontWeight: '500', color: 'var(--text-primary)', fontSize: '13px' }}>{content.title}</span>
                   </td>
                   <td style={{ padding: '12px 16px' }}>
                     <span style={{ 
@@ -384,15 +384,15 @@ export default function Engagement() {
                       borderRadius: '16px', 
                       fontSize: '11px', 
                       fontWeight: '500',
-                      background: '#f1f5f9',
-                      color: '#475569'
+                      background: 'var(--bg-secondary)',
+                      color: 'var(--text-secondary)'
                     }}>
                       {content.type}
                     </span>
                   </td>
-                  <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{content.likes.toLocaleString()}</td>
-                  <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{content.comments.toLocaleString()}</td>
-                  <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{content.shares.toLocaleString()}</td>
+                  <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{content.likes.toLocaleString()}</td>
+                  <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{content.comments.toLocaleString()}</td>
+                  <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{content.shares.toLocaleString()}</td>
                 </tr>
               ))}
             </tbody>
@@ -402,30 +402,30 @@ export default function Engagement() {
 
       {selectedTab === 'users' && (
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
           overflow: 'hidden'
         }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+            <thead style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}>
               <tr>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>User</th>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Email</th>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Likes</th>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Comments</th>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Shares</th>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Total</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>User</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Email</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Likes</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Comments</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Shares</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Total</th>
               </tr>
             </thead>
             <tbody>
               {topUsers.length > 0 ? (
                 topUsers.map((user, index) => (
-                  <tr key={index} style={{ borderBottom: '1px solid #e2e8f0', transition: 'background 0.2s ease' }}
+                  <tr key={index} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background 0.2s ease' }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = '#f8fafc'
+                    e.currentTarget.style.background = 'var(--bg-secondary)'
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.background = 'transparent'
@@ -446,13 +446,13 @@ export default function Engagement() {
                         }}>
                           {user.name.charAt(0).toUpperCase()}
                         </div>
-                        <span style={{ fontWeight: '500', color: '#0f172a', fontSize: '13px' }}>{user.name}</span>
+                        <span style={{ fontWeight: '500', color: 'var(--text-primary)', fontSize: '13px' }}>{user.name}</span>
                       </div>
                     </td>
-                    <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{user.email}</td>
-                    <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{user.likes.toLocaleString()}</td>
-                    <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{user.comments.toLocaleString()}</td>
-                    <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{user.shares.toLocaleString()}</td>
+                    <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{user.email}</td>
+                    <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{user.likes.toLocaleString()}</td>
+                    <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{user.comments.toLocaleString()}</td>
+                    <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{user.shares.toLocaleString()}</td>
                     <td style={{ padding: '12px 16px' }}>
                       <span style={{ 
                         padding: '3px 8px', 
@@ -469,7 +469,7 @@ export default function Engagement() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6" style={{ padding: '40px', textAlign: 'center', color: '#64748b', fontSize: '13px' }}>
+                  <td colSpan="6" style={{ padding: '40px', textAlign: 'center', color: 'var(--text-secondary)', fontSize: '13px' }}>
                     No user engagement data yet
                   </td>
                 </tr>

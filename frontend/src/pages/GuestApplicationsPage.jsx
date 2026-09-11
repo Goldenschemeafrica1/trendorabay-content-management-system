@@ -59,10 +59,10 @@ export default function GuestApplicationsPage() {
   const getStatusColor = (status) => {
     switch (status) {
       case 'pending': return '#f59e0b'
-      case 'under_review': return '#3b82f6'
+      case 'under_review': return 'var(--text-primary)'
       case 'approved': return '#10b981'
       case 'rejected': return '#ef4444'
-      default: return '#64748b'
+      default: return 'var(--text-secondary)'
     }
   }
 
@@ -81,8 +81,8 @@ export default function GuestApplicationsPage() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#0f172a' }}>Guest Applications</h1>
-          <p style={{ color: '#64748b', marginTop: '2px', fontSize: '13px' }}>Manage applications from potential podcast guests</p>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--text-primary)' }}>Guest Applications</h1>
+          <p style={{ color: 'var(--text-secondary)', marginTop: '2px', fontSize: '13px' }}>Manage applications from potential podcast guests</p>
         </div>
         <div style={{ display: 'flex', gap: '10px' }}>
           <button
@@ -91,11 +91,11 @@ export default function GuestApplicationsPage() {
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              background: '#f8fafc',
-              color: '#64748b',
+              background: 'var(--bg-secondary)',
+              color: 'var(--text-secondary)',
               padding: '8px 16px',
               borderRadius: '10px',
-              border: '1px solid #e2e8f0',
+              border: '1px solid var(--border-color)',
               cursor: 'pointer',
               fontSize: '13px',
               fontWeight: '500',
@@ -110,10 +110,10 @@ export default function GuestApplicationsPage() {
 
       {/* Filters */}
       <div style={{
-        background: 'rgba(255, 255, 255, 0.95)',
+        background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
         backdropFilter: 'blur(20px)',
         borderRadius: '16px',
-        border: '1px solid rgba(226, 232, 240, 0.8)',
+        border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
         padding: '20px',
         display: 'flex',
@@ -121,7 +121,7 @@ export default function GuestApplicationsPage() {
         alignItems: 'center'
       }}>
         <div style={{ flex: 1, position: 'relative' }}>
-          <Search style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', width: '16px', height: '16px', color: '#94a3b8' }} />
+          <Search style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', width: '16px', height: '16px', color: 'var(--text-secondary)' }} />
           <input
             type="text"
             placeholder="Search applications..."
@@ -130,8 +130,8 @@ export default function GuestApplicationsPage() {
             style={{
               width: '100%',
               padding: '10px 12px 10px 40px',
-              background: '#f8fafc',
-              border: '1px solid #e2e8f0',
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
               borderRadius: '10px',
               outline: 'none',
               fontSize: '13px',
@@ -146,9 +146,9 @@ export default function GuestApplicationsPage() {
               onClick={() => setFilterStatus(status)}
               style={{
                 padding: '8px 16px',
-                background: filterStatus === status ? 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)' : '#f8fafc',
-                color: filterStatus === status ? 'white' : '#64748b',
-                border: filterStatus === status ? 'none' : '1px solid #e2e8f0',
+                background: filterStatus === status ? 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)' : 'var(--bg-secondary)',
+                color: filterStatus === status ? 'white' : 'var(--text-secondary)',
+                border: filterStatus === status ? 'none' : '1px solid var(--border-color)',
                 borderRadius: '10px',
                 fontSize: '13px',
                 fontWeight: '500',
@@ -165,21 +165,21 @@ export default function GuestApplicationsPage() {
       {/* Applications List */}
       {loading ? (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
-          <p style={{ color: '#64748b' }}>Loading applications...</p>
+          <p style={{ color: 'var(--text-secondary)' }}>Loading applications...</p>
         </div>
       ) : (
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
           padding: '20px'
         }}>
           {filteredApplications.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '60px 20px' }}>
               <User style={{ width: '48px', height: '48px', color: '#cbd5e1', margin: '0 auto 16px' }} />
-              <p style={{ color: '#64748b', fontSize: '14px' }}>No applications found</p>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>No applications found</p>
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -187,10 +187,10 @@ export default function GuestApplicationsPage() {
                 <div
                   key={application.id || `application-${index}`}
                   style={{
-                    background: '#f8fafc',
+                    background: 'var(--bg-secondary)',
                     borderRadius: '12px',
                     padding: '16px',
-                    border: '1px solid #e2e8f0',
+                    border: '1px solid var(--border-color)',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '16px',
@@ -211,7 +211,7 @@ export default function GuestApplicationsPage() {
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                      <p style={{ fontSize: '14px', fontWeight: '600', color: '#0f172a' }}>{application.applicant_name}</p>
+                      <p style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>{application.applicant_name}</p>
                       <span style={{
                         fontSize: '11px',
                         padding: '2px 8px',
@@ -224,23 +224,23 @@ export default function GuestApplicationsPage() {
                       </span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
-                      <span style={{ fontSize: '12px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <span style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                         <Mail style={{ width: '12px', height: '12px' }} />
                         {application.applicant_email}
                       </span>
                       {application.company_name && (
-                        <span style={{ fontSize: '12px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <span style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                           <Building style={{ width: '12px', height: '12px' }} />
                           {application.company_name}
                         </span>
                       )}
                       {application.job_title && (
-                        <span style={{ fontSize: '12px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <span style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                           <Briefcase style={{ width: '12px', height: '12px' }} />
                           {application.job_title}
                         </span>
                       )}
-                      <span style={{ fontSize: '12px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <span style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                         <Calendar style={{ width: '12px', height: '12px' }} />
                         {new Date(application.created_at).toLocaleDateString()}
                       </span>
@@ -254,15 +254,15 @@ export default function GuestApplicationsPage() {
                       }}
                       style={{
                         padding: '8px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '8px',
                         cursor: 'pointer',
                         transition: 'all 0.2s ease'
                       }}
                       title="View Details"
                     >
-                      <Eye style={{ width: '16px', height: '16px', color: '#64748b' }} />
+                      <Eye style={{ width: '16px', height: '16px', color: 'var(--text-secondary)' }} />
                     </button>
                     {application.status === 'pending' && (
                       <>
@@ -345,7 +345,7 @@ export default function GuestApplicationsPage() {
           zIndex: 50
         }}>
           <div style={{
-            background: 'white',
+            background: 'var(--bg-primary)',
             borderRadius: '16px',
             width: '90%',
             maxWidth: '700px',
@@ -355,12 +355,12 @@ export default function GuestApplicationsPage() {
           }}>
             <div style={{
               padding: '20px',
-              borderBottom: '1px solid #e2e8f0',
+              borderBottom: '1px solid var(--border-color)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-              <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a' }}>Application Details</h2>
+              <h2 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)' }}>Application Details</h2>
               <button
                 onClick={() => setShowModal(false)}
                 style={{
@@ -370,7 +370,7 @@ export default function GuestApplicationsPage() {
                   borderRadius: '8px',
                   cursor: 'pointer',
                   fontSize: '18px',
-                  color: '#94a3b8'
+                  color: 'var(--text-secondary)'
                 }}
               >
                 ×
@@ -391,23 +391,23 @@ export default function GuestApplicationsPage() {
                     <User style={{ width: '32px', height: '32px', color: 'white' }} />
                   </div>
                   <div>
-                    <h3 style={{ fontSize: '20px', fontWeight: '600', color: '#0f172a' }}>{selectedApplication.applicant_name}</h3>
-                    <p style={{ fontSize: '14px', color: '#64748b' }}>{selectedApplication.job_title || 'No title provided'}</p>
+                    <h3 style={{ fontSize: '20px', fontWeight: '600', color: 'var(--text-primary)' }}>{selectedApplication.applicant_name}</h3>
+                    <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>{selectedApplication.job_title || 'No title provided'}</p>
                   </div>
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
                   <div>
-                    <label style={{ fontSize: '12px', fontWeight: '500', color: '#64748b', display: 'block', marginBottom: '4px' }}>Email</label>
-                    <p style={{ fontSize: '14px', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <label style={{ fontSize: '12px', fontWeight: '500', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Email</label>
+                    <p style={{ fontSize: '14px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <Mail style={{ width: '14px', height: '14px' }} />
                       {selectedApplication.applicant_email}
                     </p>
                   </div>
                   {selectedApplication.applicant_phone && (
                     <div>
-                      <label style={{ fontSize: '12px', fontWeight: '500', color: '#64748b', display: 'block', marginBottom: '4px' }}>Phone</label>
-                      <p style={{ fontSize: '14px', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <label style={{ fontSize: '12px', fontWeight: '500', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Phone</label>
+                      <p style={{ fontSize: '14px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <Phone style={{ width: '14px', height: '14px' }} />
                         {selectedApplication.applicant_phone}
                       </p>
@@ -415,15 +415,15 @@ export default function GuestApplicationsPage() {
                   )}
                   {selectedApplication.company_name && (
                     <div>
-                      <label style={{ fontSize: '12px', fontWeight: '500', color: '#64748b', display: 'block', marginBottom: '4px' }}>Company</label>
-                      <p style={{ fontSize: '14px', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <label style={{ fontSize: '12px', fontWeight: '500', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Company</label>
+                      <p style={{ fontSize: '14px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <Building style={{ width: '14px', height: '14px' }} />
                         {selectedApplication.company_name}
                       </p>
                     </div>
                   )}
                   <div>
-                    <label style={{ fontSize: '12px', fontWeight: '500', color: '#64748b', display: 'block', marginBottom: '4px' }}>Status</label>
+                    <label style={{ fontSize: '12px', fontWeight: '500', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Status</label>
                     <span style={{
                       fontSize: '12px',
                       padding: '4px 12px',
@@ -439,47 +439,47 @@ export default function GuestApplicationsPage() {
 
                 {selectedApplication.bio && (
                   <div>
-                    <label style={{ fontSize: '12px', fontWeight: '500', color: '#64748b', display: 'block', marginBottom: '4px' }}>Bio</label>
-                    <p style={{ fontSize: '14px', color: '#0f172a', lineHeight: '1.6' }}>{selectedApplication.bio}</p>
+                    <label style={{ fontSize: '12px', fontWeight: '500', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Bio</label>
+                    <p style={{ fontSize: '14px', color: 'var(--text-primary)', lineHeight: '1.6' }}>{selectedApplication.bio}</p>
                   </div>
                 )}
 
                 {selectedApplication.expertise_areas && (
                   <div>
-                    <label style={{ fontSize: '12px', fontWeight: '500', color: '#64748b', display: 'block', marginBottom: '4px' }}>Expertise Areas</label>
-                    <p style={{ fontSize: '14px', color: '#0f172a', lineHeight: '1.6' }}>{selectedApplication.expertise_areas}</p>
+                    <label style={{ fontSize: '12px', fontWeight: '500', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Expertise Areas</label>
+                    <p style={{ fontSize: '14px', color: 'var(--text-primary)', lineHeight: '1.6' }}>{selectedApplication.expertise_areas}</p>
                   </div>
                 )}
 
                 {selectedApplication.proposed_topics && (
                   <div>
-                    <label style={{ fontSize: '12px', fontWeight: '500', color: '#64748b', display: 'block', marginBottom: '4px' }}>Proposed Topics</label>
-                    <p style={{ fontSize: '14px', color: '#0f172a', lineHeight: '1.6' }}>{selectedApplication.proposed_topics}</p>
+                    <label style={{ fontSize: '12px', fontWeight: '500', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Proposed Topics</label>
+                    <p style={{ fontSize: '14px', color: 'var(--text-primary)', lineHeight: '1.6' }}>{selectedApplication.proposed_topics}</p>
                   </div>
                 )}
 
                 {selectedApplication.availability && (
                   <div>
-                    <label style={{ fontSize: '12px', fontWeight: '500', color: '#64748b', display: 'block', marginBottom: '4px' }}>Availability</label>
-                    <p style={{ fontSize: '14px', color: '#0f172a', lineHeight: '1.6' }}>{selectedApplication.availability}</p>
+                    <label style={{ fontSize: '12px', fontWeight: '500', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Availability</label>
+                    <p style={{ fontSize: '14px', color: 'var(--text-primary)', lineHeight: '1.6' }}>{selectedApplication.availability}</p>
                   </div>
                 )}
 
                 {selectedApplication.admin_notes && (
                   <div>
-                    <label style={{ fontSize: '12px', fontWeight: '500', color: '#64748b', display: 'block', marginBottom: '4px' }}>Admin Notes</label>
-                    <p style={{ fontSize: '14px', color: '#0f172a', lineHeight: '1.6' }}>{selectedApplication.admin_notes}</p>
+                    <label style={{ fontSize: '12px', fontWeight: '500', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Admin Notes</label>
+                    <p style={{ fontSize: '14px', color: 'var(--text-primary)', lineHeight: '1.6' }}>{selectedApplication.admin_notes}</p>
                   </div>
                 )}
 
-                <div style={{ fontSize: '12px', color: '#94a3b8' }}>
+                <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
                   Applied on {new Date(selectedApplication.created_at).toLocaleString()}
                 </div>
               </div>
             </div>
             <div style={{
               padding: '20px',
-              borderTop: '1px solid #e2e8f0',
+              borderTop: '1px solid var(--border-color)',
               display: 'flex',
               gap: '12px',
               justifyContent: 'flex-end'
@@ -536,9 +536,9 @@ export default function GuestApplicationsPage() {
                 onClick={() => setShowModal(false)}
                 style={{
                   padding: '10px 20px',
-                  background: '#f8fafc',
-                  color: '#64748b',
-                  border: '1px solid #e2e8f0',
+                  background: 'var(--bg-secondary)',
+                  color: 'var(--text-secondary)',
+                  border: '1px solid var(--border-color)',
                   borderRadius: '10px',
                   fontSize: '13px',
                   fontWeight: '500',

@@ -1,9 +1,12 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const xss = require('./middleware/xss');
+const { cspMiddleware } = require('./middleware/csp');
+const { createRoleBasedRateLimiter, createStrictRateLimiter, createApiRateLimiter } = require('./middleware/userRateLimit');
 const path = require('path');
 const fs = require('fs');
 require('dotenv').config();
@@ -13,40 +16,36 @@ const PORT = process.env.PORT || 5000;
 
 // Security middleware
 app.use(helmet({
-  contentSecurityPolicy: false,
+  contentSecurityPolicy: false, // We use custom CSP middleware
   crossOriginEmbedderPolicy: false,
   crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
 
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 1000, // limit each IP to 1000 requests per windowMs (increased for normal usage)
-  message: 'Too many requests from this IP, please try again later.',
-  standardHeaders: true,
-  legacyHeaders: false,
-});
+// Custom CSP middleware
+app.use(cspMiddleware);
 
-// Stricter rate limiting for auth routes
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // temporarily increased for testing
-  message: 'Too many authentication attempts, please try again later.',
-  standardHeaders: true,
-  legacyHeaders: false,
-});
+// User-based rate limiting for API routes
+const apiLimiter = createApiRateLimiter();
 
-app.use('/api/auth/', authLimiter);
-app.use(limiter);
-
-// XSS Protection
-app.use(xss);
+// Strict rate limiting for auth routes
+const authLimiter = createStrictRateLimiter();
 
 // Middleware
+app.use(cookieParser());
 app.use(cors({
   origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:3000', 'https://trendorabay-content-management-syst.vercel.app', /.+\.vercel\.app$/], // Restrict to specific origins and Vercel domains
   credentials: true
 }));
+
+// XSS Protection
+app.use(xss);
+
+// Security monitoring - detect suspicious activity
+// app.use(suspiciousActivityDetector);
+
+// Apply rate limiting
+app.use('/api/auth/', authLimiter);
+app.use('/api/', apiLimiter);
 app.use(bodyParser.json({ limit: '10mb' })); // Add request size limit
 app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -58,9 +57,21 @@ if (!fs.existsSync(uploadsPath)) {
   fs.mkdirSync(uploadsPath, { recursive: true });
 }
 
-// Serve static files with CORS
+// Serve static files with restricted CORS
+const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:3000', 'https://trendorabay-content-management-syst.vercel.app', /.+\.vercel\.app$/];
+
 app.use('/uploads', (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
+  const origin = req.headers.origin;
+  const isAllowed = allowedOrigins.some(allowed => {
+    if (allowed instanceof RegExp) {
+      return allowed.test(origin);
+    }
+    return allowed === origin;
+  });
+  
+  if (isAllowed) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
   res.header('Access-Control-Allow-Methods', 'GET');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
   next();
@@ -106,6 +117,9 @@ const guestApplicationsRoutes = require('./routes/guestApplications');
 const pitchSubmissionsRoutes = require('./routes/pitchSubmissions');
 const contactMessagesRoutes = require('./routes/contactMessages');
 const galleryRoutes = require('./routes/gallery');
+const securityRoutes = require('./routes/security');
+const notificationsRoutes = require('./routes/notifications');
+const dashboardRoutes = require('./routes/dashboard');
 console.log('Routes loaded successfully');
 
 // Use routes
@@ -140,6 +154,9 @@ app.use('/api/guest-applications', guestApplicationsRoutes);
 app.use('/api/pitch-submissions', pitchSubmissionsRoutes);
 app.use('/api/contact-messages', contactMessagesRoutes);
 app.use('/api/gallery', galleryRoutes);
+app.use('/api/security', securityRoutes);
+app.use('/api/notifications', notificationsRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

@@ -1,18 +1,23 @@
 const jwt = require('jsonwebtoken');
 const db = require('../config/database');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is required');
+}
 
 // Authentication middleware - verifies JWT token
 const authenticate = async (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization;
+    // Check for token in cookie first, then fall back to Authorization header
+    const token = req.cookies?.auth_token || 
+                  (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
+                    ? req.headers.authorization.substring(7) 
+                    : null);
     
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!token) {
       return res.status(401).json({ error: 'No token provided' });
     }
-    
-    const token = authHeader.substring(7);
     
     try {
       const decoded = jwt.verify(token, JWT_SECRET);
@@ -47,13 +52,15 @@ const authenticate = async (req, res, next) => {
 // Optional authentication - doesn't fail if no token
 const optionalAuth = async (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization;
+    // Check for token in cookie first, then fall back to Authorization header
+    const token = req.cookies?.auth_token || 
+                  (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
+                    ? req.headers.authorization.substring(7) 
+                    : null);
     
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!token) {
       return next();
     }
-    
-    const token = authHeader.substring(7);
     
     try {
       const decoded = jwt.verify(token, JWT_SECRET);

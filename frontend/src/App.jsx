@@ -40,6 +40,10 @@ import PitchSubmissionsPage from './pages/PitchSubmissionsPage'
 import ContactMessagesPage from './pages/ContactMessagesPage'
 import Gallery from './pages/Gallery'
 import SearchResults from './pages/SearchResults'
+import SecurityDashboard from './pages/SecurityDashboard'
+import SecurityEvents from './pages/SecurityEvents'
+import AuditLogs from './pages/AuditLogs'
+import CspViolations from './pages/CspViolations'
 
 function ProtectedRoute({ children, allowedRoles = [] }) {
   const userStr = sessionStorage.getItem('user')
@@ -69,9 +73,21 @@ function App() {
           <Route path="search" element={<SearchResults />} />
           <Route path="stories" element={<Stories />} />
           <Route path="magazines" element={<Magazines />} />
-          <Route path="podcasts" element={<Podcasts />} />
-          <Route path="podcast-hosts" element={<PodcastHosts />} />
-          <Route path="podcast-guests" element={<PodcastGuests />} />
+          <Route path="podcasts" element={
+            <ProtectedRoute allowedRoles={['superadmin']}>
+              <Podcasts />
+            </ProtectedRoute>
+          } />
+          <Route path="podcast-hosts" element={
+            <ProtectedRoute allowedRoles={['superadmin']}>
+              <PodcastHosts />
+            </ProtectedRoute>
+          } />
+          <Route path="podcast-guests" element={
+            <ProtectedRoute allowedRoles={['superadmin']}>
+              <PodcastGuests />
+            </ProtectedRoute>
+          } />
           <Route path="authors" element={
             <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
               <Authors />
@@ -89,7 +105,7 @@ function App() {
             </ProtectedRoute>
           } />
           <Route path="orders" element={
-            <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
+            <ProtectedRoute allowedRoles={['superadmin']}>
               <Orders />
             </ProtectedRoute>
           } />
@@ -129,22 +145,22 @@ function App() {
             </ProtectedRoute>
           } />
           <Route path="homepage" element={
-            <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
+            <ProtectedRoute allowedRoles={['superadmin']}>
               <Homepage />
             </ProtectedRoute>
           } />
           <Route path="podcast" element={
-            <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
+            <ProtectedRoute allowedRoles={['superadmin']}>
               <PodcastPage />
             </ProtectedRoute>
           } />
           <Route path="store" element={
-            <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
+            <ProtectedRoute allowedRoles={['superadmin']}>
               <StorePage />
             </ProtectedRoute>
           } />
           <Route path="mission" element={
-            <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
+            <ProtectedRoute allowedRoles={['superadmin']}>
               <Mission />
             </ProtectedRoute>
           } />
@@ -184,30 +200,54 @@ function App() {
             </ProtectedRoute>
           } />
           <Route path="plans" element={
-            <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
+            <ProtectedRoute allowedRoles={['superadmin']}>
               <Plans />
             </ProtectedRoute>
           } />
           <Route path="subscribers" element={
-            <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
+            <ProtectedRoute allowedRoles={['superadmin']}>
               <Subscribers />
             </ProtectedRoute>
           } />
           <Route path="categories" element={
-            <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
+            <ProtectedRoute allowedRoles={['superadmin']}>
               <Categories />
             </ProtectedRoute>
           } />
           <Route path="email-templates" element={
-            <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
+            <ProtectedRoute allowedRoles={['superadmin']}>
               <EmailTemplates />
             </ProtectedRoute>
           } />
-          <Route path="guest-applications" element={<GuestApplicationsPage />} />
+          <Route path="guest-applications" element={
+            <ProtectedRoute allowedRoles={['superadmin']}>
+              <GuestApplicationsPage />
+            </ProtectedRoute>
+          } />
           <Route path="pitch-submissions" element={<PitchSubmissionsPage />} />
           <Route path="contact-messages" element={
             <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
               <ContactMessagesPage />
+            </ProtectedRoute>
+          } />
+          <Route path="security" element={
+            <ProtectedRoute allowedRoles={['superadmin']}>
+              <SecurityDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="security-events" element={
+            <ProtectedRoute allowedRoles={['superadmin']}>
+              <SecurityEvents />
+            </ProtectedRoute>
+          } />
+          <Route path="audit-logs" element={
+            <ProtectedRoute allowedRoles={['superadmin']}>
+              <AuditLogs />
+            </ProtectedRoute>
+          } />
+          <Route path="csp-violations" element={
+            <ProtectedRoute allowedRoles={['superadmin']}>
+              <CspViolations />
             </ProtectedRoute>
           } />
         </Route>

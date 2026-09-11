@@ -125,9 +125,7 @@ router.post('/', authenticate, isEditor, uploadFieldsConfig, async (req, res) =>
     res.status(201).json({ id: result.insertId, message: 'Magazine created successfully' });
   } catch (error) {
     console.error('Error creating magazine:', error);
-    console.error('Error details:', error.message);
-    console.error('Error stack:', error.stack);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: 'Failed to create magazine' });
   }
 });
 

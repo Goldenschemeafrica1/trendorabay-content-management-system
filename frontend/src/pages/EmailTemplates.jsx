@@ -25,8 +25,8 @@ export default function EmailTemplates() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#0f172a' }}>Email Templates</h1>
-          <p style={{ color: '#64748b', marginTop: '2px', fontSize: '13px' }}>Manage email templates for automated communications</p>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--text-primary)' }}>Email Templates</h1>
+          <p style={{ color: 'var(--text-secondary)', marginTop: '2px', fontSize: '13px' }}>Manage email templates for automated communications</p>
         </div>
         <button style={{
           display: 'flex',
@@ -59,27 +59,27 @@ export default function EmailTemplates() {
 
       {/* Templates List */}
       <div style={{
-        background: 'rgba(255, 255, 255, 0.95)',
+        background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
         backdropFilter: 'blur(20px)',
         borderRadius: '16px',
-        border: '1px solid rgba(226, 232, 240, 0.8)',
+        border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
         overflow: 'hidden'
       }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+          <thead style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}>
             <tr>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Template</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Type</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Last Modified</th>
-              <th style={{ textAlign: 'right', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: '#0f172a' }}>Actions</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Template</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Type</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Last Modified</th>
+              <th style={{ textAlign: 'right', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {templates.map((template, index) => (
-              <tr key={template.id || `template-${index}`} style={{ borderBottom: '1px solid #e2e8f0', transition: 'background 0.2s ease', cursor: 'pointer' }}
+              <tr key={template.id || `template-${index}`} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background 0.2s ease', cursor: 'pointer' }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#f8fafc'
+                e.currentTarget.style.background = 'var(--bg-secondary)'
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = 'transparent'
@@ -87,8 +87,8 @@ export default function EmailTemplates() {
               onClick={() => handleSelectTemplate(template)}>
                 <td style={{ padding: '12px 16px' }}>
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <span style={{ fontWeight: '500', color: '#0f172a', fontSize: '13px' }}>{template.name}</span>
-                    <span style={{ color: '#64748b', fontSize: '11px' }}>{template.subject}</span>
+                    <span style={{ fontWeight: '500', color: 'var(--text-primary)', fontSize: '13px' }}>{template.name}</span>
+                    <span style={{ color: 'var(--text-secondary)', fontSize: '11px' }}>{template.subject}</span>
                   </div>
                 </td>
                 <td style={{ padding: '12px 16px' }}>
@@ -97,13 +97,13 @@ export default function EmailTemplates() {
                     borderRadius: '16px', 
                     fontSize: '11px', 
                     fontWeight: '500',
-                    background: '#f1f5f9',
-                    color: '#475569'
+                    background: 'var(--bg-secondary)',
+                    color: 'var(--text-secondary)'
                   }}>
                     {template.type}
                   </span>
                 </td>
-                <td style={{ padding: '12px 16px', color: '#64748b', fontSize: '13px' }}>{template.lastModified}</td>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{template.lastModified}</td>
                 <td style={{ padding: '12px 16px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '6px' }}>
                     <button style={{
@@ -116,13 +116,13 @@ export default function EmailTemplates() {
                     }}
                     onMouseEnter={(e) => {
                       e.stopPropagation()
-                      e.currentTarget.style.background = '#f1f5f9'
+                      e.currentTarget.style.background = 'var(--bg-secondary)'
                     }}
                     onMouseLeave={(e) => {
                       e.stopPropagation()
                       e.currentTarget.style.background = 'transparent'
                     }}>
-                      <Edit style={{ width: '14px', height: '14px', color: '#64748b' }} />
+                      <Edit style={{ width: '14px', height: '14px', color: 'var(--text-secondary)' }} />
                     </button>
                     <button style={{
                       padding: '6px',
@@ -153,15 +153,15 @@ export default function EmailTemplates() {
       {/* Template Editor */}
       {selectedTemplate && (
         <div style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
           backdropFilter: 'blur(20px)',
           borderRadius: '16px',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          border: '1px solid color-mix(in srgb, var(--border-color) 80%, transparent)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
           padding: '20px'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-            <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <h3 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <FileText style={{ width: '20px', height: '20px' }} />
               Edit: {selectedTemplate.name}
             </h3>
@@ -195,7 +195,7 @@ export default function EmailTemplates() {
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Subject</label>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Subject</label>
               <input
                 type="text"
                 value={subject}
@@ -203,8 +203,8 @@ export default function EmailTemplates() {
                 style={{
                   width: '100%',
                   padding: '10px 12px',
-                  background: '#f8fafc',
-                  border: '1px solid #e2e8f0',
+                  background: 'var(--bg-secondary)',
+                  border: '1px solid var(--border-color)',
                   borderRadius: '10px',
                   outline: 'none',
                   fontSize: '13px',
@@ -215,13 +215,13 @@ export default function EmailTemplates() {
                   e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                 }}
                 onBlur={(e) => {
-                  e.currentTarget.style.borderColor = '#e2e8f0'
+                  e.currentTarget.style.borderColor = 'var(--border-color)'
                   e.currentTarget.style.boxShadow = 'none'
                 }}
               />
             </div>
             <div>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Content</label>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '6px' }}>Content</label>
               <textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
@@ -229,8 +229,8 @@ export default function EmailTemplates() {
                 style={{
                   width: '100%',
                   padding: '10px 12px',
-                  background: '#f8fafc',
-                  border: '1px solid #e2e8f0',
+                  background: 'var(--bg-secondary)',
+                  border: '1px solid var(--border-color)',
                   borderRadius: '10px',
                   outline: 'none',
                   fontSize: '13px',
@@ -243,11 +243,11 @@ export default function EmailTemplates() {
                   e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
                 }}
                 onBlur={(e) => {
-                  e.currentTarget.style.borderColor = '#e2e8f0'
+                  e.currentTarget.style.borderColor = 'var(--border-color)'
                   e.currentTarget.style.boxShadow = 'none'
                 }}
               />
-              <p style={{ fontSize: '11px', color: '#94a3b8', marginTop: '4px' }}>Available variables: [User Name], [Email], [Order ID], [Subscription Date]</p>
+              <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '4px' }}>Available variables: [User Name], [Email], [Order ID], [Subscription Date]</p>
             </div>
           </div>
         </div>
