@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react'
-import { Plus, Search, Edit, Trash2, Image, Calendar, DollarSign, TrendingUp, Eye, EyeOff, Upload } from 'lucide-react'
+import { Plus, Edit, Trash2, Image, TrendingUp } from 'lucide-react'
 import api from '../services/api'
-import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
+import { HeaderVisibilityContext, SidebarVisibilityContext } from '../contexts/LayoutContexts'
 
 const API_BASE_URL = 'https://trendorabay-content-management-system.onrender.com'
 
@@ -13,7 +13,7 @@ export default function Advertisements() {
   const [searchTerm, setSearchTerm] = useState('')
   const [filterStatus, setFilterStatus] = useState('all')
   const [advertisements, setAdvertisements] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [,setLoading] = useState(true)
   const [formData, setFormData] = useState({
     title: '',
     advertiser_name: '',

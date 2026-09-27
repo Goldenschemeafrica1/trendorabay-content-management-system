@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { BarChart3, TrendingUp, Eye, Clock, ArrowUpRight, ArrowDownRight, FileText, Radio, BookOpen, Users } from 'lucide-react'
+import { TrendingUp, Eye, Clock, ArrowUpRight } from 'lucide-react'
 
 const performanceData = [
   { type: 'Stories', views: 45200, engagement: 8.5, avgTime: '4:32', growth: 12.3 },

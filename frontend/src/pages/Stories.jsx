@@ -1,10 +1,10 @@
 import { useState, useEffect, useContext } from 'react'
-import { useLocation, useSearchParams } from 'react-router-dom'
-import { Plus, Search, Filter, MoreVertical, Edit, Trash2, Eye, EyeOff } from 'lucide-react'
+import { useSearchParams } from 'react-router-dom'
+import { Plus, MoreVertical, Edit, Trash2, Eye } from 'lucide-react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import api from '../services/api'
-import { HeaderVisibilityContext, SidebarVisibilityContext, ThemeContext } from '../components/Layout'
+import { HeaderVisibilityContext, SidebarVisibilityContext, ThemeContext } from '../contexts/LayoutContexts'
 
 const API_BASE_URL = 'https://trendorabay-content-management-system.onrender.com'
 
@@ -13,7 +13,7 @@ export default function Stories() {
   const { setHideSidebar } = useContext(SidebarVisibilityContext)
   const { isDarkMode } = useContext(ThemeContext)
   const [searchParams] = useSearchParams()
-  const location = useLocation()
+  
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
   const [showViewModal, setShowViewModal] = useState(false)
@@ -22,7 +22,7 @@ export default function Stories() {
   const [searchTerm, setSearchTerm] = useState('')
   const [filterStatus, setFilterStatus] = useState('all')
   const [stories, setStories] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [,setLoading] = useState(true)
   const [authors, setAuthors] = useState([])
   const [categories, setCategories] = useState([])
   const [formData, setFormData] = useState({
@@ -34,13 +34,13 @@ export default function Stories() {
     read_time: '5 min read'
   })
   const [coverImageFile, setCoverImageFile] = useState(null)
-  const [coverImagePreview, setCoverImagePreview] = useState(null)
+  const [,setCoverImagePreview] = useState(null)
   const [coverImageFile2, setCoverImageFile2] = useState(null)
-  const [coverImagePreview2, setCoverImagePreview2] = useState(null)
+  const [,setCoverImagePreview2] = useState(null)
   const [coverImageFile3, setCoverImageFile3] = useState(null)
-  const [coverImagePreview3, setCoverImagePreview3] = useState(null)
+  const [,setCoverImagePreview3] = useState(null)
   const [coverImageFile4, setCoverImageFile4] = useState(null)
-  const [coverImagePreview4, setCoverImagePreview4] = useState(null)
+  const [,setCoverImagePreview4] = useState(null)
 
   // Handle search from URL parameter
   useEffect(() => {
@@ -324,7 +324,7 @@ export default function Stories() {
         formDataToSend.append('cover_image_4', coverImageFile4)
       }
       
-      const response = await api.put(`/stories/${editingStory.id}`, formDataToSend)
+      await api.put(`/stories/${editingStory.id}`, formDataToSend)
       
       // Refresh stories list
       const data = await api.get('/stories')

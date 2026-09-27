@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Save, Eye, Type, Image, Layout, Settings } from 'lucide-react'
+import { Save, Eye, Type } from 'lucide-react'
 
 export default function Mission() {
   const [missionTitle, setMissionTitle] = useState('Our Mission')

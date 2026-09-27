@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Mail, Phone, MessageSquare, Clock, Check, X, Filter, Search, Calendar, Inbox, Archive, Trash2, Reply } from 'lucide-react'
+import { Mail, Phone, MessageSquare, Search, Calendar, Inbox, Archive, Trash2, Reply } from 'lucide-react'
 import api from '../services/api'
 
 export default function Contact() {

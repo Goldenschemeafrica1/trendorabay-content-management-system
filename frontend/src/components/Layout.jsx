@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef, createContext } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard,
@@ -20,13 +20,11 @@ import {
   AlertTriangle,
   UserPlus,
   Calendar,
-  MessageCircle,
   Home,
   File,
   Users as TeamIcon,
-  Inbox,
-  Building2,
   Mail,
+  Building2,
   Award,
   CreditCard,
   Folder,
@@ -44,24 +42,11 @@ import {
 import { useIdleTimeout } from '../hooks/useIdleTimeout'
 import SessionTimeoutModal from './SessionTimeoutModal'
 import api from '../services/api'
-
-// Create context for header visibility control
-export const HeaderVisibilityContext = createContext({
-  hideHeader: false,
-  setHideHeader: () => {}
-})
-
-// Create context for sidebar visibility control
-export const SidebarVisibilityContext = createContext({
-  hideSidebar: false,
-  setHideSidebar: () => {}
-})
-
-// Create context for theme control
-export const ThemeContext = createContext({
-  isDarkMode: false,
-  toggleTheme: () => {}
-})
+import {
+  HeaderVisibilityContext,
+  SidebarVisibilityContext,
+  ThemeContext
+} from '../contexts/LayoutContexts'
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, notificationKey: null },
@@ -91,8 +76,7 @@ const navigation = [
   { name: 'CSP Violations', href: '/dashboard/csp-violations', icon: AlertTriangle, notificationKey: null },
   { section: 'Community' },
   { name: 'Contributors', href: '/dashboard/contributors', icon: UserPlus, notificationKey: null },
-  { name: 'Events', href: '/dashboard/events', icon: Calendar, notificationKey: 'events' },
-  { name: 'Community Hub', href: '/dashboard/community', icon: MessageCircle, notificationKey: null },
+  { name: 'Opportunities', href: '/dashboard/events', icon: Calendar, notificationKey: 'events' },
   { section: 'Pages' },
   { name: 'Homepage', href: '/dashboard/homepage', icon: Home, notificationKey: null },
   { name: 'PodcastPage', href: '/dashboard/podcast', icon: File, notificationKey: null },
@@ -100,7 +84,6 @@ const navigation = [
   { name: 'Mission', href: '/dashboard/mission', icon: File, notificationKey: null },
   { name: 'Team', href: '/dashboard/team', icon: TeamIcon, notificationKey: null },
   { name: 'Gallery', href: '/dashboard/gallery', icon: ImageIcon, notificationKey: null },
-  { name: 'Contact Messages', href: '/dashboard/contact-messages', icon: Inbox, notificationKey: 'contactMessages' },
   { section: 'Advertisers' },
   { name: 'Partners', href: '/dashboard/partners', icon: Building2, notificationKey: null },
   { name: 'Partners Inquiry', href: '/dashboard/partnership-inquiries', icon: Mail, notificationKey: 'partnersInquiry' },
@@ -344,7 +327,7 @@ function HeaderContent({ userInitial, userName, userEmail, profileDropdownOpen, 
 export default function Layout() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const location = useLocation()
-  const navigate = useNavigate()
+  
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false)
   const profileRef = useRef(null)
   const [expandedSections, setExpandedSections] = useState({
@@ -365,7 +348,6 @@ export default function Layout() {
     orders: 0,
     securityEvents: 0,
     events: 0,
-    contactMessages: 0,
     partnersInquiry: 0,
     userManagement: 0
   })
@@ -463,7 +445,6 @@ export default function Layout() {
         orders: 0,
         securityEvents: 0,
         events: 0,
-        contactMessages: 0,
         partnersInquiry: 0,
         userManagement: 0
       })
@@ -573,11 +554,11 @@ export default function Layout() {
               return false
             }
             // Hide Community section for contributors and users
-            if ((item.name === 'Contributors' || item.name === 'Events' || item.name === 'Community Hub' || item.section === 'Community') && (!userRole || userRole === 'contributor' || userRole === 'user')) {
+            if ((item.name === 'Contributors' || item.name === 'Opportunities' || item.section === 'Community') && (!userRole || userRole === 'contributor' || userRole === 'user')) {
               return false
             }
             // Hide Pages section for contributors and users
-            if ((item.name === 'Homepage' || item.name === 'PodcastPage' || item.name === 'Store' || item.name === 'Mission' || item.name === 'Team' || item.name === 'Contact Messages' || item.section === 'Pages') && (!userRole || userRole === 'contributor' || userRole === 'user')) {
+            if ((item.name === 'Homepage' || item.name === 'PodcastPage' || item.name === 'Store' || item.name === 'Mission' || item.name === 'Team' || item.section === 'Pages') && (!userRole || userRole === 'contributor' || userRole === 'user')) {
               return false
             }
             // Hide Homepage, PodcastPage, Store, and Mission for non-superadmin users
@@ -821,15 +802,13 @@ export default function Layout() {
                               item.name === 'Products' ? 'linear-gradient(135deg, #f59e0b 0%, #eab308 100%)' :
                               item.name === 'Orders' ? 'linear-gradient(135deg, #ec4899 0%, #f43f5e 100%)' :
                               item.name === 'Contributors' ? 'linear-gradient(135deg, #14b8a6 0%, #06b6d4 100%)' :
-                              item.name === 'Events' ? 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)' :
-                              item.name === 'Community Hub' ? 'linear-gradient(135deg, #f97316 0%, #f59e0b 100%)' :
+                              item.name === 'Opportunities' ? 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)' :
                               item.name === 'Homepage' ? 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' :
                               item.name === 'PodcastPage' ? 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)' :
                               item.name === 'Store' ? 'linear-gradient(135deg, #ec4899 0%, #f43f5e 100%)' :
                               item.name === 'Mission' ? 'linear-gradient(135deg, #10b981 0%, #14b8a6 100%)' :
                               item.name === 'Team' ? 'linear-gradient(135deg, #f97316 0%, #f59e0b 100%)' :
                               item.name === 'Gallery' ? 'linear-gradient(135deg, #ec4899 0%, #f43f5e 100%)' :
-                              item.name === 'Contact Messages' ? 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' :
                               item.name === 'Partners' ? 'linear-gradient(135deg, #10b981 0%, #14b8a6 100%)' :
                               item.name === 'Partners Inquiry' ? 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)' :
                               item.name === 'Sponsorships' ? 'linear-gradient(135deg, #f59e0b 0%, #eab308 100%)' :

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Save, Eye, User, Mail, Phone, Building, Briefcase, FileText, Clock, Check, X, MessageSquare, Filter, Search, Calendar, Trash2 } from 'lucide-react'
+import { Eye, User, Mail, Phone, Building, Briefcase, Check, X, Filter, Search, Calendar, Trash2 } from 'lucide-react'
 import api from '../services/api'
 
 export default function GuestApplicationsPage() {

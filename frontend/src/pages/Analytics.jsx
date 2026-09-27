@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react'
-import { TrendingUp, Eye, Clock, Users, Globe, Smartphone, Monitor, FileText } from 'lucide-react'
+import { Eye, Clock, Users, Globe, Smartphone, Monitor } from 'lucide-react'
 import api from '../services/api'
 
 export default function Analytics() {
   const [pageViewData, setPageViewData] = useState([])
-  const [topPages, setTopPages] = useState([])
-  const [contentPerformance, setContentPerformance] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [,setTopPages] = useState([])
+  const [,setContentPerformance] = useState([])
+  const [,setLoading] = useState(true)
   const [activeSource, setActiveSource] = useState('cms') // 'cms' or 'trendorabay'
   
   // New analytics metrics
-  const [totalPageViews, setTotalPageViews] = useState(0)
-  const [totalVisitors, setTotalVisitors] = useState(0)
+  const [,setTotalPageViews] = useState(0)
+  const [,setTotalVisitors] = useState(0)
   const [popularCategories, setPopularCategories] = useState([])
   const [mostReadArticles, setMostReadArticles] = useState([])
   const [averageReadingTime, setAverageReadingTime] = useState('0 min')
@@ -221,7 +221,7 @@ export default function Analytics() {
 
   const totalViews = pageViewData.reduce((sum, d) => sum + d.views, 0)
   const totalUnique = pageViewData.reduce((sum, d) => sum + d.unique, 0)
-  const avgViews = Math.round(totalViews / pageViewData.length)
+  
   const growth = 12.5
 
   // Get current data based on active source

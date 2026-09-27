@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Search, Upload, Folder, Image as ImageIcon, File, Trash2, Download, MoreVertical } from 'lucide-react'
+import { Search, Upload, Folder, File, Trash2, Download } from 'lucide-react'
 import api, { BASE_URL } from '../services/api'
 
 export default function Media() {
@@ -7,7 +7,7 @@ export default function Media() {
   const [searchTerm, setSearchTerm] = useState('')
   const [showUploadModal, setShowUploadModal] = useState(false)
   const [mediaItems, setMediaItems] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [,setLoading] = useState(true)
   const [uploadFolder, setUploadFolder] = useState('Blog Posts')
   const [uploadedFiles, setUploadedFiles] = useState([])
   const [uploadPreviews, setUploadPreviews] = useState([])

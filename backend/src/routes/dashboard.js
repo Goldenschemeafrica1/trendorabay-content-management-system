@@ -100,7 +100,7 @@ router.get('/', authenticate, async (req, res) => {
         `)
         : Promise.resolve([]),
       
-      // Upcoming 3 events
+      // Upcoming 3 opportunities
       db.query(`
         SELECT id, title, event_date, location, status
         FROM events
@@ -131,7 +131,7 @@ router.get('/', authenticate, async (req, res) => {
         joined_at: user.created_at || new Date().toISOString()
       })) : [],
       latestSubscribers: latestSubscribers.length > 0 ? latestSubscribers[0] : [],
-      upcomingEvents: upcomingEvents[0]
+      upcomingEvents: upcomingEvents[0] // Keeping as upcomingEvents for API compatibility
     };
 
     res.json(dashboardData);

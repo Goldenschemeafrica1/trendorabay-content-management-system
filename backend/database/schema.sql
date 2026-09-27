@@ -262,7 +262,7 @@ CREATE TABLE IF NOT EXISTS contributors (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Events table
+-- Opportunities table
 CREATE TABLE IF NOT EXISTS events (
   id INT AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
@@ -280,19 +280,6 @@ CREATE TABLE IF NOT EXISTS events (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   type VARCHAR(100) DEFAULT 'Conference'
-);
-
--- Community Posts table
-CREATE TABLE IF NOT EXISTS community_posts (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  title VARCHAR(255) NOT NULL,
-  content LONGTEXT,
-  author_id INT,
-  status ENUM('draft', 'published', 'archived') DEFAULT 'draft',
-  published_at TIMESTAMP NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (author_id) REFERENCES cms_users(id) ON DELETE SET NULL
 );
 
 -- Site Settings table
@@ -428,20 +415,6 @@ CREATE TABLE IF NOT EXISTS pitch_submissions (
   additional_resources TEXT,
   article_attachment VARCHAR(255),
   status ENUM('pending', 'under_review', 'approved', 'rejected') DEFAULT 'pending',
-  admin_notes TEXT,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-
--- Contact Messages table
-CREATE TABLE IF NOT EXISTS contact_messages (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  email VARCHAR(255) NOT NULL,
-  phone VARCHAR(100),
-  subject VARCHAR(255),
-  message TEXT NOT NULL,
-  status ENUM('pending', 'unread', 'read', 'replied', 'archived') DEFAULT 'unread',
   admin_notes TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

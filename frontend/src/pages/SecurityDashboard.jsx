@@ -19,7 +19,7 @@ const SecurityDashboard = () => {
     }
 
     loadSecurityData();
-  }, []);
+  }, [user.role]);
 
   const loadSecurityData = async () => {
     try {

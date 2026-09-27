@@ -51,7 +51,7 @@ export default function Register() {
       setTimeout(() => {
         navigate('/login')
       }, 2000)
-    } catch (err) {
+    } catch  {
       setError('Email already exists or registration failed')
     } finally {
       setLoading(false)

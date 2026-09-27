@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react'
-import { Plus, Search, Edit, Trash2, User, Mail, Calendar, Award, Filter } from 'lucide-react'
+import { Plus, Edit, Trash2, User, Award } from 'lucide-react'
 import api from '../services/api'
-import { HeaderVisibilityContext, SidebarVisibilityContext, ThemeContext } from '../components/Layout'
+import { HeaderVisibilityContext, SidebarVisibilityContext, ThemeContext } from '../contexts/LayoutContexts'
 
 export default function Contributors() {
   const { setHideHeader } = useContext(HeaderVisibilityContext)
@@ -13,7 +13,7 @@ export default function Contributors() {
   const [filterStatus, setFilterStatus] = useState('all')
   const [contributors, setContributors] = useState([])
   const [roles, setRoles] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [,setLoading] = useState(true)
   const [editingContributor, setEditingContributor] = useState(null)
   const [formData, setFormData] = useState({
     name: '',

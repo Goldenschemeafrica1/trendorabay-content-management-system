@@ -6,15 +6,15 @@ const { deleteFromS3 } = require('../config/s3');
 const { authenticate, optionalAuth } = require('../middleware/auth');
 const { isEditor, hasRole } = require('../middleware/authorize');
 
-// Configure upload for events with S3 support
-const upload = uploadSingle('image', 'events', 5 * 1024 * 1024); // 5MB limit for event images
+// Configure upload for opportunities with S3 support
+const upload = uploadSingle('image', 'events', 5 * 1024 * 1024); // 5MB limit for opportunity images
 
-// Get all events (public read)
+// Get all opportunities (public read)
 router.get('/', optionalAuth, async (req, res) => {
   try {
-    console.log('[GET /api/events] Fetching events...');
+    console.log('[GET /api/events] Fetching opportunities...');
     const [rows] = await db.query('SELECT * FROM events ORDER BY event_date DESC');
-    console.log('[GET /api/events] Successfully fetched', rows.length, 'events');
+    console.log('[GET /api/events] Successfully fetched', rows.length, 'opportunities');
     res.json(rows);
   } catch (error) {
     console.error('[GET /api/events] Error:', error);
@@ -22,10 +22,10 @@ router.get('/', optionalAuth, async (req, res) => {
   }
 });
 
-// Create event (editor+)
+// Create opportunity (editor+)
 router.post('/', authenticate, isEditor, upload, async (req, res) => {
   try {
-    console.log('Event create request received');
+    console.log('Opportunity create request received');
     console.log('File:', req.file);
     console.log('Use Cloudinary:', useCloudinary);
     
@@ -67,17 +67,17 @@ router.post('/', authenticate, isEditor, upload, async (req, res) => {
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [title, description, event_date, event_time, location, event_type || 'In-Person', image_url, category, price, attendees || 0, type || 'Conference', autoStatus]
     );
-    res.status(201).json({ id: result.insertId, message: 'Event created successfully' });
+    res.status(201).json({ id: result.insertId, message: 'Opportunity created successfully' });
   } catch (error) {
-    console.error('Error creating event:', error);
+    console.error('Error creating opportunity:', error);
     res.status(500).json({ error: error.message });
   }
 });
 
-// Update event (editor+)
+// Update opportunity (editor+)
 router.put('/:id', authenticate, isEditor, upload, async (req, res) => {
   try {
-    console.log('Event update request received');
+    console.log('Opportunity update request received');
     console.log('File:', req.file);
     console.log('Use Cloudinary:', useCloudinary);
     
@@ -129,21 +129,21 @@ router.put('/:id', authenticate, isEditor, upload, async (req, res) => {
     params.push(req.params.id);
     
     await db.query(query, params);
-    res.json({ message: 'Event updated successfully' });
+    res.json({ message: 'Opportunity updated successfully' });
   } catch (error) {
-    console.error('Error updating event:', error);
+    console.error('Error updating opportunity:', error);
     res.status(500).json({ error: error.message });
   }
 });
 
-// Delete event (admin+)
+// Delete opportunity (admin+)
 router.delete('/:id', authenticate, async (req, res) => {
   try {
     if (!hasRole(req.user.role, 'admin')) {
-      return res.status(403).json({ error: 'Admin access required to delete events' });
+      return res.status(403).json({ error: 'Admin access required to delete opportunities' });
     }
     await db.query('DELETE FROM events WHERE id = ?', [req.params.id]);
-    res.json({ message: 'Event deleted successfully' });
+    res.json({ message: 'Opportunity deleted successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

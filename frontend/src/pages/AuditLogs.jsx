@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { FileText, Filter, RefreshCw, User, Clock, CheckCircle, XCircle } from 'lucide-react';
 import api from '../services/api';
 
@@ -16,17 +16,7 @@ const AuditLogs = () => {
 
   const user = api.getCurrentUser();
 
-  useEffect(() => {
-    if (user?.role !== 'superadmin') {
-      setError('Access denied. Superadmin role required.');
-      setLoading(false);
-      return;
-    }
-
-    loadData();
-  }, [filters]);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true);
       const [logsData, statsData] = await Promise.all([
@@ -41,7 +31,17 @@ const AuditLogs = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters]);
+
+  useEffect(() => {
+    if (user?.role !== 'superadmin') {
+      setError('Access denied. Superadmin role required.');
+      setLoading(false);
+      return;
+    }
+
+    loadData();
+  }, [filters, user.role, loadData]);
 
   const getStatusColor = (status) => {
     return status === 'success' 

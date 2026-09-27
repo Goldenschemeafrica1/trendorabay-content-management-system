@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react'
-import { Save, Eye, Mail, Phone, FileText, Clock, Check, X, Filter, Search, Calendar, Lightbulb, Trash2 } from 'lucide-react'
+import { Eye, Mail, Phone, FileText, Check, X, Filter, Search, Calendar, Lightbulb, Trash2 } from 'lucide-react'
 import api from '../services/api'
-import { HeaderVisibilityContext } from '../components/Layout'
+import { HeaderVisibilityContext } from '../contexts/LayoutContexts'
 
 export default function PitchSubmissionsPage() {
   const [submissions, setSubmissions] = useState([])
@@ -309,7 +309,7 @@ export default function PitchSubmissionsPage() {
                                 try {
                                   const errorData = await response.json()
                                   errorMessage = errorData.message || errorData.error || errorMessage
-                                } catch (jsonError) {
+                                } catch  {
                                   // Response body is not JSON, use status text
                                   errorMessage = response.statusText || errorMessage
                                 }
@@ -658,7 +658,7 @@ export default function PitchSubmissionsPage() {
                             try {
                               const errorData = await response.json()
                               errorMessage = errorData.message || errorData.error || errorMessage
-                            } catch (jsonError) {
+                            } catch  {
                               // Response body is not JSON, use status text
                               errorMessage = response.statusText || errorMessage
                             }

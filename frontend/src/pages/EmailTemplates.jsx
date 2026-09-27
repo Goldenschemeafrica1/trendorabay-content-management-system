@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Save, Mail, Plus, Edit, Trash2, FileText } from 'lucide-react'
+import { Save, Plus, Edit, Trash2, FileText } from 'lucide-react'
 
 const templates = [
   { id: 1, name: 'Welcome Email', subject: 'Welcome to Our Platform', type: 'user', lastModified: '2024-01-07' },

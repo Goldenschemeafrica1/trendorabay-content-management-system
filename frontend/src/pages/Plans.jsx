@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react'
-import { Plus, Search, Edit, Trash2, CreditCard, Users, TrendingUp, Crown, Star, Zap } from 'lucide-react'
-import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
+import { Plus, Edit, Trash2, CreditCard, Users, TrendingUp, Crown, Star, Zap } from 'lucide-react'
+import { HeaderVisibilityContext, SidebarVisibilityContext } from '../contexts/LayoutContexts'
 
 const plans = [
   { id: 1, name: 'Basic', price: 9.99, period: 'month', features: ['Access to stories', 'Basic podcasts', 'Community access'], subscribers: 245, status: 'active' },

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { DollarSign, TrendingUp, Package, ShoppingCart, Calendar, ArrowUpRight, ArrowDownRight } from 'lucide-react'
+import { DollarSign, TrendingUp, ShoppingCart, ArrowUpRight, ArrowDownRight } from 'lucide-react'
 import api from '../services/api'
 
 export default function Sales() {
@@ -7,7 +7,7 @@ export default function Sales() {
   const [selectedTab, setSelectedTab] = useState('overview')
   const [salesData, setSalesData] = useState([])
   const [topProducts, setTopProducts] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [,setLoading] = useState(true)
   
   // Fetch sales data from backend
   useEffect(() => {

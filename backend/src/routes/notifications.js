@@ -15,7 +15,6 @@ router.get('/counts', authenticate, isAdmin, async (req, res) => {
     let orderCount = 0;
     let securityEventCount = 0;
     let eventCount = 0;
-    let contactMessageCount = 0;
     let partnershipInquiryCount = 0;
 
     // Get new users count (created within last 7 days)
@@ -108,7 +107,7 @@ router.get('/counts', authenticate, isAdmin, async (req, res) => {
       console.error('Error fetching security event count:', error);
     }
 
-    // Get upcoming events
+    // Get upcoming opportunities
     try {
       const [eventRows] = await db.query(`
         SELECT COUNT(*) as count
@@ -117,19 +116,7 @@ router.get('/counts', authenticate, isAdmin, async (req, res) => {
       `);
       eventCount = eventRows[0]?.count || 0;
     } catch (error) {
-      console.error('Error fetching event count:', error);
-    }
-
-    // Get unread contact messages
-    try {
-      const [contactMessageRows] = await db.query(`
-        SELECT COUNT(*) as count
-        FROM contact_messages
-        WHERE status IN ('unread', 'new', 'pending')
-      `);
-      contactMessageCount = contactMessageRows[0]?.count || 0;
-    } catch (error) {
-      console.error('Error fetching contact message count:', error);
+      console.error('Error fetching opportunity count:', error);
     }
 
     // Get pending partnership inquiries
@@ -152,7 +139,6 @@ router.get('/counts', authenticate, isAdmin, async (req, res) => {
       orders: orderCount,
       securityEvents: securityEventCount,
       events: eventCount,
-      contactMessages: contactMessageCount,
       partnersInquiry: partnershipInquiryCount,
       userManagement: userCount
     });

@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react'
-import { Plus, Search, Edit, Trash2, User, Mail, Briefcase, Image, Save, Users } from 'lucide-react'
+import { Plus, Edit, Trash2, Users } from 'lucide-react'
 import api from '../services/api'
-import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
+import { HeaderVisibilityContext, SidebarVisibilityContext } from '../contexts/LayoutContexts'
 
 const API_BASE_URL = 'https://trendorabay-content-management-system.onrender.com'
 
@@ -12,7 +12,7 @@ export default function Team() {
   const [editingMember, setEditingMember] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [teamMembers, setTeamMembers] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [,setLoading] = useState(true)
   const [formData, setFormData] = useState({
     name: '',
     role: '',

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Shield, AlertTriangle, Filter, RefreshCw, CheckCircle, XCircle, FileText } from 'lucide-react';
 import api from '../services/api';
 
@@ -16,17 +16,7 @@ const CspViolations = () => {
 
   const user = api.getCurrentUser();
 
-  useEffect(() => {
-    if (user?.role !== 'superadmin') {
-      setError('Access denied. Superadmin role required.');
-      setLoading(false);
-      return;
-    }
-
-    loadData();
-  }, [filters]);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true);
       const [violationsData, statsData] = await Promise.all([
@@ -41,7 +31,17 @@ const CspViolations = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters]);
+
+  useEffect(() => {
+    if (user?.role !== 'superadmin') {
+      setError('Access denied. Superadmin role required.');
+      setLoading(false);
+      return;
+    }
+
+    loadData();
+  }, [filters, user.role, loadData]);
 
   const handleResolve = async (id) => {
     const notes = prompt('Add notes for resolution (optional):');
