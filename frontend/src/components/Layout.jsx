@@ -541,8 +541,8 @@ export default function Layout() {
             if (item.name === 'Media Library' && (!userRole || userRole !== 'superadmin')) {
               return false
             }
-            // Hide Store section and Products/Orders for non-superadmin users
-            if ((item.name === 'Products' || item.name === 'Orders' || item.section === 'Store') && (!userRole || userRole === 'contributor' || userRole === 'user' || userRole === 'editor' || userRole === 'admin')) {
+            // Hide Store section and Products/Orders for non-admin users
+            if ((item.name === 'Products' || item.name === 'Orders' || item.section === 'Store') && (!userRole || userRole === 'contributor' || userRole === 'user' || userRole === 'editor')) {
               return false
             }
             // Hide Analytics section for non-superadmin users

@@ -106,7 +106,7 @@ function App() {
             </ProtectedRoute>
           } />
           <Route path="orders" element={
-            <ProtectedRoute allowedRoles={['superadmin']}>
+            <ProtectedRoute allowedRoles={['admin', 'superadmin']}>
               <Orders />
             </ProtectedRoute>
           } />
