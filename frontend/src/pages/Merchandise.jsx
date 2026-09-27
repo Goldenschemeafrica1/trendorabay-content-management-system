@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext, useRef } from 'react'
-import { Plus, Search, Edit, Trash2, Package, DollarSign, TrendingUp, Upload } from 'lucide-react'
-import api, { BASE_URL } from '../services/api'
-import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
+import { Plus, Edit, Trash2, Package, DollarSign, TrendingUp, Upload } from 'lucide-react'
+import api from '../services/api'
+import { HeaderVisibilityContext, SidebarVisibilityContext } from '../contexts/LayoutContexts'
 
 export default function Merchandise() {
   const { setHideHeader } = useContext(HeaderVisibilityContext)
@@ -11,7 +11,7 @@ export default function Merchandise() {
   const [searchTerm, setSearchTerm] = useState('')
   const [filterStatus, setFilterStatus] = useState('all')
   const [products, setProducts] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [,setLoading] = useState(true)
   const [editingProduct, setEditingProduct] = useState(null)
   const [formData, setFormData] = useState({
     name: '',

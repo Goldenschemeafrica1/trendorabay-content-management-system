@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext, useRef } from 'react'
-import { Plus, Search, Filter, Edit, Trash2, Eye, Upload } from 'lucide-react'
+import { Plus, Edit, Trash2, Eye, Upload } from 'lucide-react'
 import api from '../services/api'
-import { HeaderVisibilityContext, SidebarVisibilityContext, ThemeContext } from '../components/Layout'
+import { HeaderVisibilityContext, SidebarVisibilityContext, ThemeContext } from '../contexts/LayoutContexts'
 
 const BASE_URL = import.meta.env.VITE_API_URL?.replace('/api', '') ||
   (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
@@ -18,7 +18,7 @@ export default function Magazines() {
   const [searchTerm, setSearchTerm] = useState('')
   const [magazines, setMagazines] = useState([])
   const [categories, setCategories] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [,setLoading] = useState(true)
   const [isCreating, setIsCreating] = useState(false)
   const [formData, setFormData] = useState({
     title: '',
@@ -245,7 +245,7 @@ export default function Magazines() {
     setShowEditModal(true)
   }
 
-  const handleUpdateMagazine = async (status) => {
+  const handleUpdateMagazine = async (_status) => {
     if (!formData.title || !formData.issue || !formData.category) {
       alert('Please fill in all required fields (title, issue, category)')
       return
@@ -280,7 +280,7 @@ export default function Magazines() {
         formDataToSend.append(`preview_pages_file_${index}`, file)
       })
       
-      const response = await api.put(`/magazines/${editingMagazine.id}`, formDataToSend)
+      await api.put(`/magazines/${editingMagazine.id}`, formDataToSend)
       
       // Refresh magazines list
       const data = await api.get('/magazines')

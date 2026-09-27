@@ -1,49 +1,49 @@
+import { Suspense, lazy } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import MobileBlocker from './components/MobileBlocker'
 import Layout from './components/Layout'
-import Login from './pages/Login'
-import Register from './pages/Register'
-import Dashboard from './pages/Dashboard'
-import Stories from './pages/Stories'
-import Magazines from './pages/Magazines'
-import Podcasts from './pages/Podcasts'
-import PodcastHosts from './pages/PodcastHosts'
-import PodcastGuests from './pages/PodcastGuests'
-import Authors from './pages/Authors'
-import Users from './pages/Users'
-import Media from './pages/Media'
-import Merchandise from './pages/Merchandise'
-import Orders from './pages/Orders'
-import Analytics from './pages/Analytics'
-import Engagement from './pages/Engagement'
-import Sales from './pages/Sales'
-import Performance from './pages/Performance'
-import Contributors from './pages/Contributors'
-import Events from './pages/Events'
-import CommunityHub from './pages/CommunityHub'
-import Homepage from './pages/Homepage'
-import PodcastPage from './pages/PodcastPage'
-import StorePage from './pages/StorePage'
-import Mission from './pages/Mission'
-import Team from './pages/Team'
-import Partners from './pages/Partners'
-import PartnershipInquiries from './pages/PartnershipInquiries'
-import Sponsorships from './pages/Sponsorships'
-import Advertisements from './pages/Advertisements'
-import AdvertisementInquiries from './pages/AdvertisementInquiries'
-import Plans from './pages/Plans'
-import Subscribers from './pages/Subscribers'
-import Categories from './pages/Categories'
-import EmailTemplates from './pages/EmailTemplates'
-import GuestApplicationsPage from './pages/GuestApplicationsPage'
-import PitchSubmissionsPage from './pages/PitchSubmissionsPage'
-import ContactMessagesPage from './pages/ContactMessagesPage'
-import Gallery from './pages/Gallery'
-import SearchResults from './pages/SearchResults'
-import SecurityDashboard from './pages/SecurityDashboard'
-import SecurityEvents from './pages/SecurityEvents'
-import AuditLogs from './pages/AuditLogs'
-import CspViolations from './pages/CspViolations'
+
+const Login = lazy(() => import('./pages/Login'))
+const Register = lazy(() => import('./pages/Register'))
+const Dashboard = lazy(() => import('./pages/Dashboard'))
+const Stories = lazy(() => import('./pages/Stories'))
+const Magazines = lazy(() => import('./pages/Magazines'))
+const Podcasts = lazy(() => import('./pages/Podcasts'))
+const PodcastHosts = lazy(() => import('./pages/PodcastHosts'))
+const PodcastGuests = lazy(() => import('./pages/PodcastGuests'))
+const Authors = lazy(() => import('./pages/Authors'))
+const Users = lazy(() => import('./pages/Users'))
+const Media = lazy(() => import('./pages/Media'))
+const Merchandise = lazy(() => import('./pages/Merchandise'))
+const Orders = lazy(() => import('./pages/Orders'))
+const Analytics = lazy(() => import('./pages/Analytics'))
+const Engagement = lazy(() => import('./pages/Engagement'))
+const Sales = lazy(() => import('./pages/Sales'))
+const Performance = lazy(() => import('./pages/Performance'))
+const Contributors = lazy(() => import('./pages/Contributors'))
+const Opportunities = lazy(() => import('./pages/Opportunities'))
+const Homepage = lazy(() => import('./pages/Homepage'))
+const PodcastPage = lazy(() => import('./pages/PodcastPage'))
+const StorePage = lazy(() => import('./pages/StorePage'))
+const Mission = lazy(() => import('./pages/Mission'))
+const Team = lazy(() => import('./pages/Team'))
+const Partners = lazy(() => import('./pages/Partners'))
+const PartnershipInquiries = lazy(() => import('./pages/PartnershipInquiries'))
+const Sponsorships = lazy(() => import('./pages/Sponsorships'))
+const Advertisements = lazy(() => import('./pages/Advertisements'))
+const AdvertisementInquiries = lazy(() => import('./pages/AdvertisementInquiries'))
+const Plans = lazy(() => import('./pages/Plans'))
+const Subscribers = lazy(() => import('./pages/Subscribers'))
+const Categories = lazy(() => import('./pages/Categories'))
+const EmailTemplates = lazy(() => import('./pages/EmailTemplates'))
+const GuestApplicationsPage = lazy(() => import('./pages/GuestApplicationsPage'))
+const PitchSubmissionsPage = lazy(() => import('./pages/PitchSubmissionsPage'))
+const Gallery = lazy(() => import('./pages/Gallery'))
+const SearchResults = lazy(() => import('./pages/SearchResults'))
+const SecurityDashboard = lazy(() => import('./pages/SecurityDashboard'))
+const SecurityEvents = lazy(() => import('./pages/SecurityEvents'))
+const AuditLogs = lazy(() => import('./pages/AuditLogs'))
+const CspViolations = lazy(() => import('./pages/CspViolations'))
 
 function ProtectedRoute({ children, allowedRoles = [] }) {
   const userStr = sessionStorage.getItem('user')
@@ -64,6 +64,7 @@ function App() {
   return (
     <MobileBlocker>
       <BrowserRouter>
+        <Suspense fallback={<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>Loading...</div>}>
         <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />} />
@@ -136,12 +137,7 @@ function App() {
           } />
           <Route path="events" element={
             <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
-              <Events />
-            </ProtectedRoute>
-          } />
-          <Route path="community" element={
-            <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
-              <CommunityHub />
+              <Opportunities />
             </ProtectedRoute>
           } />
           <Route path="homepage" element={
@@ -225,11 +221,6 @@ function App() {
             </ProtectedRoute>
           } />
           <Route path="pitch-submissions" element={<PitchSubmissionsPage />} />
-          <Route path="contact-messages" element={
-            <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
-              <ContactMessagesPage />
-            </ProtectedRoute>
-          } />
           <Route path="security" element={
             <ProtectedRoute allowedRoles={['superadmin']}>
               <SecurityDashboard />
@@ -252,6 +243,7 @@ function App() {
           } />
         </Route>
       </Routes>
+      </Suspense>
     </BrowserRouter>
     </MobileBlocker>
   )

@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext, useRef } from 'react'
-import { Plus, Search, Edit, Trash2, Play, Upload, Clock } from 'lucide-react'
+import { Plus, Edit, Trash2, Play, Upload, Clock } from 'lucide-react'
 import api, { BASE_URL } from '../services/api'
-import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
+import { HeaderVisibilityContext, SidebarVisibilityContext } from '../contexts/LayoutContexts'
 
 export default function Podcasts() {
   const { setHideHeader } = useContext(HeaderVisibilityContext)
@@ -14,7 +14,7 @@ export default function Podcasts() {
   const [categories, setCategories] = useState([])
   const [hosts, setHosts] = useState([])
   const [guests, setGuests] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [,setLoading] = useState(true)
   const [playingAudio, setPlayingAudio] = useState(null)
   const [audioRef, setAudioRef] = useState(null)
   const [formData, setFormData] = useState({
@@ -188,7 +188,7 @@ export default function Podcasts() {
     setShowEditModal(true)
   }
 
-  const handleUpdatePodcast = async (status) => {
+  const handleUpdatePodcast = async (_status) => {
     if (!formData.title || formData.title.trim() === '') {
       alert('Please fill in the episode title')
       return
@@ -215,7 +215,7 @@ export default function Podcasts() {
         formDataToSend.append('audio_file', audioFile)
       }
       
-      const response = await api.put(`/podcasts/${editingPodcast.id}`, formDataToSend)
+      await api.put(`/podcasts/${editingPodcast.id}`, formDataToSend)
       
       // Refresh podcasts list
       const data = await api.get('/podcasts')

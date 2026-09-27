@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { 
   Star, 
   Image as ImageIcon, 
@@ -12,32 +12,25 @@ import {
   EyeOff,
   Save,
   Upload,
-  Calendar,
-  DollarSign,
   TrendingUp,
   FileText,
   Search,
   Pin,
-  Clock,
-  User,
   Hash,
   Filter,
   Grid3x3,
-  List,
-  ChevronDown
+  List
 } from 'lucide-react'
 import api, { BASE_URL } from '../services/api'
 
 export default function Homepage() {
   const [activeTab, setActiveTab] = useState('featured')
-  const [loading, setLoading] = useState(true)
+  const [,setLoading] = useState(true)
 
   // Featured Stories State
   const [featuredStories, setFeaturedStories] = useState([])
   const [allStories, setAllStories] = useState([])
   const [mainCoverStory, setMainCoverStory] = useState(null)
-  const [leftFeatured, setLeftFeatured] = useState(null)
-  const [rightFeatured, setRightFeatured] = useState(null)
   const [trendingStories, setTrendingStories] = useState([])
   const [moreToExplore, setMoreToExplore] = useState([])
   const [searchQuery, setSearchQuery] = useState('')
@@ -66,9 +59,6 @@ export default function Homepage() {
   
   // Magazine categories
   const magazineCategories = ['Business', 'Lifestyle', 'Sports', 'Fashion', 'Technology', 'Health']
-  
-  // Ads State
-  const [ads, setAds] = useState([])
   
   // Layout State
   const [sections, setSections] = useState([
@@ -115,11 +105,7 @@ export default function Homepage() {
     { id: 'mobile-banner', name: 'Mobile Banner', enabled: true, image: '', url: '', advertiser: '', campaign: '', priority: 1, rotation: true, active: true, startDate: '', endDate: '', budget: '', impressions: 0, clicks: 0 },
   ])
 
-  useEffect(() => {
-    fetchHomepageData()
-  }, [])
-
-  const fetchHomepageData = async () => {
+  const fetchHomepageData = useCallback(async () => {
     try {
       const [storiesRes, magazinesRes] = await Promise.all([
         api.get('/stories'),
@@ -152,7 +138,11 @@ export default function Homepage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [magazinesLimit])
+
+  useEffect(() => {
+    fetchHomepageData()
+  }, [fetchHomepageData])
 
   const handleSave = () => {
     alert('Homepage configuration saved!')

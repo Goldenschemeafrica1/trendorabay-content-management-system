@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react'
 import { Shield, Trash2, User as UserIcon, Users as UsersIcon, Plus, Edit } from 'lucide-react'
 import api from '../services/api'
-import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
+import { HeaderVisibilityContext, SidebarVisibilityContext } from '../contexts/LayoutContexts'
 
 export default function Users() {
   const { setHideHeader } = useContext(HeaderVisibilityContext)

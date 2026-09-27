@@ -63,11 +63,6 @@ CREATE INDEX IF NOT EXISTS idx_subscribers_plan_id ON subscribers(plan_id);
 CREATE INDEX IF NOT EXISTS idx_contributors_status ON contributors(status);
 CREATE INDEX IF NOT EXISTS idx_contributors_email ON contributors(email);
 
--- Community posts indexes
-CREATE INDEX IF NOT EXISTS idx_community_posts_status ON community_posts(status);
-CREATE INDEX IF NOT EXISTS idx_community_posts_author_id ON community_posts(author_id);
-CREATE INDEX IF NOT EXISTS idx_community_posts_created_at ON community_posts(created_at);
-
 -- Podcasts table indexes
 CREATE INDEX IF NOT EXISTS idx_podcasts_category_id ON podcasts(category_id);
 CREATE INDEX IF NOT EXISTS idx_podcasts_host_id ON podcasts(host_id);
@@ -92,11 +87,6 @@ CREATE INDEX IF NOT EXISTS idx_guest_applications_email ON guest_applications(ap
 -- Pitch submissions indexes
 CREATE INDEX IF NOT EXISTS idx_pitch_submissions_status ON pitch_submissions(status);
 CREATE INDEX IF NOT EXISTS idx_pitch_submissions_email ON pitch_submissions(email);
-
--- Contact messages indexes
-CREATE INDEX IF NOT EXISTS idx_contact_messages_status ON contact_messages(status);
-CREATE INDEX IF NOT EXISTS idx_contact_messages_email ON contact_messages(email);
-CREATE INDEX IF NOT EXISTS idx_contact_messages_created_at ON contact_messages(created_at);
 
 -- Advertisement inquiries indexes
 CREATE INDEX IF NOT EXISTS idx_advertisement_inquiries_status ON advertisement_inquiries(status);

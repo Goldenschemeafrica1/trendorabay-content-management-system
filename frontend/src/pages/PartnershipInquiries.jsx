@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react'
-import { Search, Edit, Trash2, Mail, Phone, Building2, Calendar, CheckCircle, XCircle, Clock } from 'lucide-react'
+import { Edit, Trash2, Mail, CheckCircle, XCircle, Clock } from 'lucide-react'
 import api from '../services/api'
-import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
+import { HeaderVisibilityContext, SidebarVisibilityContext } from '../contexts/LayoutContexts'
 
 export default function PartnershipInquiries() {
   const { setHideHeader } = useContext(HeaderVisibilityContext)

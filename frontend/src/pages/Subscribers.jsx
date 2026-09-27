@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react'
-import { Plus, Search, Edit, Trash2, User, Mail, Calendar, CreditCard, Ban, CheckCircle } from 'lucide-react'
-import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
+import { Plus, Edit, User, CreditCard, Ban, CheckCircle } from 'lucide-react'
+import { HeaderVisibilityContext, SidebarVisibilityContext } from '../contexts/LayoutContexts'
 
 const subscribers = [
   { id: 1, name: 'John Smith', email: 'john@example.com', plan: 'Premium', status: 'active', joined: '2023-01-15', nextBilling: '2024-02-15' },

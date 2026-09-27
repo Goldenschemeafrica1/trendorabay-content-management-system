@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
-import { Save, Eye, Type, Image, Layout, Settings, Plus, Trash2, Mic, Play, Clock, Users, Calendar, Star, User, FileText, Award, Radio } from 'lucide-react'
+import { Save, Eye, Plus, Trash2, Mic, Play, Clock, Users, Calendar, Star, User, FileText, Award, Radio } from 'lucide-react'
 import api, { BASE_URL } from '../services/api'
 
 export default function PodcastPage() {
-  const [podcastTitle, setPodcastTitle] = useState('Our Podcasts')
-  const [podcastContent, setPodcastContent] = useState('Discover our engaging podcasts covering topics from news and entertainment to technology and lifestyle.')
+  const [podcastTitle] = useState('Our Podcasts')
+  const [podcastContent] = useState('Discover our engaging podcasts covering topics from news and entertainment to technology and lifestyle.')
   const [showPreview, setShowPreview] = useState(false)
   const [loading, setLoading] = useState(true)
   const [featuredEpisodes, setFeaturedEpisodes] = useState([])
@@ -17,7 +17,7 @@ export default function PodcastPage() {
   })
   const [latestEpisodes, setLatestEpisodes] = useState([])
   const [podcastHosts, setPodcastHosts] = useState([])
-  const [blogPosts, setBlogPosts] = useState([])
+  const [blogPosts] = useState([])
   const [featuredGuests, setFeaturedGuests] = useState([])
 
   useEffect(() => {

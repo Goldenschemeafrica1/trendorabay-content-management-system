@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
-import { Users, MessageCircle, Heart, Share2, Clock, TrendingUp, Award } from 'lucide-react'
+import { MessageCircle, Heart, Share2, TrendingUp } from 'lucide-react'
 import api from '../services/api'
 
 export default function Engagement() {
   const [timeRange, setTimeRange] = useState('7d')
   const [selectedTab, setSelectedTab] = useState('overview')
-  const [loading, setLoading] = useState(true)
+  const [,setLoading] = useState(true)
   const [engagementData, setEngagementData] = useState([])
   const [topContent, setTopContent] = useState([])
   const [topUsers, setTopUsers] = useState([])

@@ -163,7 +163,7 @@ class ApiService {
         } else {
           // Wait for the in-progress refresh to complete
           return new Promise((resolve, reject) => {
-            this.addRefreshSubscriber((token) => {
+            this.addRefreshSubscriber((_token) => {
               try {
                 resolve(this.request(method, endpoint, data));
               } catch (error) {

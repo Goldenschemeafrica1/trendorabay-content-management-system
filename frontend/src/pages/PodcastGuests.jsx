@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react'
-import { Plus, Search, Edit, Trash2, User, Mail, Calendar, CheckCircle, XCircle } from 'lucide-react'
+import { Plus, Edit, Trash2, User, CheckCircle } from 'lucide-react'
 import api from '../services/api'
-import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
+import { HeaderVisibilityContext, SidebarVisibilityContext } from '../contexts/LayoutContexts'
 
 export default function PodcastGuests() {
   const { setHideHeader } = useContext(HeaderVisibilityContext)
@@ -10,7 +10,7 @@ export default function PodcastGuests() {
   const [searchTerm, setSearchTerm] = useState('')
   const [filterStatus, setFilterStatus] = useState('all')
   const [guests, setGuests] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [,setLoading] = useState(true)
   const [formData, setFormData] = useState({
     name: '',
     title: '',

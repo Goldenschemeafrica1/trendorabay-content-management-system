@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react'
-import { Plus, Search, Edit, Trash2, Mail, User as UserIcon, Upload, Calendar } from 'lucide-react'
+import { Plus, Edit, Trash2, User as UserIcon, Upload } from 'lucide-react'
 import api, { BASE_URL } from '../services/api'
-import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
+import { HeaderVisibilityContext, SidebarVisibilityContext } from '../contexts/LayoutContexts'
 
 export default function Authors() {
   const { setHideHeader } = useContext(HeaderVisibilityContext)
@@ -11,7 +11,7 @@ export default function Authors() {
   const [editingAuthor, setEditingAuthor] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [authors, setAuthors] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [,setLoading] = useState(true)
   const [formData, setFormData] = useState({
     name: '',
     email: '',

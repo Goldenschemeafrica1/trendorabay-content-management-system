@@ -1,18 +1,18 @@
 import { useState, useEffect, useContext } from 'react'
-import { Plus, Search, Edit, Trash2, Calendar, MapPin, Users, Clock, Tag } from 'lucide-react'
+import { Plus, Edit, Trash2, Calendar, Users, Clock } from 'lucide-react'
 import api from '../services/api'
-import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
+import { HeaderVisibilityContext, SidebarVisibilityContext } from '../contexts/LayoutContexts'
 
-export default function Events() {
+export default function Opportunities() {
   const { setHideHeader } = useContext(HeaderVisibilityContext)
   const { setHideSidebar } = useContext(SidebarVisibilityContext)
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [filterStatus, setFilterStatus] = useState('all')
-  const [events, setEvents] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [editingEvent, setEditingEvent] = useState(null)
+  const [opportunities, setOpportunities] = useState([])
+  const [_loading, setLoading] = useState(true)
+  const [editingOpportunity, setEditingOpportunity] = useState(null)
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -27,19 +27,19 @@ export default function Events() {
   })
   const [imageFile, setImageFile] = useState(null)
   
-  // Fetch events from backend
+  // Fetch opportunities from backend
   useEffect(() => {
-    const fetchEvents = async () => {
+    const fetchOpportunities = async () => {
       try {
         const data = await api.get('/events')
-        setEvents(data)
+        setOpportunities(data)
       } catch (error) {
-        console.error('Failed to fetch events:', error)
+        console.error('Failed to fetch opportunities:', error)
       } finally {
         setLoading(false)
       }
     }
-    fetchEvents()
+    fetchOpportunities()
   }, [])
 
   // Hide header when create/edit modals are open (keep sidebar visible)
@@ -53,19 +53,19 @@ export default function Events() {
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
-  const handleCreateEvent = async () => {
-    console.log('Creating event:', formData)
-    
+  const handleCreateOpportunity = async () => {
+    console.log('Creating opportunity:', formData)
+
     if (!formData.title || formData.title.trim() === '') {
-      alert('Please fill in the event title field')
+      alert('Please fill in the opportunity title field')
       return
     }
-    
+
     if (!formData.event_date || formData.event_date === '') {
       alert('Please fill in the date field')
       return
     }
-    
+
     try {
       const formDataToSend = new FormData()
       Object.keys(formData).forEach(key => {
@@ -74,72 +74,72 @@ export default function Events() {
       if (imageFile) {
         formDataToSend.append('image', imageFile)
       }
-      
+
       const response = await api.post('/events', formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       })
       console.log('Response:', response)
-      
+
       setShowCreateModal(false)
       setFormData({ title: '', description: '', event_date: '', event_time: '', location: '', category: '', price: '', attendees: 0, type: 'Conference', event_type: 'In-Person' })
       setImageFile(null)
-      // Refresh events list
+      // Refresh opportunities list
       const data = await api.get('/events')
-      setEvents(data)
-      alert('Event created successfully!')
+      setOpportunities(data)
+      alert('Opportunity created successfully!')
     } catch (error) {
-      console.error('Failed to create event:', error)
-      alert('Failed to create event: ' + error.message)
+      console.error('Failed to create opportunity:', error)
+      alert('Failed to create opportunity: ' + error.message)
     }
   }
 
-  const handleDeleteEvent = async (eventId) => {
-    if (!confirm('Are you sure you want to delete this event?')) {
+  const handleDeleteOpportunity = async (opportunityId) => {
+    if (!confirm('Are you sure you want to delete this opportunity?')) {
       return
     }
-    
+
     try {
-      await api.delete(`/events/${eventId}`)
-      // Refresh events list
+      await api.delete(`/events/${opportunityId}`)
+      // Refresh opportunities list
       const data = await api.get('/events')
-      setEvents(data)
-      alert('Event deleted successfully!')
+      setOpportunities(data)
+      alert('Opportunity deleted successfully!')
     } catch (error) {
-      console.error('Failed to delete event:', error)
-      alert('Failed to delete event: ' + error.message)
+      console.error('Failed to delete opportunity:', error)
+      alert('Failed to delete opportunity: ' + error.message)
     }
   }
 
-  const handleEditEvent = (event) => {
-    setEditingEvent(event)
+  const handleEditOpportunity = (opportunity) => {
+    setEditingOpportunity(opportunity)
     setFormData({
-      title: event.title,
-      description: event.description || '',
-      event_date: event.event_date ? event.event_date.split('T')[0] : '',
-      event_time: event.event_time || '',
-      location: event.location || '',
-      category: event.category || '',
-      price: event.price || '',
-      attendees: event.attendees || 0,
-      type: event.type || 'Conference',
-      event_type: event.event_type || 'In-Person'
+      title: opportunity.title,
+      description: opportunity.description || '',
+      event_date: opportunity.event_date ? opportunity.event_date.split('T')[0] : '',
+      event_time: opportunity.event_time || '',
+      location: opportunity.location || '',
+      category: opportunity.category || '',
+      price: opportunity.price || '',
+      attendees: opportunity.attendees || 0,
+      type: opportunity.type || 'Conference',
+      event_type: opportunity.event_type || 'In-Person'
     })
     setShowEditModal(true)
   }
 
-  const handleUpdateEvent = async () => {
+  const handleUpdateOpportunity = async () => {
     if (!formData.title || formData.title.trim() === '') {
-      alert('Please fill in the event title field')
+      alert('Please fill in the opportunity title field')
       return
     }
-    
+
     if (!formData.event_date || formData.event_date === '') {
       alert('Please fill in the date field')
       return
     }
-    
+
     try {
       const formDataToSend = new FormData()
       Object.keys(formData).forEach(key => {
@@ -148,45 +148,45 @@ export default function Events() {
       if (imageFile) {
         formDataToSend.append('image', imageFile)
       }
-      
-      await api.put(`/events/${editingEvent.id}`, formDataToSend, {
+
+      await api.put(`/events/${editingOpportunity.id}`, formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       })
-      
+
       setShowEditModal(false)
-      setEditingEvent(null)
+      setEditingOpportunity(null)
       setFormData({ title: '', description: '', event_date: '', event_time: '', location: '', category: '', price: '', attendees: 0, type: 'Conference', event_type: 'In-Person' })
       setImageFile(null)
-      // Refresh events list
+      // Refresh opportunities list
       const data = await api.get('/events')
-      setEvents(data)
-      alert('Event updated successfully!')
+      setOpportunities(data)
+      alert('Opportunity updated successfully!')
     } catch (error) {
-      console.error('Failed to update event:', error)
-      alert('Failed to update event: ' + error.message)
+      console.error('Failed to update opportunity:', error)
+      alert('Failed to update opportunity: ' + error.message)
     }
   }
 
-  const filteredEvents = events.filter(event => {
-    const matchesSearch = event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         event.location.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesStatus = filterStatus === 'all' || event.status === filterStatus
+  const filteredOpportunities = opportunities.filter(opportunity => {
+    const matchesSearch = (opportunity.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         (opportunity.location || '').toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesStatus = filterStatus === 'all' || opportunity.status === filterStatus
     return matchesSearch && matchesStatus
   })
 
-  const totalEvents = events.length
-  const upcomingEvents = events.filter(e => e.status === 'upcoming').length
-  const totalAttendees = events.reduce((sum, e) => sum + e.attendees, 0)
+  const totalOpportunities = opportunities.length
+  const upcomingOpportunities = opportunities.filter(e => e.status === 'upcoming').length
+  const totalAttendees = opportunities.reduce((sum, e) => sum + (Number(e.attendees) || 0), 0)
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--text-primary)' }}>Events</h1>
-          <p style={{ color: 'var(--text-secondary)', marginTop: '2px', fontSize: '13px' }}>Manage community events and gatherings</p>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--text-primary)' }}>Opportunities</h1>
+          <p style={{ color: 'var(--text-secondary)', marginTop: '2px', fontSize: '13px' }}>Manage community opportunities and programs</p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
@@ -215,7 +215,7 @@ export default function Events() {
           }}
         >
           <Plus style={{ width: '16px', height: '16px' }} />
-          Add Event
+          Add Opportunity
         </button>
       </div>
 
@@ -245,8 +245,8 @@ export default function Events() {
             <Calendar style={{ width: '16px', height: '16px', color: '#2563eb' }} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--text-primary)', margin: 0 }}>{totalEvents}</h3>
-            <p style={{ fontSize: '10px', color: 'var(--text-secondary)', margin: 0 }}>Total Events</p>
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--text-primary)', margin: 0 }}>{totalOpportunities}</h3>
+            <p style={{ fontSize: '10px', color: 'var(--text-secondary)', margin: 0 }}>Total Opportunities</p>
           </div>
         </div>
         <div style={{
@@ -260,21 +260,21 @@ export default function Events() {
           alignItems: 'center',
           gap: '12px'
         }}>
-          <div style={{ 
-            width: '32px', 
-            height: '32px', 
-            background: 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)', 
-            borderRadius: '10px', 
-            display: 'flex', 
-            alignItems: 'center', 
+          <div style={{
+            width: '32px',
+            height: '32px',
+            background: 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)',
+            borderRadius: '10px',
+            display: 'flex',
+            alignItems: 'center',
             justifyContent: 'center',
             flexShrink: 0
           }}>
             <Clock style={{ width: '16px', height: '16px', color: '#16a34a' }} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--text-primary)', margin: 0 }}>{upcomingEvents}</h3>
-            <p style={{ fontSize: '10px', color: 'var(--text-secondary)', margin: 0 }}>Upcoming Events</p>
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--text-primary)', margin: 0 }}>{upcomingOpportunities}</h3>
+            <p style={{ fontSize: '10px', color: 'var(--text-secondary)', margin: 0 }}>Upcoming Opportunities</p>
           </div>
         </div>
         <div style={{
@@ -312,7 +312,7 @@ export default function Events() {
         <div style={{ flex: 1 }}>
           <input
             type="text"
-            placeholder="Search events..."
+            placeholder="Search opportunities..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             style={{
@@ -363,7 +363,7 @@ export default function Events() {
         </select>
       </div>
 
-      {/* Events Table */}
+      {/* Opportunities Table */}
       <div style={{
         background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
         backdropFilter: 'blur(20px)',
@@ -375,7 +375,7 @@ export default function Events() {
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}>
             <tr>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Event</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Opportunity</th>
               <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Date</th>
               <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Location</th>
               <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Attendees</th>
@@ -385,8 +385,8 @@ export default function Events() {
             </tr>
           </thead>
           <tbody>
-            {filteredEvents.map((event, index) => (
-              <tr key={event.id || `event-${index}`} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background 0.2s ease' }}
+            {filteredOpportunities.map((opportunity, index) => (
+              <tr key={opportunity.id || `opportunity-${index}`} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background 0.2s ease' }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = 'var(--bg-secondary)'
               }}
@@ -394,41 +394,41 @@ export default function Events() {
                 e.currentTarget.style.background = 'transparent'
               }}>
                 <td style={{ padding: '12px 16px' }}>
-                  <span style={{ fontWeight: '500', color: 'var(--text-primary)', fontSize: '13px' }}>{event.title}</span>
+                  <span style={{ fontWeight: '500', color: 'var(--text-primary)', fontSize: '13px' }}>{opportunity.title}</span>
                 </td>
                 <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>
-                  {event.event_date ? new Date(event.event_date).toLocaleDateString() : 'N/A'}
+                  {opportunity.event_date ? new Date(opportunity.event_date).toLocaleDateString() : 'N/A'}
                 </td>
-                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{event.location}</td>
-                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{event.attendees}</td>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{opportunity.location}</td>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{opportunity.attendees}</td>
                 <td style={{ padding: '12px 16px' }}>
-                  <span style={{ 
-                    padding: '3px 8px', 
-                    borderRadius: '16px', 
-                    fontSize: '11px', 
+                  <span style={{
+                    padding: '3px 8px',
+                    borderRadius: '16px',
+                    fontSize: '11px',
                     fontWeight: '500',
                     background: 'var(--bg-secondary)',
                     color: 'var(--text-secondary)'
                   }}>
-                    {event.type}
+                    {opportunity.type}
                   </span>
                 </td>
                 <td style={{ padding: '12px 16px' }}>
-                  <span style={{ 
-                    padding: '3px 8px', 
-                    borderRadius: '16px', 
-                    fontSize: '11px', 
+                  <span style={{
+                    padding: '3px 8px',
+                    borderRadius: '16px',
+                    fontSize: '11px',
                     fontWeight: '500',
-                    background: event.status === 'upcoming' ? '#dbeafe' : '#dcfce7',
-                    color: event.status === 'upcoming' ? '#1e40af' : '#166534'
+                    background: opportunity.status === 'upcoming' ? '#dbeafe' : '#dcfce7',
+                    color: opportunity.status === 'upcoming' ? '#1e40af' : '#166534'
                   }}>
-                    {event.status ? event.status.charAt(0).toUpperCase() + event.status.slice(1) : 'N/A'}
+                    {opportunity.status ? opportunity.status.charAt(0).toUpperCase() + opportunity.status.slice(1) : 'N/A'}
                   </span>
                 </td>
                 <td style={{ padding: '12px 16px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '6px' }}>
-                    <button 
-                      onClick={() => handleEditEvent(event)}
+                    <button
+                      onClick={() => handleEditOpportunity(opportunity)}
                       style={{
                         padding: '6px',
                         background: 'transparent',
@@ -445,8 +445,8 @@ export default function Events() {
                       }}>
                       <Edit style={{ width: '14px', height: '14px', color: 'var(--text-secondary)' }} />
                     </button>
-                    <button 
-                      onClick={() => handleDeleteEvent(event.id)}
+                    <button
+                      onClick={() => handleDeleteOpportunity(opportunity.id)}
                       style={{
                         padding: '6px',
                         background: 'transparent',
@@ -499,7 +499,7 @@ export default function Events() {
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-              <h2 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)' }}>Add New Event</h2>
+              <h2 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)' }}>Add New Opportunity</h2>
               <button
                 onClick={() => setShowCreateModal(false)}
                 style={{
@@ -527,7 +527,7 @@ export default function Events() {
             <div style={{ padding: '20px', overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Event Title</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Opportunity Title</label>
                   <input
                     type="text"
                     name="title"
@@ -668,7 +668,7 @@ export default function Events() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Event Image</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Opportunity Image</label>
                   <input
                     type="file"
                     name="image"
@@ -787,7 +787,7 @@ export default function Events() {
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Event Type</label>
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Opportunity Type</label>
                     <select 
                       name="event_type"
                       value={formData.event_type}
@@ -818,7 +818,7 @@ export default function Events() {
                   </div>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Event Category (Type)</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Opportunity Category (Type)</label>
                   <select 
                     name="type"
                     value={formData.type}
@@ -875,7 +875,7 @@ export default function Events() {
                 Cancel
               </button>
               <button
-                onClick={handleCreateEvent}
+                onClick={handleCreateOpportunity}
                 style={{
                   padding: '8px 16px',
                   background: 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)',
@@ -896,7 +896,7 @@ export default function Events() {
                   e.currentTarget.style.transform = 'translateY(0)'
                   e.currentTarget.style.boxShadow = '0 4px 12px rgba(124, 58, 237, 0.3)'
                 }}>
-                Add Event
+                Add Opportunity
               </button>
             </div>
           </div>
@@ -931,7 +931,7 @@ export default function Events() {
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
-              <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a' }}>Edit Event</h2>
+              <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a' }}>Edit Opportunity</h2>
               <button
                 onClick={() => setShowEditModal(false)}
                 style={{
@@ -959,7 +959,7 @@ export default function Events() {
             <div style={{ padding: '20px', overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Event Title</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Opportunity Title</label>
                   <input
                     type="text"
                     name="title"
@@ -1100,7 +1100,7 @@ export default function Events() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Event Image</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Opportunity Image</label>
                   <input
                     type="file"
                     name="image"
@@ -1219,7 +1219,7 @@ export default function Events() {
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Event Type</label>
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Opportunity Type</label>
                     <select 
                       name="event_type"
                       value={formData.event_type}
@@ -1250,7 +1250,7 @@ export default function Events() {
                   </div>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Event Category (Type)</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Opportunity Category (Type)</label>
                   <select 
                     name="type"
                     value={formData.type}
@@ -1307,7 +1307,7 @@ export default function Events() {
                 Cancel
               </button>
               <button
-                onClick={handleUpdateEvent}
+                onClick={handleUpdateOpportunity}
                 style={{
                   padding: '8px 16px',
                   background: 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)',
@@ -1328,7 +1328,7 @@ export default function Events() {
                   e.currentTarget.style.transform = 'translateY(0)'
                   e.currentTarget.style.boxShadow = '0 4px 12px rgba(124, 58, 237, 0.3)'
                 }}>
-                Update Event
+                Update Opportunity
               </button>
             </div>
           </div>

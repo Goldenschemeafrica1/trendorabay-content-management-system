@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react'
-import { Plus, Search, Edit, Trash2, Package, Calendar, User, DollarSign, TrendingUp, Eye } from 'lucide-react'
+import { Plus, Edit, Trash2, Package, DollarSign, Eye } from 'lucide-react'
 import api from '../services/api'
-import { HeaderVisibilityContext, SidebarVisibilityContext } from '../components/Layout'
+import { HeaderVisibilityContext, SidebarVisibilityContext } from '../contexts/LayoutContexts'
 
 export default function Orders() {
   const { setHideHeader } = useContext(HeaderVisibilityContext)
@@ -10,7 +10,7 @@ export default function Orders() {
   const [searchTerm, setSearchTerm] = useState('')
   const [filterStatus, setFilterStatus] = useState('all')
   const [orders, setOrders] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [,setLoading] = useState(true)
   const [formData, setFormData] = useState({
     customer_name: '',
     order_number: '',

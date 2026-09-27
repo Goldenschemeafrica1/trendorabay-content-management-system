@@ -6,29 +6,21 @@ import {
   Users,
   ShoppingBag,
   TrendingUp,
-  MessageSquare,
   ArrowUpRight,
   Calendar,
   UserPlus,
   Plus
 } from 'lucide-react'
-import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
 import api from '../services/api'
-import { ThemeContext } from '../components/Layout'
+import { ThemeContext } from '../contexts/LayoutContexts'
 
 export default function Dashboard() {
-  const userStr = sessionStorage.getItem('user')
-  const user = userStr ? JSON.parse(userStr) : null
-  const userRole = user?.role || 'user'
-  const isAdminOrHigher = userRole === 'admin' || userRole === 'superadmin'
-  const isEditorOrHigher = userRole === 'editor' || userRole === 'admin' || userRole === 'superadmin'
   const { isDarkMode } = useContext(ThemeContext)
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [publishedArticles, setPublishedArticles] = useState(0)
-  const [draftArticles, setDraftArticles] = useState(0)
-  const [pendingReview, setPendingReview] = useState(0)
-  const [scheduledPosts, setScheduledPosts] = useState(0)
+  const [,setDraftArticles] = useState(0)
+  const [,setScheduledPosts] = useState(0)
   const [topStories, setTopStories] = useState([])
   const [latestSubscribers, setLatestSubscribers] = useState([])
   const [recentActivity, setRecentActivity] = useState([])
@@ -106,10 +98,6 @@ export default function Dashboard() {
     { name: 'Add Author', href: '/dashboard/authors/new', icon: Users, gradient: 'from-orange-500 to-amber-500' },
   ]
 
-  if (loading) {
-    return <div style={{ padding: '20px' }}>Loading...</div>
-  }
-
   const metrics = [
     { name: 'Users', value: usersCount.toString(), icon: Users, gradient: 'from-orange-500 to-amber-500' },
     { name: 'Published Articles', value: publishedArticles.toString(), icon: FileText, gradient: 'from-emerald-500 to-teal-500' },
@@ -117,7 +105,20 @@ export default function Dashboard() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-      {/* Main Layout - Left: Stats + Users + Events, Right: Top Stories */}
+      {loading && (
+        <div style={{
+          padding: '12px 16px',
+          background: isDarkMode ? 'rgba(59, 130, 246, 0.15)' : '#f0f9ff',
+          border: isDarkMode ? '1px solid rgba(59, 130, 246, 0.3)' : '1px solid #bae6fd',
+          borderRadius: '12px',
+          color: isDarkMode ? '#93c5fd' : '#0369a1',
+          fontSize: '13px',
+          fontWeight: '500'
+        }}>
+          Loading dashboard data...
+        </div>
+      )}
+      {/* Main Layout - Left: Stats + Users + Opportunities, Right: Top Stories */}
       <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px', width: '100%' }}>
         {/* Left Column */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -236,7 +237,7 @@ export default function Dashboard() {
             ))}
           </div>
 
-          {/* Latest Users and Upcoming Events */}
+          {/* Latest Users and Upcoming Opportunities */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px' }}>
             {/* Latest Users */}
             <div style={{
@@ -309,13 +310,13 @@ export default function Dashboard() {
               boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-                <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: isDarkMode ? '#f1f5f9' : '#0f172a' }}>Upcoming Events</h3>
+                <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: isDarkMode ? '#f1f5f9' : '#0f172a' }}>Upcoming Opportunities</h3>
                 <Calendar style={{ width: '16px', height: '16px', color: '#8b5cf6' }} />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 {upcomingEvents.length > 0 ? (
-                  upcomingEvents.map((event, index) => (
-                    <div key={event.id || `event-${index}`} style={{
+                  upcomingEvents.map((opportunity, index) => (
+                    <div key={opportunity.id || `opportunity-${index}`} style={{
                       display: 'flex',
                       alignItems: 'flex-start',
                       gap: '10px',
@@ -336,16 +337,16 @@ export default function Dashboard() {
                         fontWeight: '600',
                         flexShrink: 0
                       }}>
-                        {new Date(event.event_date).getDate()}
+                        {new Date(opportunity.event_date).getDate()}
                       </div>
                       <div style={{ flex: 1 }}>
-                        <p style={{ fontSize: '13px', fontWeight: '500', color: isDarkMode ? '#f1f5f9' : '#0f172a', lineHeight: 1.3, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', maxHeight: '2.6em' }}>{event.title}</p>
-                        <p style={{ fontSize: '11px', color: isDarkMode ? '#94a3b8' : '#64748b', marginTop: '2px' }}>{event.location || 'TBD'}</p>
+                        <p style={{ fontSize: '13px', fontWeight: '500', color: isDarkMode ? '#f1f5f9' : '#0f172a', lineHeight: 1.3, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', maxHeight: '2.6em' }}>{opportunity.title}</p>
+                        <p style={{ fontSize: '11px', color: isDarkMode ? '#94a3b8' : '#64748b', marginTop: '2px' }}>{opportunity.location || 'TBD'}</p>
                       </div>
                     </div>
                   ))
                 ) : (
-                  <p style={{ fontSize: '13px', color: isDarkMode ? '#94a3b8' : '#64748b', textAlign: 'center', padding: '20px' }}>No upcoming events</p>
+                  <p style={{ fontSize: '13px', color: isDarkMode ? '#94a3b8' : '#64748b', textAlign: 'center', padding: '20px' }}>No upcoming opportunities</p>
                 )}
               </div>
             </div>

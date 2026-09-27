@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Shield, AlertTriangle, Filter, RefreshCw } from 'lucide-react';
 import api from '../services/api';
 
@@ -11,20 +11,10 @@ const SecurityEvents = () => {
     severity: '',
     limit: 100
   });
-
+jjjjcdsarorjfsitwmhg
   const user = api.getCurrentUser();
 
-  useEffect(() => {
-    if (user?.role !== 'superadmin') {
-      setError('Access denied. Superadmin role required.');
-      setLoading(false);
-      return;
-    }
-
-    loadEvents();
-  }, [filters]);
-
-  const loadEvents = async () => {
+  const loadEvents = useCallback(async () => {
     try {
       setLoading(true);
       const data = await api.getSecurityEvents(filters);
@@ -35,7 +25,17 @@ const SecurityEvents = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters]);
+
+  useEffect(() => {
+    if (user?.role !== 'superadmin') {
+      setError('Access denied. Superadmin role required.');
+      setLoading(false);
+      return;
+    }
+
+    loadEvents();
+  }, [filters, user.role, loadEvents]);
 
   const getSeverityColor = (severity) => {
     switch (severity) {

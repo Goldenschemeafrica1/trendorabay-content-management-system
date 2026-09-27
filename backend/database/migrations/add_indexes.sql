@@ -61,11 +61,6 @@ CREATE INDEX IF NOT EXISTS idx_events_status ON events(status);
 CREATE INDEX IF NOT EXISTS idx_events_event_date ON events(event_date);
 CREATE INDEX IF NOT EXISTS idx_events_created_at ON events(created_at DESC);
 
--- Community Posts table indexes
-CREATE INDEX IF NOT EXISTS idx_community_posts_status ON community_posts(status);
-CREATE INDEX IF NOT EXISTS idx_community_posts_author_id ON community_posts(author_id);
-CREATE INDEX IF NOT EXISTS idx_community_posts_published_at ON community_posts(published_at DESC);
-
 -- Email Templates table indexes
 CREATE INDEX IF NOT EXISTS idx_email_templates_name ON email_templates(template_name);
 
@@ -84,10 +79,6 @@ CREATE INDEX IF NOT EXISTS idx_guest_applications_created_at ON guest_applicatio
 -- Pitch Submissions table indexes
 CREATE INDEX IF NOT EXISTS idx_pitch_submissions_status ON pitch_submissions(status);
 CREATE INDEX IF NOT EXISTS idx_pitch_submissions_created_at ON pitch_submissions(created_at DESC);
-
--- Contact Messages table indexes
-CREATE INDEX IF NOT EXISTS idx_contact_messages_status ON contact_messages(status);
-CREATE INDEX IF NOT EXISTS idx_contact_messages_created_at ON contact_messages(created_at DESC);
 
 -- Analytics tables indexes
 CREATE INDEX IF NOT EXISTS idx_page_views_date ON page_views(date DESC);
