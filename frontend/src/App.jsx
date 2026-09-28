@@ -7,6 +7,9 @@ const Login = lazy(() => import('./pages/Login'))
 const Register = lazy(() => import('./pages/Register'))
 const Dashboard = lazy(() => import('./pages/Dashboard'))
 const Stories = lazy(() => import('./pages/Stories'))
+const CreateStory = lazy(() => import('./pages/CreateStory'))
+const EditStory = lazy(() => import('./pages/EditStory'))
+const ViewStory = lazy(() => import('./pages/ViewStory'))
 const Magazines = lazy(() => import('./pages/Magazines'))
 const Podcasts = lazy(() => import('./pages/Podcasts'))
 const PodcastHosts = lazy(() => import('./pages/PodcastHosts'))
@@ -22,6 +25,8 @@ const Sales = lazy(() => import('./pages/Sales'))
 const Performance = lazy(() => import('./pages/Performance'))
 const Contributors = lazy(() => import('./pages/Contributors'))
 const Opportunities = lazy(() => import('./pages/Opportunities'))
+const CreateOpportunity = lazy(() => import('./pages/CreateOpportunity'))
+const EditOpportunity = lazy(() => import('./pages/EditOpportunity'))
 const Homepage = lazy(() => import('./pages/Homepage'))
 const PodcastPage = lazy(() => import('./pages/PodcastPage'))
 const StorePage = lazy(() => import('./pages/StorePage'))
@@ -73,6 +78,9 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="search" element={<SearchResults />} />
           <Route path="stories" element={<Stories />} />
+          <Route path="stories/create" element={<CreateStory />} />
+          <Route path="stories/edit/:id" element={<EditStory />} />
+          <Route path="stories/view/:id" element={<ViewStory />} />
           <Route path="magazines" element={<Magazines />} />
           <Route path="podcasts" element={
             <ProtectedRoute allowedRoles={['superadmin']}>
@@ -138,6 +146,16 @@ function App() {
           <Route path="events" element={
             <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
               <Opportunities />
+            </ProtectedRoute>
+          } />
+          <Route path="events/create" element={
+            <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
+              <CreateOpportunity />
+            </ProtectedRoute>
+          } />
+          <Route path="events/edit/:id" element={
+            <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
+              <EditOpportunity />
             </ProtectedRoute>
           } />
           <Route path="homepage" element={

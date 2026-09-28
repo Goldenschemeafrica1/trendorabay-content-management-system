@@ -8,17 +8,31 @@ async function seedCategories() {
 
     // Categories to seed
     const categories = [
-      { name: 'Technology', slug: 'technology', description: 'Technology related content' },
-      { name: 'Design', slug: 'design', description: 'Design related content' },
-      { name: 'Business', slug: 'business', description: 'Business related content' },
-      { name: 'Tutorial', slug: 'tutorial', description: 'Tutorial content' },
       { name: 'Music', slug: 'music', description: 'Music related content' },
-      { name: 'Sports', slug: 'sports', description: 'Sports related content' },
-      { name: 'Finance', slug: 'finance', description: 'Finance related content' },
-      { name: 'Culture', slug: 'culture', description: 'Culture related content' },
+      { name: 'Fashion', slug: 'fashion', description: 'Fashion related content' },
       { name: 'Art', slug: 'art', description: 'Art related content' },
+      { name: 'Technology', slug: 'technology', description: 'Technology related content' },
+      { name: 'Agriculture', slug: 'agriculture', description: 'Agriculture related content' },
+      { name: 'Business', slug: 'business', description: 'Business related content' },
+      { name: 'Sports', slug: 'sports', description: 'Sports related content' },
+      { name: 'Food & Nutrition', slug: 'food-nutrition', description: 'Food & Nutrition related content' },
+      { name: 'Finance', slug: 'finance', description: 'Finance related content' },
+      { name: 'Education', slug: 'education', description: 'Education related content' },
       { name: 'Travel', slug: 'travel', description: 'Travel related content' },
-      { name: 'Tech', slug: 'tech', description: 'Tech related content' }
+      { name: 'Gaming', slug: 'gaming', description: 'Gaming related content' },
+      { name: 'Film', slug: 'film', description: 'Film related content' },
+      { name: 'Events', slug: 'events', description: 'Events related content' },
+      { name: 'Creative Arts', slug: 'creative-arts', description: 'Creative Arts related content' },
+      { name: 'Real Estate', slug: 'real-estate', description: 'Real Estate related content' },
+      { name: 'Logistics', slug: 'logistics', description: 'Logistics related content' },
+      { name: 'Recycling', slug: 'recycling', description: 'Recycling related content' },
+      { name: 'Youth/Student Life', slug: 'youth-student-life', description: 'Youth/Student Life related content' },
+      { name: 'Women in Business', slug: 'women-in-business', description: 'Women in Business related content' },
+      { name: 'Riders', slug: 'riders', description: 'Riders related content' },
+      { name: 'Lifestyle', slug: 'lifestyle', description: 'Lifestyle related content' },
+      { name: 'Community Impact', slug: 'community-impact', description: 'Community Impact related content' },
+      { name: 'Comics', slug: 'comics', description: 'Comics related content' },
+      { name: 'Home', slug: 'home', description: 'Home related content' }
     ];
 
     for (const category of categories) {
