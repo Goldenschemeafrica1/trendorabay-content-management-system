@@ -17,7 +17,7 @@ import { ThemeContext } from '../contexts/LayoutContexts'
 export default function Dashboard() {
   const { isDarkMode } = useContext(ThemeContext)
 
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [publishedArticles, setPublishedArticles] = useState(0)
   const [,setDraftArticles] = useState(0)
   const [,setScheduledPosts] = useState(0)
@@ -39,10 +39,16 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        setLoading(true)
+        // Add timeout to prevent hanging
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Request timeout')), 5000)
+        )
         
         // Single optimized API call to get all dashboard data
-        const data = await api.get('/dashboard')
+        const data = await Promise.race([
+          api.get('/dashboard'),
+          timeoutPromise
+        ])
         
         // Set stats from backend
         setPublishedArticles(data.stats.publishedArticles)
@@ -83,7 +89,7 @@ export default function Dashboard() {
         setLoading(false)
       } catch (error) {
         console.error('Failed to fetch dashboard data:', error)
-      } finally {
+        // Still set loading to false on error so UI shows
         setLoading(false)
       }
     }

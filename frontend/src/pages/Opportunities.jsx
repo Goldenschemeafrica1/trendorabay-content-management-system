@@ -1,37 +1,24 @@
 import { useState, useEffect, useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Plus, Edit, Trash2, Calendar, Users, Clock } from 'lucide-react'
 import api from '../services/api'
-import { HeaderVisibilityContext, SidebarVisibilityContext } from '../contexts/LayoutContexts'
+import { HeaderVisibilityContext, SidebarVisibilityContext, ThemeContext } from '../contexts/LayoutContexts'
 
 export default function Opportunities() {
-  const { setHideHeader } = useContext(HeaderVisibilityContext)
-  const { setHideSidebar } = useContext(SidebarVisibilityContext)
-  const [showCreateModal, setShowCreateModal] = useState(false)
-  const [showEditModal, setShowEditModal] = useState(false)
+  const navigate = useNavigate()
+  const { setHideHeader: _setHideHeader } = useContext(HeaderVisibilityContext)
+  const { setHideSidebar: _setHideSidebar } = useContext(SidebarVisibilityContext)
+  const { isDarkMode: _isDarkMode } = useContext(ThemeContext)
   const [searchTerm, setSearchTerm] = useState('')
   const [filterStatus, setFilterStatus] = useState('all')
   const [opportunities, setOpportunities] = useState([])
   const [_loading, setLoading] = useState(true)
-  const [editingOpportunity, setEditingOpportunity] = useState(null)
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    event_date: '',
-    event_time: '',
-    location: '',
-    category: '',
-    price: '',
-    attendees: 0,
-    type: 'Conference',
-    event_type: 'In-Person'
-  })
-  const [imageFile, setImageFile] = useState(null)
   
   // Fetch opportunities from backend
   useEffect(() => {
     const fetchOpportunities = async () => {
       try {
-        const data = await api.get('/events')
+        const data = await api.get('/opportunities')
         setOpportunities(data)
       } catch (error) {
         console.error('Failed to fetch opportunities:', error)
@@ -42,68 +29,15 @@ export default function Opportunities() {
     fetchOpportunities()
   }, [])
 
-  // Hide header when create/edit modals are open (keep sidebar visible)
-  useEffect(() => {
-    setHideHeader(showCreateModal || showEditModal)
-    setHideSidebar(false)
-  }, [showCreateModal, showEditModal, setHideHeader, setHideSidebar])
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
-  }
-
-  const handleCreateOpportunity = async () => {
-    console.log('Creating opportunity:', formData)
-
-    if (!formData.title || formData.title.trim() === '') {
-      alert('Please fill in the opportunity title field')
-      return
-    }
-
-    if (!formData.event_date || formData.event_date === '') {
-      alert('Please fill in the date field')
-      return
-    }
-
-    try {
-      const formDataToSend = new FormData()
-      Object.keys(formData).forEach(key => {
-        formDataToSend.append(key, formData[key])
-      })
-      if (imageFile) {
-        formDataToSend.append('image', imageFile)
-      }
-
-      const response = await api.post('/events', formDataToSend, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      })
-      console.log('Response:', response)
-
-      setShowCreateModal(false)
-      setFormData({ title: '', description: '', event_date: '', event_time: '', location: '', category: '', price: '', attendees: 0, type: 'Conference', event_type: 'In-Person' })
-      setImageFile(null)
-      // Refresh opportunities list
-      const data = await api.get('/events')
-      setOpportunities(data)
-      alert('Opportunity created successfully!')
-    } catch (error) {
-      console.error('Failed to create opportunity:', error)
-      alert('Failed to create opportunity: ' + error.message)
-    }
-  }
-
   const handleDeleteOpportunity = async (opportunityId) => {
     if (!confirm('Are you sure you want to delete this opportunity?')) {
       return
     }
 
     try {
-      await api.delete(`/events/${opportunityId}`)
+      await api.delete(`/opportunities/${opportunityId}`)
       // Refresh opportunities list
-      const data = await api.get('/events')
+      const data = await api.get('/opportunities')
       setOpportunities(data)
       alert('Opportunity deleted successfully!')
     } catch (error) {
@@ -113,60 +47,7 @@ export default function Opportunities() {
   }
 
   const handleEditOpportunity = (opportunity) => {
-    setEditingOpportunity(opportunity)
-    setFormData({
-      title: opportunity.title,
-      description: opportunity.description || '',
-      event_date: opportunity.event_date ? opportunity.event_date.split('T')[0] : '',
-      event_time: opportunity.event_time || '',
-      location: opportunity.location || '',
-      category: opportunity.category || '',
-      price: opportunity.price || '',
-      attendees: opportunity.attendees || 0,
-      type: opportunity.type || 'Conference',
-      event_type: opportunity.event_type || 'In-Person'
-    })
-    setShowEditModal(true)
-  }
-
-  const handleUpdateOpportunity = async () => {
-    if (!formData.title || formData.title.trim() === '') {
-      alert('Please fill in the opportunity title field')
-      return
-    }
-
-    if (!formData.event_date || formData.event_date === '') {
-      alert('Please fill in the date field')
-      return
-    }
-
-    try {
-      const formDataToSend = new FormData()
-      Object.keys(formData).forEach(key => {
-        formDataToSend.append(key, formData[key])
-      })
-      if (imageFile) {
-        formDataToSend.append('image', imageFile)
-      }
-
-      await api.put(`/events/${editingOpportunity.id}`, formDataToSend, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      })
-
-      setShowEditModal(false)
-      setEditingOpportunity(null)
-      setFormData({ title: '', description: '', event_date: '', event_time: '', location: '', category: '', price: '', attendees: 0, type: 'Conference', event_type: 'In-Person' })
-      setImageFile(null)
-      // Refresh opportunities list
-      const data = await api.get('/events')
-      setOpportunities(data)
-      alert('Opportunity updated successfully!')
-    } catch (error) {
-      console.error('Failed to update opportunity:', error)
-      alert('Failed to update opportunity: ' + error.message)
-    }
+    navigate(`/dashboard/events/edit/${opportunity.id}`)
   }
 
   const filteredOpportunities = opportunities.filter(opportunity => {
@@ -177,8 +58,8 @@ export default function Opportunities() {
   })
 
   const totalOpportunities = opportunities.length
-  const upcomingOpportunities = opportunities.filter(e => e.status === 'upcoming').length
-  const totalAttendees = opportunities.reduce((sum, e) => sum + (Number(e.attendees) || 0), 0)
+  const publishedOpportunities = opportunities.filter(e => e.status === 'published').length
+  const totalApplications = opportunities.reduce((sum, e) => sum + (Number(e.applications) || 0), 0)
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -189,7 +70,7 @@ export default function Opportunities() {
           <p style={{ color: 'var(--text-secondary)', marginTop: '2px', fontSize: '13px' }}>Manage community opportunities and programs</p>
         </div>
         <button
-          onClick={() => setShowCreateModal(true)}
+          onClick={() => navigate('/dashboard/events/create')}
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -273,8 +154,8 @@ export default function Opportunities() {
             <Clock style={{ width: '16px', height: '16px', color: '#16a34a' }} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--text-primary)', margin: 0 }}>{upcomingOpportunities}</h3>
-            <p style={{ fontSize: '10px', color: 'var(--text-secondary)', margin: 0 }}>Upcoming Opportunities</p>
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--text-primary)', margin: 0 }}>{publishedOpportunities}</h3>
+            <p style={{ fontSize: '10px', color: 'var(--text-secondary)', margin: 0 }}>Published Opportunities</p>
           </div>
         </div>
         <div style={{
@@ -301,8 +182,8 @@ export default function Opportunities() {
             <Users style={{ width: '16px', height: '16px', color: '#9333ea' }} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--text-primary)', margin: 0 }}>{totalAttendees}</h3>
-            <p style={{ fontSize: '10px', color: 'var(--text-secondary)', margin: 0 }}>Total Attendees</p>
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--text-primary)', margin: 0 }}>{totalApplications}</h3>
+            <p style={{ fontSize: '10px', color: 'var(--text-secondary)', margin: 0 }}>Total Applications</p>
           </div>
         </div>
       </div>
@@ -358,8 +239,12 @@ export default function Opportunities() {
           }}
         >
           <option value="all">All Status</option>
-          <option value="upcoming">Upcoming</option>
-          <option value="completed">Completed</option>
+          <option value="published">Published</option>
+          <option value="draft">Draft</option>
+          <option value="pending">Pending</option>
+          <option value="expired">Expired</option>
+          <option value="rejected">Rejected</option>
+          <option value="archived">Archived</option>
         </select>
       </div>
 
@@ -376,9 +261,9 @@ export default function Opportunities() {
           <thead style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}>
             <tr>
               <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Opportunity</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Date</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Deadline</th>
               <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Location</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Attendees</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Applications</th>
               <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Type</th>
               <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Status</th>
               <th style={{ textAlign: 'right', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Actions</th>
@@ -397,10 +282,10 @@ export default function Opportunities() {
                   <span style={{ fontWeight: '500', color: 'var(--text-primary)', fontSize: '13px' }}>{opportunity.title}</span>
                 </td>
                 <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>
-                  {opportunity.event_date ? new Date(opportunity.event_date).toLocaleDateString() : 'N/A'}
+                  {opportunity.deadline ? new Date(opportunity.deadline).toLocaleDateString() : 'N/A'}
                 </td>
                 <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{opportunity.location}</td>
-                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{opportunity.attendees}</td>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{opportunity.applications}</td>
                 <td style={{ padding: '12px 16px' }}>
                   <span style={{
                     padding: '3px 8px',
@@ -410,20 +295,34 @@ export default function Opportunities() {
                     background: 'var(--bg-secondary)',
                     color: 'var(--text-secondary)'
                   }}>
-                    {opportunity.type}
+                    {opportunity.opportunity_type}
                   </span>
                 </td>
                 <td style={{ padding: '12px 16px' }}>
-                  <span style={{
-                    padding: '3px 8px',
-                    borderRadius: '16px',
-                    fontSize: '11px',
-                    fontWeight: '500',
-                    background: opportunity.status === 'upcoming' ? '#dbeafe' : '#dcfce7',
-                    color: opportunity.status === 'upcoming' ? '#1e40af' : '#166534'
-                  }}>
-                    {opportunity.status ? opportunity.status.charAt(0).toUpperCase() + opportunity.status.slice(1) : 'N/A'}
-                  </span>
+                  {(() => {
+                    const statusColors = {
+                      published: { bg: '#dcfce7', color: '#166534' },
+                      draft: { bg: '#f3f4f6', color: '#4b5563' },
+                      pending: { bg: '#fef3c7', color: '#92400e' },
+                      expired: { bg: '#fee2e2', color: '#991b1b' },
+                      rejected: { bg: '#fee2e2', color: '#991b1b' },
+                      archived: { bg: '#e0e7ff', color: '#3730a3' }
+                    }
+                    const s = opportunity.status || 'draft'
+                    const colors = statusColors[s] || { bg: '#f3f4f6', color: '#4b5563' }
+                    return (
+                      <span style={{
+                        padding: '3px 8px',
+                        borderRadius: '16px',
+                        fontSize: '11px',
+                        fontWeight: '500',
+                        background: colors.bg,
+                        color: colors.color
+                      }}>
+                        {s.charAt(0).toUpperCase() + s.slice(1)}
+                      </span>
+                    )
+                  })()}
                 </td>
                 <td style={{ padding: '12px 16px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '6px' }}>
@@ -470,870 +369,6 @@ export default function Opportunities() {
           </tbody>
         </table>
       </div>
-
-      {/* Create Modal */}
-      {showCreateModal && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          background: 'rgba(0, 0, 0, 0.5)',
-          backdropFilter: 'blur(4px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 50
-        }}>
-          <div style={{
-            background: 'var(--bg-primary)',
-            borderRadius: '16px',
-            width: '100%',
-            maxWidth: '600px',
-            maxHeight: '90vh',
-            overflow: 'hidden',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
-          }}>
-            <div style={{
-              padding: '20px',
-              borderBottom: '1px solid var(--border-color)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between'
-            }}>
-              <h2 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-primary)' }}>Add New Opportunity</h2>
-              <button
-                onClick={() => setShowCreateModal(false)}
-                style={{
-                  padding: '6px',
-                  background: 'transparent',
-                  border: 'none',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  fontSize: '18px',
-                  color: 'var(--text-secondary)',
-                  transition: 'all 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f1f5f9'
-                  e.currentTarget.style.color = 'var(--text-secondary)'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'transparent'
-                  e.currentTarget.style.color = '#94a3b8'
-                }}
-              >
-                ✕
-              </button>
-            </div>
-            <div style={{ padding: '20px', overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Opportunity Title</label>
-                  <input
-                    type="text"
-                    name="title"
-                    value={formData.title}
-                    onChange={handleInputChange}
-                    placeholder="Enter event title..."
-                    style={{
-                      width: '100%',
-                      padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '10px',
-                      outline: 'none',
-                      fontSize: '13px',
-                      transition: 'all 0.2s ease'
-                    }}
-                    onFocus={(e) => {
-                      e.currentTarget.style.borderColor = '#7c3aed'
-                      e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                    }}
-                    onBlur={(e) => {
-                      e.currentTarget.style.borderColor = 'var(--border-color)'
-                      e.currentTarget.style.boxShadow = 'none'
-                    }}
-                  />
-                </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Description</label>
-                  <textarea
-                    name="description"
-                    value={formData.description}
-                    onChange={handleInputChange}
-                    placeholder="Enter event description..."
-                    rows="3"
-                    style={{
-                      width: '100%',
-                      padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '10px',
-                      outline: 'none',
-                      fontSize: '13px',
-                      transition: 'all 0.2s ease',
-                      resize: 'vertical'
-                    }}
-                    onFocus={(e) => {
-                      e.currentTarget.style.borderColor = '#7c3aed'
-                      e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                    }}
-                    onBlur={(e) => {
-                      e.currentTarget.style.borderColor = 'var(--border-color)'
-                      e.currentTarget.style.boxShadow = 'none'
-                    }}
-                  />
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Date</label>
-                    <input
-                      type="date"
-                      name="event_date"
-                      value={formData.event_date}
-                      onChange={handleInputChange}
-                      style={{
-                        width: '100%',
-                        padding: '10px 12px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '10px',
-                        outline: 'none',
-                        fontSize: '13px',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onFocus={(e) => {
-                        e.currentTarget.style.borderColor = '#7c3aed'
-                        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.borderColor = 'var(--border-color)'
-                        e.currentTarget.style.boxShadow = 'none'
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Time</label>
-                    <input
-                      type="time"
-                      name="event_time"
-                      value={formData.event_time}
-                      onChange={handleInputChange}
-                      style={{
-                        width: '100%',
-                        padding: '10px 12px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '10px',
-                        outline: 'none',
-                        fontSize: '13px',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onFocus={(e) => {
-                        e.currentTarget.style.borderColor = '#7c3aed'
-                        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.borderColor = 'var(--border-color)'
-                        e.currentTarget.style.boxShadow = 'none'
-                      }}
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Location</label>
-                  <input
-                    type="text"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleInputChange}
-                    placeholder="Enter location..."
-                    style={{
-                      width: '100%',
-                      padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '10px',
-                      outline: 'none',
-                      fontSize: '13px',
-                      transition: 'all 0.2s ease'
-                    }}
-                    onFocus={(e) => {
-                      e.currentTarget.style.borderColor = '#7c3aed'
-                      e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                    }}
-                    onBlur={(e) => {
-                      e.currentTarget.style.borderColor = 'var(--border-color)'
-                      e.currentTarget.style.boxShadow = 'none'
-                    }}
-                  />
-                </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Opportunity Image</label>
-                  <input
-                    type="file"
-                    name="image"
-                    onChange={(e) => setImageFile(e.target.files[0])}
-                    accept="image/*"
-                    style={{
-                      width: '100%',
-                      padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '10px',
-                      outline: 'none',
-                      fontSize: '13px',
-                      transition: 'all 0.2s ease'
-                    }}
-                    onFocus={(e) => {
-                      e.currentTarget.style.borderColor = '#7c3aed'
-                      e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                    }}
-                    onBlur={(e) => {
-                      e.currentTarget.style.borderColor = 'var(--border-color)'
-                      e.currentTarget.style.boxShadow = 'none'
-                    }}
-                  />
-                  {imageFile && (
-                    <p style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>
-                      Selected: {imageFile.name}
-                    </p>
-                  )}
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Category</label>
-                    <input
-                      type="text"
-                      name="category"
-                      value={formData.category}
-                      onChange={handleInputChange}
-                      placeholder="Enter category..."
-                      style={{
-                        width: '100%',
-                        padding: '10px 12px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '10px',
-                        outline: 'none',
-                        fontSize: '13px',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onFocus={(e) => {
-                        e.currentTarget.style.borderColor = '#7c3aed'
-                        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.borderColor = 'var(--border-color)'
-                        e.currentTarget.style.boxShadow = 'none'
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Price</label>
-                    <input
-                      type="text"
-                      name="price"
-                      value={formData.price}
-                      onChange={handleInputChange}
-                      placeholder="Enter price (e.g., $50, Free)..."
-                      style={{
-                        width: '100%',
-                        padding: '10px 12px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '10px',
-                        outline: 'none',
-                        fontSize: '13px',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onFocus={(e) => {
-                        e.currentTarget.style.borderColor = '#7c3aed'
-                        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.borderColor = 'var(--border-color)'
-                        e.currentTarget.style.boxShadow = 'none'
-                      }}
-                    />
-                  </div>
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Expected Attendees</label>
-                    <input
-                      type="number"
-                      name="attendees"
-                      value={formData.attendees}
-                      onChange={handleInputChange}
-                      placeholder="0"
-                      style={{
-                        width: '100%',
-                        padding: '10px 12px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '10px',
-                        outline: 'none',
-                        fontSize: '13px',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onFocus={(e) => {
-                        e.currentTarget.style.borderColor = '#7c3aed'
-                        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.borderColor = 'var(--border-color)'
-                        e.currentTarget.style.boxShadow = 'none'
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Opportunity Type</label>
-                    <select 
-                      name="event_type"
-                      value={formData.event_type}
-                      onChange={handleInputChange}
-                      style={{
-                        width: '100%',
-                        padding: '10px 12px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '10px',
-                        outline: 'none',
-                        fontSize: '13px',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onFocus={(e) => {
-                        e.currentTarget.style.borderColor = '#7c3aed'
-                        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.borderColor = 'var(--border-color)'
-                        e.currentTarget.style.boxShadow = 'none'
-                      }}>
-                      <option value="In-Person">In-Person</option>
-                      <option value="Virtual">Virtual</option>
-                      <option value="Hybrid">Hybrid</option>
-                    </select>
-                  </div>
-                </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Opportunity Category (Type)</label>
-                  <select 
-                    name="type"
-                    value={formData.type}
-                    onChange={handleInputChange}
-                    style={{
-                      width: '100%',
-                      padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '10px',
-                      outline: 'none',
-                      fontSize: '13px',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease'
-                    }}
-                    onFocus={(e) => {
-                      e.currentTarget.style.borderColor = '#7c3aed'
-                      e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                    }}
-                    onBlur={(e) => {
-                      e.currentTarget.style.borderColor = 'var(--border-color)'
-                      e.currentTarget.style.boxShadow = 'none'
-                    }}>
-                    <option value="Conference">Conference</option>
-                    <option value="Party">Party</option>
-                    <option value="Signing">Signing</option>
-                    <option value="Meetup">Meetup</option>
-                    <option value="Workshop">Workshop</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div style={{ padding: '20px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-              <button
-                onClick={() => setShowCreateModal(false)}
-                style={{
-                  padding: '8px 16px',
-                  background: 'transparent',
-                  border: '1px solid #e2e8f0',
-                  borderRadius: '10px',
-                  cursor: 'pointer',
-                  fontSize: '13px',
-                  fontWeight: '500',
-                  color: '#64748b',
-                  transition: 'all 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f8fafc'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'transparent'
-                }}
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleCreateOpportunity}
-                style={{
-                  padding: '8px 16px',
-                  background: 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)',
-                  border: 'none',
-                  borderRadius: '10px',
-                  cursor: 'pointer',
-                  fontSize: '13px',
-                  fontWeight: '500',
-                  color: 'white',
-                  boxShadow: '0 4px 12px rgba(124, 58, 237, 0.3)',
-                  transition: 'all 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-2px)'
-                  e.currentTarget.style.boxShadow = '0 6px 16px rgba(124, 58, 237, 0.4)'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)'
-                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(124, 58, 237, 0.3)'
-                }}>
-                Add Opportunity
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Edit Modal */}
-      {showEditModal && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          background: 'rgba(0, 0, 0, 0.5)',
-          backdropFilter: 'blur(4px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 50
-        }}>
-          <div style={{
-            background: 'var(--bg-primary)',
-            borderRadius: '16px',
-            width: '100%',
-            maxWidth: '600px',
-            maxHeight: '90vh',
-            overflow: 'hidden',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
-          }}>
-            <div style={{
-              padding: '20px',
-              borderBottom: '1px solid var(--border-color)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between'
-            }}>
-              <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#0f172a' }}>Edit Opportunity</h2>
-              <button
-                onClick={() => setShowEditModal(false)}
-                style={{
-                  padding: '6px',
-                  background: 'transparent',
-                  border: 'none',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  fontSize: '18px',
-                  color: 'var(--text-secondary)',
-                  transition: 'all 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f1f5f9'
-                  e.currentTarget.style.color = 'var(--text-secondary)'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'transparent'
-                  e.currentTarget.style.color = '#94a3b8'
-                }}
-              >
-                ✕
-              </button>
-            </div>
-            <div style={{ padding: '20px', overflowY: 'auto', maxHeight: 'calc(90vh - 140px)' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Opportunity Title</label>
-                  <input
-                    type="text"
-                    name="title"
-                    value={formData.title}
-                    onChange={handleInputChange}
-                    placeholder="Enter event title..."
-                    style={{
-                      width: '100%',
-                      padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '10px',
-                      outline: 'none',
-                      fontSize: '13px',
-                      transition: 'all 0.2s ease'
-                    }}
-                    onFocus={(e) => {
-                      e.currentTarget.style.borderColor = '#7c3aed'
-                      e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                    }}
-                    onBlur={(e) => {
-                      e.currentTarget.style.borderColor = 'var(--border-color)'
-                      e.currentTarget.style.boxShadow = 'none'
-                    }}
-                  />
-                </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Description</label>
-                  <textarea
-                    name="description"
-                    value={formData.description}
-                    onChange={handleInputChange}
-                    placeholder="Enter event description..."
-                    rows="3"
-                    style={{
-                      width: '100%',
-                      padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '10px',
-                      outline: 'none',
-                      fontSize: '13px',
-                      transition: 'all 0.2s ease',
-                      resize: 'vertical'
-                    }}
-                    onFocus={(e) => {
-                      e.currentTarget.style.borderColor = '#7c3aed'
-                      e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                    }}
-                    onBlur={(e) => {
-                      e.currentTarget.style.borderColor = 'var(--border-color)'
-                      e.currentTarget.style.boxShadow = 'none'
-                    }}
-                  />
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Date</label>
-                    <input
-                      type="date"
-                      name="event_date"
-                      value={formData.event_date}
-                      onChange={handleInputChange}
-                      style={{
-                        width: '100%',
-                        padding: '10px 12px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '10px',
-                        outline: 'none',
-                        fontSize: '13px',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onFocus={(e) => {
-                        e.currentTarget.style.borderColor = '#7c3aed'
-                        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.borderColor = 'var(--border-color)'
-                        e.currentTarget.style.boxShadow = 'none'
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Time</label>
-                    <input
-                      type="time"
-                      name="event_time"
-                      value={formData.event_time}
-                      onChange={handleInputChange}
-                      style={{
-                        width: '100%',
-                        padding: '10px 12px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '10px',
-                        outline: 'none',
-                        fontSize: '13px',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onFocus={(e) => {
-                        e.currentTarget.style.borderColor = '#7c3aed'
-                        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.borderColor = 'var(--border-color)'
-                        e.currentTarget.style.boxShadow = 'none'
-                      }}
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Location</label>
-                  <input
-                    type="text"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleInputChange}
-                    placeholder="Enter location..."
-                    style={{
-                      width: '100%',
-                      padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '10px',
-                      outline: 'none',
-                      fontSize: '13px',
-                      transition: 'all 0.2s ease'
-                    }}
-                    onFocus={(e) => {
-                      e.currentTarget.style.borderColor = '#7c3aed'
-                      e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                    }}
-                    onBlur={(e) => {
-                      e.currentTarget.style.borderColor = 'var(--border-color)'
-                      e.currentTarget.style.boxShadow = 'none'
-                    }}
-                  />
-                </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Opportunity Image</label>
-                  <input
-                    type="file"
-                    name="image"
-                    onChange={(e) => setImageFile(e.target.files[0])}
-                    accept="image/*"
-                    style={{
-                      width: '100%',
-                      padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '10px',
-                      outline: 'none',
-                      fontSize: '13px',
-                      transition: 'all 0.2s ease'
-                    }}
-                    onFocus={(e) => {
-                      e.currentTarget.style.borderColor = '#7c3aed'
-                      e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                    }}
-                    onBlur={(e) => {
-                      e.currentTarget.style.borderColor = 'var(--border-color)'
-                      e.currentTarget.style.boxShadow = 'none'
-                    }}
-                  />
-                  {imageFile && (
-                    <p style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>
-                      Selected: {imageFile.name}
-                    </p>
-                  )}
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Category</label>
-                    <input
-                      type="text"
-                      name="category"
-                      value={formData.category}
-                      onChange={handleInputChange}
-                      placeholder="Enter category..."
-                      style={{
-                        width: '100%',
-                        padding: '10px 12px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '10px',
-                        outline: 'none',
-                        fontSize: '13px',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onFocus={(e) => {
-                        e.currentTarget.style.borderColor = '#7c3aed'
-                        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.borderColor = 'var(--border-color)'
-                        e.currentTarget.style.boxShadow = 'none'
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Price</label>
-                    <input
-                      type="text"
-                      name="price"
-                      value={formData.price}
-                      onChange={handleInputChange}
-                      placeholder="Enter price (e.g., $50, Free)..."
-                      style={{
-                        width: '100%',
-                        padding: '10px 12px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '10px',
-                        outline: 'none',
-                        fontSize: '13px',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onFocus={(e) => {
-                        e.currentTarget.style.borderColor = '#7c3aed'
-                        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.borderColor = 'var(--border-color)'
-                        e.currentTarget.style.boxShadow = 'none'
-                      }}
-                    />
-                  </div>
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Expected Attendees</label>
-                    <input
-                      type="number"
-                      name="attendees"
-                      value={formData.attendees}
-                      onChange={handleInputChange}
-                      placeholder="0"
-                      style={{
-                        width: '100%',
-                        padding: '10px 12px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '10px',
-                        outline: 'none',
-                        fontSize: '13px',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onFocus={(e) => {
-                        e.currentTarget.style.borderColor = '#7c3aed'
-                        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.borderColor = 'var(--border-color)'
-                        e.currentTarget.style.boxShadow = 'none'
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Opportunity Type</label>
-                    <select 
-                      name="event_type"
-                      value={formData.event_type}
-                      onChange={handleInputChange}
-                      style={{
-                        width: '100%',
-                        padding: '10px 12px',
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '10px',
-                        outline: 'none',
-                        fontSize: '13px',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onFocus={(e) => {
-                        e.currentTarget.style.borderColor = '#7c3aed'
-                        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.borderColor = 'var(--border-color)'
-                        e.currentTarget.style.boxShadow = 'none'
-                      }}>
-                      <option value="In-Person">In-Person</option>
-                      <option value="Virtual">Virtual</option>
-                      <option value="Hybrid">Hybrid</option>
-                    </select>
-                  </div>
-                </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>Opportunity Category (Type)</label>
-                  <select 
-                    name="type"
-                    value={formData.type}
-                    onChange={handleInputChange}
-                    style={{
-                      width: '100%',
-                      padding: '10px 12px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '10px',
-                      outline: 'none',
-                      fontSize: '13px',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease'
-                    }}
-                    onFocus={(e) => {
-                      e.currentTarget.style.borderColor = '#7c3aed'
-                      e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                    }}
-                    onBlur={(e) => {
-                      e.currentTarget.style.borderColor = 'var(--border-color)'
-                      e.currentTarget.style.boxShadow = 'none'
-                    }}>
-                    <option value="Conference">Conference</option>
-                    <option value="Party">Party</option>
-                    <option value="Signing">Signing</option>
-                    <option value="Meetup">Meetup</option>
-                    <option value="Workshop">Workshop</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div style={{ padding: '20px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-              <button
-                onClick={() => setShowEditModal(false)}
-                style={{
-                  padding: '8px 16px',
-                  background: 'transparent',
-                  border: '1px solid #e2e8f0',
-                  borderRadius: '10px',
-                  cursor: 'pointer',
-                  fontSize: '13px',
-                  fontWeight: '500',
-                  color: '#64748b',
-                  transition: 'all 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#f8fafc'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'transparent'
-                }}
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleUpdateOpportunity}
-                style={{
-                  padding: '8px 16px',
-                  background: 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)',
-                  border: 'none',
-                  borderRadius: '10px',
-                  cursor: 'pointer',
-                  fontSize: '13px',
-                  fontWeight: '500',
-                  color: 'white',
-                  boxShadow: '0 4px 12px rgba(124, 58, 237, 0.3)',
-                  transition: 'all 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-2px)'
-                  e.currentTarget.style.boxShadow = '0 6px 16px rgba(124, 58, 237, 0.4)'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)'
-                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(124, 58, 237, 0.3)'
-                }}>
-                Update Opportunity
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
