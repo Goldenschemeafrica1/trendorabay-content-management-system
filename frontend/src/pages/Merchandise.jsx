@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useRef } from 'react'
 import { Plus, Edit, Trash2, Package, DollarSign, TrendingUp, Upload } from 'lucide-react'
-import api from '../services/api'
+import api, { BASE_URL } from '../services/api'
 import { HeaderVisibilityContext, SidebarVisibilityContext } from '../contexts/LayoutContexts'
 
 export default function Merchandise() {
@@ -77,7 +77,7 @@ export default function Merchandise() {
         const formDataUpload = new FormData()
         formDataUpload.append('image', imageFile)
         const token = sessionStorage.getItem('auth_token')
-        const uploadResponse = await fetch(`${API_BASE_URL}/api/products/upload`, {
+        const uploadResponse = await fetch(`${BASE_URL}/api/products/upload`, {
           method: 'POST',
           headers: token ? { 'Authorization': `Bearer ${token}` } : {},
           body: formDataUpload
@@ -104,10 +104,10 @@ export default function Merchandise() {
 
   const handleEditProduct = (product) => {
     setEditingProduct(product)
-    const imageUrl = product.image_url 
-      ? (product.image_url.startsWith('http') 
-          ? product.image_url 
-          : `${API_BASE_URL}${product.image_url}`)
+    const imageUrl = product.image_url
+      ? (product.image_url.startsWith('http')
+          ? product.image_url
+          : `${BASE_URL}${product.image_url}`)
       : null
     setFormData({
       name: product.name,
@@ -135,7 +135,7 @@ export default function Merchandise() {
         const formDataUpload = new FormData()
         formDataUpload.append('image', imageFile)
         const token = sessionStorage.getItem('auth_token')
-        const uploadResponse = await fetch(`${API_BASE_URL}/api/products/upload`, {
+        const uploadResponse = await fetch(`${BASE_URL}/api/products/upload`, {
           method: 'POST',
           headers: token ? { 'Authorization': `Bearer ${token}` } : {},
           body: formDataUpload
