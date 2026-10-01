@@ -57,7 +57,7 @@ const navigation = [
   { name: 'Podcast Hosts', href: '/dashboard/podcast-hosts', icon: UserIcon, notificationKey: null },
   { name: 'Podcast Guests', href: '/dashboard/podcast-guests', icon: UserCheck, notificationKey: null },
   { name: 'Guest Applications', href: '/dashboard/guest-applications', icon: UserCheck, notificationKey: 'guestApplications' },
-  { name: 'Pitch Submissions', href: '/dashboard/pitch-submissions', icon: Lightbulb, notificationKey: 'pitchSubmissions' },
+  { name: 'Pitch Applications', href: '/dashboard/pitch-applications', icon: Lightbulb, notificationKey: 'pitchApplications' },
   { name: 'Authors', href: '/dashboard/authors', icon: Users, notificationKey: null },
   { name: 'User Management', href: '/dashboard/users', icon: Users, notificationKey: 'userManagement' },
   { name: 'Media Library', href: '/dashboard/media', icon: ImageIcon, notificationKey: null },
@@ -345,6 +345,7 @@ export default function Layout() {
     magazines: 0,
     guestApplications: 0,
     pitchSubmissions: 0,
+    pitchApplications: 0,
     orders: 0,
     securityEvents: 0,
     events: 0,
@@ -442,6 +443,7 @@ export default function Layout() {
         magazines: 0,
         guestApplications: 0,
         pitchSubmissions: 0,
+        pitchApplications: 0,
         orders: 0,
         securityEvents: 0,
         events: 0,
@@ -814,6 +816,7 @@ export default function Layout() {
                               item.name === 'Sponsorships' ? 'linear-gradient(135deg, #f59e0b 0%, #eab308 100%)' :
                               item.name === 'Advertisements' ? 'linear-gradient(135deg, #ec4899 0%, #f43f5e 100%)' :
                               item.name === 'Ad Inquiries' ? 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)' :
+                              item.name === 'Pitch Applications' ? 'linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%)' :
                               item.name === 'Plans' ? 'linear-gradient(135deg, #10b981 0%, #14b8a6 100%)' :
                               item.name === 'Subscribers' ? 'linear-gradient(135deg, #f97316 0%, #f59e0b 100%)' :
                               item.name === 'Categories' ? 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)' :

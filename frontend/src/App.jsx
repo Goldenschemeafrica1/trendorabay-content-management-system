@@ -43,6 +43,7 @@ const Categories = lazy(() => import('./pages/Categories'))
 const EmailTemplates = lazy(() => import('./pages/EmailTemplates'))
 const GuestApplicationsPage = lazy(() => import('./pages/GuestApplicationsPage'))
 const PitchSubmissionsPage = lazy(() => import('./pages/PitchSubmissionsPage'))
+const PitchApplicationsPage = lazy(() => import('./pages/PitchApplicationsPage'))
 const Gallery = lazy(() => import('./pages/Gallery'))
 const SearchResults = lazy(() => import('./pages/SearchResults'))
 const SecurityDashboard = lazy(() => import('./pages/SecurityDashboard'))
@@ -239,6 +240,7 @@ function App() {
             </ProtectedRoute>
           } />
           <Route path="pitch-submissions" element={<PitchSubmissionsPage />} />
+          <Route path="pitch-applications" element={<PitchApplicationsPage />} />
           <Route path="security" element={
             <ProtectedRoute allowedRoles={['superadmin']}>
               <SecurityDashboard />

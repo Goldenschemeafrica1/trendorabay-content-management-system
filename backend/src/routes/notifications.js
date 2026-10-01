@@ -12,6 +12,7 @@ router.get('/counts', authenticate, isAdmin, async (req, res) => {
     let magazineCount = 0;
     let guestApplicationCount = 0;
     let pitchCount = 0;
+    let writeApplicationCount = 0;
     let orderCount = 0;
     let securityEventCount = 0;
     let eventCount = 0;
@@ -83,6 +84,18 @@ router.get('/counts', authenticate, isAdmin, async (req, res) => {
       console.error('Error fetching pitch count:', error);
     }
 
+    // Get pending write applications
+    try {
+      const [writeApplicationRows] = await db.query(`
+        SELECT COUNT(*) as count
+        FROM write_applications
+        WHERE status IN ('pending', 'new')
+      `);
+      writeApplicationCount = writeApplicationRows[0]?.count || 0;
+    } catch (error) {
+      console.error('Error fetching write application count:', error);
+    }
+
     // Get pending orders
     try {
       const [orderRows] = await db.query(`
@@ -136,6 +149,7 @@ router.get('/counts', authenticate, isAdmin, async (req, res) => {
       magazines: magazineCount,
       guestApplications: guestApplicationCount,
       pitchSubmissions: pitchCount,
+      pitchApplications: writeApplicationCount,
       orders: orderCount,
       securityEvents: securityEventCount,
       events: eventCount,
