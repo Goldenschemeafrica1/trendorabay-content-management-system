@@ -11,13 +11,19 @@ const CreateStory = lazy(() => import('./pages/CreateStory'))
 const EditStory = lazy(() => import('./pages/EditStory'))
 const ViewStory = lazy(() => import('./pages/ViewStory'))
 const Magazines = lazy(() => import('./pages/Magazines'))
+const CreateMagazine = lazy(() => import('./pages/CreateMagazine'))
+const EditMagazine = lazy(() => import('./pages/EditMagazine'))
 const Podcasts = lazy(() => import('./pages/Podcasts'))
 const PodcastHosts = lazy(() => import('./pages/PodcastHosts'))
 const PodcastGuests = lazy(() => import('./pages/PodcastGuests'))
 const Authors = lazy(() => import('./pages/Authors'))
+const CreateAuthor = lazy(() => import('./pages/CreateAuthor'))
+const EditAuthor = lazy(() => import('./pages/EditAuthor'))
 const Users = lazy(() => import('./pages/Users'))
 const Media = lazy(() => import('./pages/Media'))
 const Merchandise = lazy(() => import('./pages/Merchandise'))
+const CreateProduct = lazy(() => import('./pages/CreateProduct'))
+const EditProduct = lazy(() => import('./pages/EditProduct'))
 const Orders = lazy(() => import('./pages/Orders'))
 const Analytics = lazy(() => import('./pages/Analytics'))
 const Engagement = lazy(() => import('./pages/Engagement'))
@@ -83,6 +89,8 @@ function App() {
           <Route path="stories/edit/:id" element={<EditStory />} />
           <Route path="stories/view/:id" element={<ViewStory />} />
           <Route path="magazines" element={<Magazines />} />
+          <Route path="magazines/create" element={<CreateMagazine />} />
+          <Route path="magazines/edit/:id" element={<EditMagazine />} />
           <Route path="podcasts" element={
             <ProtectedRoute allowedRoles={['superadmin']}>
               <Podcasts />
@@ -103,6 +111,16 @@ function App() {
               <Authors />
             </ProtectedRoute>
           } />
+          <Route path="authors/create" element={
+            <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
+              <CreateAuthor />
+            </ProtectedRoute>
+          } />
+          <Route path="authors/edit/:id" element={
+            <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
+              <EditAuthor />
+            </ProtectedRoute>
+          } />
           <Route path="users" element={
             <ProtectedRoute allowedRoles={['admin', 'superadmin']}>
               <Users />
@@ -112,6 +130,16 @@ function App() {
           <Route path="merchandise" element={
             <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
               <Merchandise />
+            </ProtectedRoute>
+          } />
+          <Route path="merchandise/create" element={
+            <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
+              <CreateProduct />
+            </ProtectedRoute>
+          } />
+          <Route path="merchandise/edit/:id" element={
+            <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
+              <EditProduct />
             </ProtectedRoute>
           } />
           <Route path="orders" element={
