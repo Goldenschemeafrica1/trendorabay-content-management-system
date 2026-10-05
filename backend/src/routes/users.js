@@ -164,7 +164,7 @@ router.post('/', authenticate, isAdmin, verifyRequestSignature, async (req, res)
       { name, email, role: userRole }
     );
 
-    res.status(201).json({ id: result.insertId, message: 'User created successfully' });
+    res.status(201).json({ id: result.insertId, message: 'User created successfully', membership_number: membershipNumber });
   } catch (error) {
     await logAuditEvent(
       'USER_CREATED',
