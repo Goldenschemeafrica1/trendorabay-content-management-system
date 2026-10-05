@@ -316,8 +316,8 @@ export default function Users() {
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}>
             <tr>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Membership No</th>
               <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>User</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Membership No</th>
               <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Name</th>
               <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Phone</th>
               <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Role</th>
@@ -334,9 +334,6 @@ export default function Users() {
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = 'transparent'
               }}>
-                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px', fontWeight: '500' }}>
-                  {user.membership_number || '-'}
-                </td>
                 <td style={{ padding: '12px 16px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     {user.profile_image_url || user.profile_image ? (
@@ -373,6 +370,9 @@ export default function Users() {
                       <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{user.email}</p>
                     </div>
                   </div>
+                </td>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px', fontWeight: '500' }}>
+                  {user.membership_number || '-'}
                 </td>
                 <td style={{ padding: '12px 16px' }}>
                   <p style={{ fontWeight: '500', color: 'var(--text-primary)', fontSize: '13px' }}>
