@@ -17,6 +17,7 @@ router.get('/counts', authenticate, isAdmin, async (req, res) => {
     let securityEventCount = 0;
     let eventCount = 0;
     let partnershipInquiryCount = 0;
+    let communityCount = 0;
 
     // Get new users count (created within last 7 days)
     try {
@@ -144,6 +145,19 @@ router.get('/counts', authenticate, isAdmin, async (req, res) => {
       console.error('Error fetching partnership inquiry count:', error);
     }
 
+    // Get pending communities (status = 'active' for new ones needing review)
+    try {
+      const [communityRows] = await db.query(`
+        SELECT COUNT(*) as count
+        FROM communities
+        WHERE status = 'active'
+      `);
+      communityCount = communityRows[0]?.count || 0;
+    } catch (error) {
+      console.error('Error fetching community count:', error);
+      communityCount = 0;
+    }
+
     res.json({
       stories: storyCount,
       magazines: magazineCount,
@@ -154,7 +168,8 @@ router.get('/counts', authenticate, isAdmin, async (req, res) => {
       securityEvents: securityEventCount,
       events: eventCount,
       partnersInquiry: partnershipInquiryCount,
-      userManagement: userCount
+      userManagement: userCount,
+      communities: communityCount
     });
   } catch (error) {
     console.error('Error fetching notification counts:', error);

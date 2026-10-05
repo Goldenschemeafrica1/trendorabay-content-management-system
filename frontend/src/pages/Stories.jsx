@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Plus, Edit, Trash2, Eye } from 'lucide-react'
+import { Plus, Edit, Trash2, Eye, ChevronUp, ChevronDown } from 'lucide-react'
 import api from '../services/api'
 import { HeaderVisibilityContext, SidebarVisibilityContext, ThemeContext } from '../contexts/LayoutContexts'
 
@@ -13,6 +13,8 @@ export default function Stories() {
   
   const [searchTerm, setSearchTerm] = useState('')
   const [filterStatus, setFilterStatus] = useState('all')
+  const [filterSection, setFilterSection] = useState('all')
+  const [sortBy, setSortBy] = useState('created_at')
   const [stories, setStories] = useState([])
   const [,setLoading] = useState(true)
 
@@ -28,7 +30,13 @@ export default function Stories() {
   useEffect(() => {
     const fetchStories = async () => {
       try {
-        const data = await api.get('/stories')
+        const params = new URLSearchParams()
+        if (filterSection !== 'all') {
+          params.append('section', filterSection)
+        }
+        const queryString = params.toString()
+        const url = queryString ? `/stories?${queryString}` : '/stories'
+        const data = await api.get(url)
         setStories(data)
       } catch (error) {
         console.error('Failed to fetch stories:', error)
@@ -37,7 +45,7 @@ export default function Stories() {
       }
     }
     fetchStories()
-  }, [])
+  }, [filterSection])
 
   // Always show header and sidebar
   useEffect(() => {
@@ -71,12 +79,31 @@ export default function Stories() {
     date: story.published_at ? new Date(story.published_at).toLocaleDateString() : story.created_at ? new Date(story.created_at).toLocaleDateString() : 'N/A',
     author: story.author_name || 'Unknown',
     category: story.category_name || story.category || 'Uncategorized',
-    views: story.views || 0
+    views: story.views || 0,
+    displaySection: story.display_section || 'default',
+    displayOrder: story.display_order || 0,
+    priority: story.priority || 0
   })).filter(story => {
     const matchesSearch = story.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          (story.author && story.author.toLowerCase().includes(searchTerm.toLowerCase()))
     const matchesFilter = filterStatus === 'all' || story.status === filterStatus
-    return matchesSearch && matchesFilter
+    const matchesSection = filterSection === 'all' || story.displaySection === filterSection
+    return matchesSearch && matchesFilter && matchesSection
+  }).sort((a, b) => {
+    // By display order if sorting by display_order
+    if (sortBy === 'display_order') {
+      return a.displayOrder - b.displayOrder
+    }
+    // By priority if sorting by priority
+    if (sortBy === 'priority') {
+      return b.priority - a.priority
+    }
+    // By views if sorting by views
+    if (sortBy === 'views') {
+      return b.views - a.views
+    }
+    // Default: sort by date
+    return new Date(b.date) - new Date(a.date)
   })
 
   return (
@@ -118,8 +145,8 @@ export default function Stories() {
       </div>
 
       {/* Filters */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-        <div style={{ flex: 1 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+        <div style={{ flex: 1, minWidth: '200px' }}>
           <input
             type="text"
             placeholder="Search stories..."
@@ -173,6 +200,63 @@ export default function Stories() {
           <option value="published">Published</option>
           <option value="draft">Draft</option>
         </select>
+        <select
+          value={filterSection}
+          onChange={(e) => setFilterSection(e.target.value)}
+          style={{
+            padding: '10px 16px',
+            background: isDarkMode ? '#1e293b' : '#f8fafc',
+            border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
+            borderRadius: '12px',
+            outline: 'none',
+            fontSize: '14px',
+            color: isDarkMode ? '#f1f5f9' : '#0f172a',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease'
+          }}
+          onFocus={(e) => {
+            e.currentTarget.style.borderColor = '#7c3aed'
+            e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
+          }}
+          onBlur={(e) => {
+            e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
+            e.currentTarget.style.boxShadow = 'none'
+          }}
+        >
+          <option value="all">All Sections</option>
+          <option value="default">Default</option>
+          <option value="latest_stories">Latest Stories</option>
+          <option value="must_read">Must Read</option>
+          <option value="innovation">Innovation</option>
+        </select>
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          style={{
+            padding: '10px 16px',
+            background: isDarkMode ? '#1e293b' : '#f8fafc',
+            border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
+            borderRadius: '12px',
+            outline: 'none',
+            fontSize: '14px',
+            color: isDarkMode ? '#f1f5f9' : '#0f172a',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease'
+          }}
+          onFocus={(e) => {
+            e.currentTarget.style.borderColor = '#7c3aed'
+            e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
+          }}
+          onBlur={(e) => {
+            e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
+            e.currentTarget.style.boxShadow = 'none'
+          }}
+        >
+          <option value="created_at">Sort by Date</option>
+          <option value="display_order">Sort by Order</option>
+          <option value="priority">Sort by Priority</option>
+          <option value="views">Sort by Views</option>
+        </select>
       </div>
 
       {/* Stories Table */}
@@ -190,6 +274,7 @@ export default function Stories() {
               <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: isDarkMode ? '#94a3b8' : '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Title</th>
               <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: isDarkMode ? '#94a3b8' : '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Author</th>
               <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: isDarkMode ? '#94a3b8' : '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Category</th>
+              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: isDarkMode ? '#94a3b8' : '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Section</th>
               <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: isDarkMode ? '#94a3b8' : '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Status</th>
               <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: isDarkMode ? '#94a3b8' : '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Date</th>
               <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: isDarkMode ? '#94a3b8' : '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Views</th>
@@ -197,7 +282,7 @@ export default function Stories() {
             </tr>
           </thead>
           <tbody>
-            {filteredStories.map((story) => (
+            {filteredStories.map((story, index) => (
               <tr key={story.id} style={{ borderBottom: isDarkMode ? '1px solid #334155' : '1px solid #f1f5f9', transition: 'background 0.2s ease' }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = isDarkMode ? '#334155' : '#f8fafc'
@@ -219,6 +304,25 @@ export default function Stories() {
                     fontWeight: '500'
                   }}>
                     {story.category}
+                  </span>
+                </td>
+                <td style={{ padding: '16px 24px' }}>
+                  <span style={{
+                    padding: '4px 12px',
+                    background: story.displaySection === 'latest_stories' ? '#3b82f6' :
+                               story.displaySection === 'must_read' ? '#ef4444' :
+                               story.displaySection === 'innovation' ? '#10b981' :
+                               isDarkMode ? '#334155' : '#f1f5f9',
+                    color: story.displaySection !== 'default' ? 'white' : (isDarkMode ? '#94a3b8' : '#475569'),
+                    borderRadius: '20px',
+                    fontSize: '12px',
+                    fontWeight: '500',
+                    textTransform: 'capitalize'
+                  }}>
+                    {story.displaySection === 'latest_stories' ? 'Latest Stories' :
+                     story.displaySection === 'must_read' ? 'Must Read' :
+                     story.displaySection === 'innovation' ? 'Innovation' :
+                     story.displaySection}
                   </span>
                 </td>
                 <td style={{ padding: '16px 24px' }}>

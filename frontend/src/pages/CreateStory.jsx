@@ -16,8 +16,12 @@ export default function CreateStory() {
     author_id: '',
     category: '',
     content: '',
-    featured: false,
-    read_time: '5 min read'
+    read_time: '5 min read',
+    display_section: 'default',
+    display_order: 0,
+    priority: 0,
+    display_start_date: '',
+    display_end_date: ''
   })
   const [coverImageFile, setCoverImageFile] = useState(null)
   const [coverImagePreview, setCoverImagePreview] = useState(null)
@@ -150,8 +154,16 @@ export default function CreateStory() {
       formDataToSend.append('category', formData.category)
       formDataToSend.append('content', formData.content)
       formDataToSend.append('status', status)
-      formDataToSend.append('featured', formData.featured)
       formDataToSend.append('read_time', formData.read_time)
+      formDataToSend.append('display_section', formData.display_section)
+      formDataToSend.append('display_order', formData.display_order)
+      formDataToSend.append('priority', formData.priority)
+      if (formData.display_start_date) {
+        formDataToSend.append('display_start_date', formData.display_start_date)
+      }
+      if (formData.display_end_date) {
+        formDataToSend.append('display_end_date', formData.display_end_date)
+      }
       if (coverImageFile) {
         formDataToSend.append('cover_image', coverImageFile)
       }
@@ -330,20 +342,153 @@ export default function CreateStory() {
               </select>
             </div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <input
-              type="checkbox"
-              name="featured"
-              checked={formData.featured}
-              onChange={(e) => setFormData(prev => ({ ...prev, featured: e.target.checked }))}
-              style={{
-                width: '20px',
-                height: '20px',
-                cursor: 'pointer',
-                accentColor: '#7c3aed'
-              }}
-            />
-            <label style={{ fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', cursor: 'pointer' }}>Featured Story</label>
+          <div>
+            <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Display Section</label>
+            <select name="display_section" value={formData.display_section} onChange={handleInputChange} style={{
+              width: '100%',
+              padding: '12px 16px',
+              background: isDarkMode ? '#0f172a' : '#f8fafc',
+              border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
+              borderRadius: '12px',
+              outline: 'none',
+              fontSize: '14px',
+              color: isDarkMode ? '#f1f5f9' : '#0f172a',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease'
+            }}
+            onFocus={(e) => {
+              e.currentTarget.style.borderColor = '#7c3aed'
+              e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
+              e.currentTarget.style.boxShadow = 'none'
+            }}>
+              <option value="default">Default</option>
+              <option value="latest_stories">Latest Stories</option>
+              <option value="must_read">Must Read</option>
+              <option value="innovation">Innovation</option>
+            </select>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Display Order</label>
+              <input
+                type="number"
+                name="display_order"
+                value={formData.display_order}
+                onChange={handleInputChange}
+                min="0"
+                placeholder="0"
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  background: isDarkMode ? '#0f172a' : '#f8fafc',
+                  border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
+                  borderRadius: '12px',
+                  outline: 'none',
+                  fontSize: '14px',
+                  color: isDarkMode ? '#f1f5f9' : '#0f172a',
+                  transition: 'all 0.2s ease'
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = '#7c3aed'
+                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
+                  e.currentTarget.style.boxShadow = 'none'
+                }}
+              />
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Priority</label>
+              <input
+                type="number"
+                name="priority"
+                value={formData.priority}
+                onChange={handleInputChange}
+                min="0"
+                placeholder="0"
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  background: isDarkMode ? '#0f172a' : '#f8fafc',
+                  border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
+                  borderRadius: '12px',
+                  outline: 'none',
+                  fontSize: '14px',
+                  color: isDarkMode ? '#f1f5f9' : '#0f172a',
+                  transition: 'all 0.2s ease'
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = '#7c3aed'
+                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
+                  e.currentTarget.style.boxShadow = 'none'
+                }}
+              />
+            </div>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Display Start Date (Optional)</label>
+              <input
+                type="date"
+                name="display_start_date"
+                value={formData.display_start_date}
+                onChange={handleInputChange}
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  background: isDarkMode ? '#0f172a' : '#f8fafc',
+                  border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
+                  borderRadius: '12px',
+                  outline: 'none',
+                  fontSize: '14px',
+                  color: isDarkMode ? '#f1f5f9' : '#0f172a',
+                  transition: 'all 0.2s ease'
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = '#7c3aed'
+                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
+                  e.currentTarget.style.boxShadow = 'none'
+                }}
+              />
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Display End Date (Optional)</label>
+              <input
+                type="date"
+                name="display_end_date"
+                value={formData.display_end_date}
+                onChange={handleInputChange}
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  background: isDarkMode ? '#0f172a' : '#f8fafc',
+                  border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
+                  borderRadius: '12px',
+                  outline: 'none',
+                  fontSize: '14px',
+                  color: isDarkMode ? '#f1f5f9' : '#0f172a',
+                  transition: 'all 0.2s ease'
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = '#7c3aed'
+                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
+                  e.currentTarget.style.boxShadow = 'none'
+                }}
+              />
+            </div>
           </div>
           <div>
             <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Cover Image</label>

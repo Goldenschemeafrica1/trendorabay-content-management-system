@@ -18,6 +18,7 @@ router.get('/', authenticate, async (req, res) => {
       podcastCount,
       orderCount,
       userCount,
+      opportunitiesCount,
       topStories,
       latestUsers,
       latestSubscribers,
@@ -39,24 +40,27 @@ router.get('/', authenticate, async (req, res) => {
       // Podcast count
       db.query('SELECT COUNT(*) as count FROM podcasts'),
       
-      // Order count (editor+ only)
-      isEditorOrHigher 
-        ? db.query('SELECT COUNT(*) as count FROM orders')
-        : Promise.resolve([{ count: 0 }]),
+      // Opportunities count
+      db.query('SELECT COUNT(*) as count FROM events'),
       
-      // User count (admin+ only, excluding superadmin)
-      isAdminOrHigher
-        ? db.query("SELECT COUNT(*) as count FROM cms_users WHERE role != 'superadmin'")
-        : Promise.resolve([{ count: 0 }]),
+      // Order count
+      db.query('SELECT COUNT(*) as count FROM orders'),
       
-      // Top 10 published stories
+      // User count - count from both tables
+      db.query(`
+        SELECT 
+          (SELECT COUNT(*) FROM cms_users WHERE role != 'superadmin') +
+          (SELECT COUNT(*) FROM users u LEFT JOIN cms_users c ON u.cms_user_id = c.id WHERE c.id IS NULL) as count
+      `),
+      
+      // Top 7 published stories
       db.query(`
         SELECT s.id, s.title, s.excerpt, s.published_at, a.name as author_name
         FROM stories s
         LEFT JOIN authors a ON s.author_id = a.id
         WHERE s.status = 'published'
         ORDER BY s.published_at DESC
-        LIMIT 10
+        LIMIT 7
       `),
       
       // Latest 5 users (admin+ only) - union of cms_users and users tables
@@ -120,7 +124,8 @@ router.get('/', authenticate, async (req, res) => {
         magazines: magazineCount[0][0].count,
         podcasts: podcastCount[0][0].count,
         orders: orderCount[0][0].count,
-        users: userCount[0][0].count
+        users: userCount[0][0].count,
+        opportunities: opportunitiesCount[0][0].count
       },
       topStories: topStories[0],
       latestUsers: latestUsers.length > 0 ? latestUsers[0].map(user => ({

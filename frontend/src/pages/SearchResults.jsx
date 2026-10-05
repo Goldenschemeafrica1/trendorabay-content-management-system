@@ -163,7 +163,7 @@ export default function SearchResults() {
           <div style={{ padding: '16px', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
             <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#0f172a', marginBottom: '4px' }}>{item.name}</h3>
             <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '8px' }}>{item.description || 'No description'}</p>
-            <span style={{ fontSize: '14px', fontWeight: '600', color: '#7c3aed' }}>${item.price || '0.00'}</span>
+            <span style={{ fontSize: '14px', fontWeight: '600', color: '#7c3aed' }}>KSH {item.price || '0.00'}</span>
           </div>
         )
       default:

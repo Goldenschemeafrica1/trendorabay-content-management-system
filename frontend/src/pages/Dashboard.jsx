@@ -26,7 +26,7 @@ export default function Dashboard() {
   const [recentActivity, setRecentActivity] = useState([])
   const [usersCount, setUsersCount] = useState(0)
   const [originalStats, setOriginalStats] = useState([
-    { name: 'Total Stories', value: '0', change: '+12%', icon: FileText, gradient: 'from-blue-500 to-cyan-500' },
+    { name: 'Opportunities', value: '0', change: '+12%', icon: Calendar, gradient: 'from-blue-500 to-cyan-500' },
     { name: 'Magazines', value: '0', change: '+5%', icon: BookOpen, gradient: 'from-emerald-500 to-teal-500' },
     { name: 'Podcasts', value: '0', change: '+8%', icon: Mic, gradient: 'from-violet-500 to-purple-500' },
     { name: 'Users', value: '0', change: '+15%', icon: Users, gradient: 'from-orange-500 to-amber-500' },
@@ -58,7 +58,7 @@ export default function Dashboard() {
 
         // Update original stats with real data
         setOriginalStats([
-          { name: 'Total Stories', value: data.stats.totalStories.toString(), change: '+12%', icon: FileText, gradient: 'from-blue-500 to-cyan-500' },
+          { name: 'Opportunities', value: data.stats.opportunities.toString(), change: '+12%', icon: Calendar, gradient: 'from-blue-500 to-cyan-500' },
           { name: 'Magazines', value: data.stats.magazines.toString(), change: '+5%', icon: BookOpen, gradient: 'from-emerald-500 to-teal-500' },
           { name: 'Podcasts', value: data.stats.podcasts.toString(), change: '+8%', icon: Mic, gradient: 'from-violet-500 to-purple-500' },
           { name: 'Orders', value: data.stats.orders.toString(), change: '+3%', icon: ShoppingBag, gradient: 'from-pink-500 to-rose-500' },

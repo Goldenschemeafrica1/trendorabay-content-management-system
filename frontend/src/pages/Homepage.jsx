@@ -937,7 +937,7 @@ export default function Homepage() {
                     <p style={{ fontSize: '14px', fontWeight: '500', color: 'var(--text-primary)' }}>{magazine.title}</p>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '8px' }}>
                       <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{magazine.category || 'No category'}</span>
-                      <span style={{ fontSize: '14px', fontWeight: '600', color: '#10b981' }}>${magazine.price || '0'}</span>
+                      <span style={{ fontSize: '14px', fontWeight: '600', color: '#10b981' }}>KSH {magazine.price || '0'}</span>
                     </div>
                     <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
                       <button

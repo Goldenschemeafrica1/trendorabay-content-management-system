@@ -77,6 +77,7 @@ const navigation = [
   { section: 'Community' },
   { name: 'Contributors', href: '/dashboard/contributors', icon: UserPlus, notificationKey: null },
   { name: 'Opportunities', href: '/dashboard/events', icon: Calendar, notificationKey: 'events' },
+  { name: 'Communities', href: '/dashboard/communities', icon: Users, notificationKey: 'communities' },
   { section: 'Pages' },
   { name: 'Homepage', href: '/dashboard/homepage', icon: Home, notificationKey: null },
   { name: 'PodcastPage', href: '/dashboard/podcast', icon: File, notificationKey: null },
@@ -350,7 +351,8 @@ export default function Layout() {
     securityEvents: 0,
     events: 0,
     partnersInquiry: 0,
-    userManagement: 0
+    userManagement: 0,
+    communities: 0
   })
 
   const toggleTheme = () => {
@@ -448,7 +450,8 @@ export default function Layout() {
         securityEvents: 0,
         events: 0,
         partnersInquiry: 0,
-        userManagement: 0
+        userManagement: 0,
+        communities: 0
       })
     }
   }

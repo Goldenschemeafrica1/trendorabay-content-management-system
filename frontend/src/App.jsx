@@ -31,6 +31,10 @@ const Sales = lazy(() => import('./pages/Sales'))
 const Performance = lazy(() => import('./pages/Performance'))
 const Contributors = lazy(() => import('./pages/Contributors'))
 const Opportunities = lazy(() => import('./pages/Opportunities'))
+const CommunitiesPage = lazy(() => import('./pages/CommunitiesPage'))
+const CreateCommunity = lazy(() => import('./pages/CreateCommunity'))
+const EditCommunity = lazy(() => import('./pages/EditCommunity'))
+const CommunityMembersPage = lazy(() => import('./pages/CommunityMembersPage'))
 const CreateOpportunity = lazy(() => import('./pages/CreateOpportunity'))
 const EditOpportunity = lazy(() => import('./pages/EditOpportunity'))
 const Homepage = lazy(() => import('./pages/Homepage'))
@@ -185,6 +189,26 @@ function App() {
           <Route path="events/edit/:id" element={
             <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
               <EditOpportunity />
+            </ProtectedRoute>
+          } />
+          <Route path="communities" element={
+            <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
+              <CommunitiesPage />
+            </ProtectedRoute>
+          } />
+          <Route path="communities/create" element={
+            <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
+              <CreateCommunity />
+            </ProtectedRoute>
+          } />
+          <Route path="communities/edit/:id" element={
+            <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
+              <EditCommunity />
+            </ProtectedRoute>
+          } />
+          <Route path="communities/members/:communityId" element={
+            <ProtectedRoute allowedRoles={['editor', 'admin', 'superadmin']}>
+              <CommunityMembersPage />
             </ProtectedRoute>
           } />
           <Route path="homepage" element={

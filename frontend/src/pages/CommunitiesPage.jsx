@@ -1,75 +1,66 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Plus, Edit, Trash2, Package, DollarSign, TrendingUp } from 'lucide-react'
+import { Plus, Edit, Trash2, Users, MessageSquare, Calendar, Shield, UserCog } from 'lucide-react'
 import api from '../services/api'
 
-export default function Merchandise() {
+export default function CommunitiesPage() {
   const navigate = useNavigate()
   const [searchTerm, setSearchTerm] = useState('')
   const [filterStatus, setFilterStatus] = useState('all')
-  const [products, setProducts] = useState([])
+  const [communities, setCommunities] = useState([])
   const [,setLoading] = useState(true)
   
-  // Fetch products from backend
+  // Fetch communities from backend
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchCommunities = async () => {
       try {
-        const data = await api.get('/products')
-        setProducts(data)
+        const data = await api.get('/communities')
+        setCommunities(data)
       } catch (error) {
-        console.error('Failed to fetch products:', error)
+        console.error('Failed to fetch communities:', error)
       } finally {
         setLoading(false)
       }
     }
-    fetchProducts()
+    fetchCommunities()
   }, [])
 
-  const handleDeleteProduct = async (productId) => {
-    if (!confirm('Are you sure you want to delete this product?')) {
+  const handleDeleteCommunity = async (communityId) => {
+    if (!confirm('Are you sure you want to delete this community?')) {
       return
     }
     
     try {
-      await api.delete(`/products/${productId}`)
-      const data = await api.get('/products')
-      setProducts(data)
-      alert('Product deleted successfully!')
+      await api.delete(`/communities/${communityId}`)
+      const data = await api.get('/communities')
+      setCommunities(data)
+      alert('Community deleted successfully!')
     } catch (error) {
-      console.error('Failed to delete product:', error)
-      alert('Failed to delete product: ' + error.message)
+      console.error('Failed to delete community:', error)
+      alert('Failed to delete community: ' + error.message)
     }
   }
 
-  const handleEditProduct = (product) => {
-    navigate(`/dashboard/merchandise/edit/${product.id}`)
-  }
-
-  const filteredProducts = products.map(product => ({
-    ...product,
-    price: parseFloat(product.price),
-    sku: 'SKU-' + product.id, // Backend doesn't have sku field yet
-    displayStatus: product.stock === 0 ? 'out-of-stock' : product.status
-  })).filter(product => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         product.sku.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesStatus = filterStatus === 'all' || product.displayStatus === filterStatus
+  const filteredCommunities = communities.filter(community => {
+    const matchesSearch = community.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         community.description?.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesStatus = filterStatus === 'all' || community.status === filterStatus
     return matchesSearch && matchesStatus
   })
 
-  const totalValue = products.reduce((sum, p) => sum + (p.price * p.stock), 0)
-  const totalStock = products.reduce((sum, p) => sum + p.stock, 0)
+  const totalMembers = communities.reduce((sum, c) => sum + (c.member_count || 0), 0)
+  const totalPosts = communities.reduce((sum, c) => sum + (c.post_count || 0), 0)
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: 'var(--text-primary)' }}>Store</h1>
-          <p style={{ color: 'var(--text-secondary)', marginTop: '4px' }}>Manage products and inventory</p>
+          <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: 'var(--text-primary)' }}>Communities</h1>
+          <p style={{ color: 'var(--text-secondary)', marginTop: '4px' }}>Manage community groups and discussions</p>
         </div>
         <button
-          onClick={() => navigate('/dashboard/merchandise/create')}
+          onClick={() => navigate('/dashboard/communities/create')}
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -95,7 +86,7 @@ export default function Merchandise() {
           }}
         >
           <Plus style={{ width: '20px', height: '20px' }} />
-          Add Product
+          Add Community
         </button>
       </div>
 
@@ -119,11 +110,11 @@ export default function Merchandise() {
               alignItems: 'center', 
               justifyContent: 'center'
             }}>
-              <Package style={{ width: '16px', height: '16px', color: '#2563eb' }} />
+              <Users style={{ width: '16px', height: '16px', color: '#2563eb' }} />
             </div>
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>{products.length}</h3>
-          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>Total Products</p>
+          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>{communities.length}</h3>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>Total Communities</p>
         </div>
         <div style={{
           background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
@@ -143,11 +134,11 @@ export default function Merchandise() {
               alignItems: 'center', 
               justifyContent: 'center'
             }}>
-              <DollarSign style={{ width: '16px', height: '16px', color: '#16a34a' }} />
+              <MessageSquare style={{ width: '16px', height: '16px', color: '#16a34a' }} />
             </div>
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>KSH {totalValue.toLocaleString()}</h3>
-          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>Total Inventory Value</p>
+          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>{totalMembers}</h3>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>Total Members</p>
         </div>
         <div style={{
           background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
@@ -167,11 +158,11 @@ export default function Merchandise() {
               alignItems: 'center', 
               justifyContent: 'center'
             }}>
-              <TrendingUp style={{ width: '16px', height: '16px', color: '#9333ea' }} />
+              <MessageSquare style={{ width: '16px', height: '16px', color: '#9333ea' }} />
             </div>
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>{totalStock}</h3>
-          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>Total Units in Stock</p>
+          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>{totalPosts}</h3>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>Total Posts</p>
         </div>
       </div>
 
@@ -180,7 +171,7 @@ export default function Merchandise() {
         <div style={{ flex: 1 }}>
           <input
             type="text"
-            placeholder="Search products..."
+            placeholder="Search communities..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             style={{
@@ -226,12 +217,13 @@ export default function Merchandise() {
           }}
         >
           <option value="all">All Status</option>
-          <option value="active">In Stock</option>
-          <option value="out-of-stock">Out of Stock</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+          <option value="archived">Archived</option>
         </select>
       </div>
 
-      {/* Products Table */}
+      {/* Communities Table */}
       <div style={{
         background: 'color-mix(in srgb, var(--bg-primary) 95%, transparent)',
         backdropFilter: 'blur(20px)',
@@ -243,18 +235,18 @@ export default function Merchandise() {
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}>
             <tr>
-              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>Product</th>
-              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>SKU</th>
-              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>Price</th>
-              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>Stock</th>
+              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>Community</th>
               <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>Category</th>
+              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>Type</th>
+              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>Members</th>
+              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>Posts</th>
               <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>Status</th>
               <th style={{ textAlign: 'right', padding: '16px 24px', fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {filteredProducts.map((product) => (
-              <tr key={product.id} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background 0.2s ease' }}
+            {filteredCommunities.map((community) => (
+              <tr key={community.id} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background 0.2s ease' }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = 'var(--bg-secondary)'
               }}
@@ -262,14 +254,19 @@ export default function Merchandise() {
                 e.currentTarget.style.background = 'transparent'
               }}>
                 <td style={{ padding: '16px 24px' }}>
-                  <span style={{ fontWeight: '500', color: 'var(--text-primary)' }}>{product.name}</span>
-                </td>
-                <td style={{ padding: '16px 24px', color: 'var(--text-secondary)' }}>{product.sku}</td>
-                <td style={{ padding: '16px 24px', color: 'var(--text-secondary)' }}>KSH {product.price.toFixed(2)}</td>
-                <td style={{ padding: '16px 24px' }}>
-                  <span style={{ fontWeight: '500', color: product.stock === 0 ? '#dc2626' : 'var(--text-primary)' }}>
-                    {product.stock}
-                  </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    {community.icon_url && (
+                      <img 
+                        src={community.icon_url} 
+                        alt={community.name}
+                        style={{ width: '40px', height: '40px', borderRadius: '8px', objectFit: 'cover' }}
+                      />
+                    )}
+                    <div>
+                      <p style={{ fontWeight: '500', color: 'var(--text-primary)', fontSize: '14px' }}>{community.name}</p>
+                      <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{community.short_description || ''}</p>
+                    </div>
+                  </div>
                 </td>
                 <td style={{ padding: '16px 24px' }}>
                   <span style={{ 
@@ -280,8 +277,17 @@ export default function Merchandise() {
                     fontSize: '12px', 
                     fontWeight: '500'
                   }}>
-                    {product.category}
+                    {community.category}
                   </span>
+                </td>
+                <td style={{ padding: '16px 24px', color: 'var(--text-secondary)', fontSize: '13px' }}>
+                  {community.community_type}
+                </td>
+                <td style={{ padding: '16px 24px', color: 'var(--text-secondary)', fontSize: '13px' }}>
+                  {community.member_count || 0}
+                </td>
+                <td style={{ padding: '16px 24px', color: 'var(--text-secondary)', fontSize: '13px' }}>
+                  {community.post_count || 0}
                 </td>
                 <td style={{ padding: '16px 24px' }}>
                   <span style={{ 
@@ -289,16 +295,34 @@ export default function Merchandise() {
                     borderRadius: '20px', 
                     fontSize: '12px', 
                     fontWeight: '500',
-                    background: product.displayStatus === 'active' ? '#dcfce7' : '#fee2e2',
-                    color: product.displayStatus === 'active' ? '#166534' : '#991b1b'
+                    background: community.status === 'active' ? '#dcfce7' : community.status === 'inactive' ? '#fef9c3' : '#fee2e2',
+                    color: community.status === 'active' ? '#166534' : community.status === 'inactive' ? '#854d0e' : '#991b1b'
                   }}>
-                    {product.displayStatus === 'active' ? 'In Stock' : 'Out of Stock'}
+                    {community.status}
                   </span>
                 </td>
                 <td style={{ padding: '16px 24px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '8px' }}>
                     <button 
-                      onClick={() => handleEditProduct(product)}
+                      onClick={() => navigate(`/dashboard/communities/members/${community.id}`)}
+                      style={{
+                        padding: '8px',
+                        background: 'transparent',
+                        border: 'none',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease'
+                      }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'var(--bg-secondary)'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'transparent'
+                    }}>
+                      <UserCog style={{ width: '16px', height: '16px', color: 'var(--text-secondary)' }} />
+                    </button>
+                    <button 
+                      onClick={() => navigate(`/dashboard/communities/edit/${community.id}`)}
                       style={{
                         padding: '8px',
                         background: 'transparent',
@@ -316,7 +340,7 @@ export default function Merchandise() {
                       <Edit style={{ width: '16px', height: '16px', color: 'var(--text-secondary)' }} />
                     </button>
                     <button 
-                      onClick={() => handleDeleteProduct(product.id)}
+                      onClick={() => handleDeleteCommunity(community.id)}
                       style={{
                         padding: '8px',
                         background: 'transparent',

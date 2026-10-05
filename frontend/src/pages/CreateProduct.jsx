@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Upload, ArrowLeft } from 'lucide-react'
 import api, { BASE_URL } from '../services/api'
@@ -16,7 +16,24 @@ export default function CreateProduct() {
   })
   const [imageFile, setImageFile] = useState(null)
   const [imagePreview, setImagePreview] = useState(null)
+  const [categories, setCategories] = useState([])
+  const [loadingCategories, setLoadingCategories] = useState(true)
   const productImageInputRef = useRef(null)
+
+  useEffect(() => {
+    fetchCategories()
+  }, [])
+
+  const fetchCategories = async () => {
+    try {
+      const data = await api.get('/categories')
+      setCategories(data)
+    } catch (error) {
+      console.error('Failed to fetch categories:', error)
+    } finally {
+      setLoadingCategories(false)
+    }
+  }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -262,12 +279,11 @@ export default function CreateProduct() {
 
           <div>
             <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Category</label>
-            <input
-              type="text"
+            <select
               name="category"
               value={formData.category}
               onChange={handleInputChange}
-              placeholder="Enter category..."
+              disabled={loadingCategories}
               style={{
                 width: '100%',
                 padding: '12px 16px',
@@ -277,17 +293,27 @@ export default function CreateProduct() {
                 outline: 'none',
                 fontSize: '14px',
                 color: 'var(--text-primary)',
+                cursor: loadingCategories ? 'not-allowed' : 'pointer',
                 transition: 'all 0.2s ease'
               }}
               onFocus={(e) => {
-                e.currentTarget.style.borderColor = '#7c3aed'
-                e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
+                if (!loadingCategories) {
+                  e.currentTarget.style.borderColor = '#7c3aed'
+                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
+                }
               }}
               onBlur={(e) => {
                 e.currentTarget.style.borderColor = 'var(--border-color)'
                 e.currentTarget.style.boxShadow = 'none'
               }}
-            />
+            >
+              <option value="">{loadingCategories ? 'Loading categories...' : 'Select a category'}</option>
+              {categories.map(category => (
+                <option key={category.id} value={category.name}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div>
