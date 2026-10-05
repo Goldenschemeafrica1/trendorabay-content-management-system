@@ -51,11 +51,14 @@ router.post('/register', registerValidation, async (req, res) => {
     );
 
     // Assign membership number
-    await assignMembershipNumber(userResult.insertId);
+    const membershipNumber = await assignMembershipNumber(userResult.insertId);
 
-    // Get the created user
+    // Get the created user with membership number
     const [newUser] = await db.query(
-      'SELECT id, name, email, role FROM cms_users WHERE id = ?',
+      `SELECT c.id, c.name, c.email, c.role, u.membership_number
+       FROM cms_users c
+       LEFT JOIN users u ON c.id = u.cms_user_id
+       WHERE c.id = ?`,
       [result.insertId]
     );
     
@@ -95,7 +98,7 @@ router.post('/register', registerValidation, async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     });
     
-    res.status(201).json({ user: newUser[0] });
+    res.status(201).json({ user: newUser[0], membership_number: newUser[0].membership_number });
   } catch (error) {
     console.error('Registration error:', error);
     res.status(500).json({ error: 'Registration failed' });
@@ -109,7 +112,10 @@ router.post('/login', ipBlocker, loginValidation, async (req, res) => {
     
     // Find user by email (select only needed fields)
     const [users] = await db.query(
-      'SELECT id, name, email, password, role, status, profile_image_url, last_active, created_at FROM cms_users WHERE email = ?',
+      `SELECT c.id, c.name, c.email, c.password, c.role, c.status, c.profile_image_url, c.last_active, c.created_at, u.membership_number
+       FROM cms_users c
+       LEFT JOIN users u ON c.id = u.cms_user_id
+       WHERE c.email = ?`,
       [email]
     );
     
@@ -247,7 +253,8 @@ router.post('/login', ipBlocker, loginValidation, async (req, res) => {
         status: user.status,
         profile_image_url: user.profile_image_url,
         last_active: user.last_active,
-        created_at: user.created_at
+        created_at: user.created_at,
+        membership_number: user.membership_number
       },
       message: 'Logged in successfully',
       token
@@ -276,7 +283,10 @@ router.get('/verify', async (req, res) => {
       
       // Get fresh user data
       const [users] = await db.query(
-        'SELECT id, name, email, role, status, profile_image_url, last_active, created_at FROM cms_users WHERE id = ?',
+        `SELECT c.id, c.name, c.email, c.role, c.status, c.profile_image_url, c.last_active, c.created_at, u.membership_number
+         FROM cms_users c
+         LEFT JOIN users u ON c.id = u.cms_user_id
+         WHERE c.id = ?`,
         [decoded.userId]
       );
       
@@ -311,7 +321,10 @@ router.post('/refresh', async (req, res) => {
     
     // Find user with this refresh token
     const [users] = await db.query(
-      'SELECT id, name, email, role, status, refresh_token_expires_at FROM cms_users WHERE refresh_token = ?',
+      `SELECT c.id, c.name, c.email, c.role, c.status, c.refresh_token_expires_at, u.membership_number
+       FROM cms_users c
+       LEFT JOIN users u ON c.id = u.cms_user_id
+       WHERE c.refresh_token = ?`,
       [refreshToken]
     );
     
@@ -367,13 +380,14 @@ router.post('/refresh', async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     });
     
-    res.json({ 
+    res.json({
       user: {
         id: user.id,
         name: user.name,
         email: user.email,
         role: user.role,
-        status: user.status
+        status: user.status,
+        membership_number: user.membership_number
       }
     });
   } catch (error) {
