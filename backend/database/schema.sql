@@ -25,11 +25,14 @@ CREATE TABLE IF NOT EXISTS users (
   last_name VARCHAR(255),
   email VARCHAR(255) NOT NULL,
   password VARCHAR(255),
+  phone_number VARCHAR(100),
+  membership_number VARCHAR(20),
   role ENUM('admin', 'user', 'contributor', 'superadmin', 'editor') DEFAULT 'user',
   profile_image_url VARCHAR(500),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (cms_user_id) REFERENCES cms_users(id) ON DELETE SET NULL
+  FOREIGN KEY (cms_user_id) REFERENCES cms_users(id) ON DELETE SET NULL,
+  UNIQUE KEY idx_membership_number (membership_number)
 );
 
 -- Authors table

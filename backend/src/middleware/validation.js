@@ -30,6 +30,10 @@ const registerValidationRules = [
   body('password')
     .notEmpty().withMessage('Password is required')
     .isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
+  body('phone_number')
+    .optional()
+    .trim()
+    .isLength({ max: 100 }).withMessage('Phone number must be less than 100 characters'),
   body('role')
     .optional()
     .isIn(['admin', 'user', 'contributor', 'superadmin', 'editor']).withMessage('Invalid role')
@@ -59,6 +63,10 @@ const updateUserValidationRules = [
     .trim()
     .isEmail().withMessage('Invalid email format')
     .normalizeEmail(),
+  body('phone_number')
+    .optional()
+    .trim()
+    .isLength({ max: 100 }).withMessage('Phone number must be less than 100 characters'),
   body('role')
     .optional()
     .isIn(['admin', 'user', 'contributor', 'superadmin', 'editor']).withMessage('Invalid role'),

@@ -7,6 +7,7 @@ const { isAdmin, isSuperAdmin, hasRole } = require('../middleware/authorize');
 const { updateUserValidation, idValidation } = require('../middleware/validation');
 const { logAuditEvent } = require('../middleware/securityLogger');
 const { verifyRequestSignature } = require('../middleware/requestSignature');
+const { assignMembershipNumber } = require('../utils/membershipNumber');
 
 const SALT_ROUNDS = 10;
 
@@ -14,7 +15,7 @@ const SALT_ROUNDS = 10;
 router.get('/', authenticate, isAdmin, async (req, res) => {
   try {
     const [rows] = await db.query(`
-      SELECT 
+      SELECT
         c.id as cms_user_id,
         c.name,
         COALESCE(c.email, u.email) as email,
@@ -28,14 +29,16 @@ router.get('/', authenticate, isAdmin, async (req, res) => {
         u.username,
         u.first_name,
         u.last_name,
+        u.phone_number,
+        u.membership_number,
         u.created_at as users_created_at,
         u.updated_at as users_updated_at
       FROM cms_users c
       LEFT JOIN users u ON c.id = u.cms_user_id
-      
+
       UNION ALL
-      
-      SELECT 
+
+      SELECT
         c.id as cms_user_id,
         c.name,
         COALESCE(c.email, u.email) as email,
@@ -49,12 +52,14 @@ router.get('/', authenticate, isAdmin, async (req, res) => {
         u.username,
         u.first_name,
         u.last_name,
+        u.phone_number,
+        u.membership_number,
         u.created_at as users_created_at,
         u.updated_at as users_updated_at
       FROM users u
       LEFT JOIN cms_users c ON u.cms_user_id = c.id
       WHERE c.id IS NULL
-      
+
       ORDER BY cms_created_at DESC, users_created_at DESC
     `);
     res.json(rows);
@@ -73,7 +78,7 @@ router.get('/:id', authenticate, async (req, res) => {
     }
     
     const [rows] = await db.query(`
-      SELECT 
+      SELECT
         c.id as cms_user_id,
         c.name,
         c.email,
@@ -87,6 +92,8 @@ router.get('/:id', authenticate, async (req, res) => {
         u.username,
         u.first_name,
         u.last_name,
+        u.phone_number,
+        u.membership_number,
         u.created_at as users_created_at,
         u.updated_at as users_updated_at
       FROM cms_users c
@@ -106,7 +113,7 @@ router.get('/:id', authenticate, async (req, res) => {
 // Create user (admin only)
 router.post('/', authenticate, isAdmin, verifyRequestSignature, async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, phone_number } = req.body;
     
     // Check if email already exists
     const [existingUsers] = await db.query(
@@ -139,10 +146,13 @@ router.post('/', authenticate, isAdmin, verifyRequestSignature, async (req, res)
     
     // Then insert into users table (for user management)
     const [result] = await db.query(
-      `INSERT INTO users (cms_user_id, username, email, role) 
-       VALUES (?, ?, ?, ?)`,
-      [cmsResult.insertId, name, email, userRole]
+      `INSERT INTO users (cms_user_id, username, email, phone_number, role)
+       VALUES (?, ?, ?, ?, ?)`,
+      [cmsResult.insertId, name, email, phone_number || null, userRole]
     );
+
+    // Assign membership number
+    const membershipNumber = await assignMembershipNumber(result.insertId);
 
     // Log audit event
     await logAuditEvent(
@@ -173,7 +183,7 @@ router.post('/', authenticate, isAdmin, verifyRequestSignature, async (req, res)
 // Update user (admin or own profile)
 router.put('/:id', authenticate, async (req, res) => {
   try {
-    const { name, email, role, profile_image_url, password } = req.body;
+    const { name, email, role, profile_image_url, password, phone_number } = req.body;
     const cmsUserId = parseInt(req.params.id);
     
     // Get old values for audit logging
@@ -245,7 +255,7 @@ router.put('/:id', authenticate, async (req, res) => {
       const usersTableId = userRecord[0].id;
       const usersUpdateFields = [];
       const usersUpdateValues = [];
-      
+
       if (role !== undefined) {
         usersUpdateFields.push('role = ?');
         usersUpdateValues.push(userRole);
@@ -262,9 +272,13 @@ router.put('/:id', authenticate, async (req, res) => {
         usersUpdateFields.push('username = ?');
         usersUpdateValues.push(name);
       }
-      
+      if (phone_number !== undefined) {
+        usersUpdateFields.push('phone_number = ?');
+        usersUpdateValues.push(phone_number);
+      }
+
       usersUpdateValues.push(usersTableId);
-      
+
       await db.query(
         `UPDATE users SET ${usersUpdateFields.join(', ')} WHERE id = ?`,
         usersUpdateValues

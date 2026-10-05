@@ -19,6 +19,7 @@ export default function Users() {
     password: '',
     first_name: '',
     last_name: '',
+    phone_number: '',
     role: 'user'
   })
   const currentUser = JSON.parse(sessionStorage.getItem('user'))
@@ -50,7 +51,8 @@ export default function Users() {
     const fullName = `${user.first_name || ''} ${user.last_name || ''}`.trim()
     const displayName = user.username || fullName || user.email
     const matchesSearch = displayName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         user.email.toLowerCase().includes(searchTerm.toLowerCase())
+                         user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         (user.membership_number && user.membership_number.toLowerCase().includes(searchTerm.toLowerCase()))
     const matchesRole = filterRole === 'all' || user.role === filterRole
     const isNotSuperadmin = user.role !== 'superadmin' || currentUser?.role === 'superadmin'
     return matchesSearch && matchesRole && isNotSuperadmin
@@ -87,8 +89,8 @@ export default function Users() {
         return;
       }
       await api.put(`/users/${userId}`, { role: newRole });
-      setUsers(users.map(user => 
-        user.cms_user_id === userId ? { ...user, role: newRole } : user
+      setUsers(users.map(user =>
+        (user.cms_user_id === userId || user.users_table_id === userId) ? { ...user, role: newRole } : user
       ));
       setEditingUserId(null);
     } catch (err) {
@@ -121,7 +123,7 @@ export default function Users() {
     try {
       await api.post('/auth/register', formData)
       setShowCreateModal(false)
-      setFormData({ username: '', email: '', password: '', first_name: '', last_name: '', role: 'user' })
+      setFormData({ username: '', email: '', password: '', first_name: '', last_name: '', phone_number: '', role: 'user' })
       const data = await api.get('/users')
       setUsers(data)
       alert('User created successfully!')
@@ -314,8 +316,10 @@ export default function Users() {
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}>
             <tr>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Membership No</th>
               <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>User</th>
               <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Name</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Phone</th>
               <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Role</th>
               <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Joined</th>
               <th style={{ textAlign: 'right', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Actions</th>
@@ -330,16 +334,19 @@ export default function Users() {
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = 'transparent'
               }}>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px', fontWeight: '500' }}>
+                  {user.membership_number || '-'}
+                </td>
                 <td style={{ padding: '12px 16px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     {user.profile_image_url || user.profile_image ? (
-                      <img 
-                        src={user.profile_image_url || user.profile_image} 
+                      <img
+                        src={user.profile_image_url || user.profile_image}
                         alt={user.username || `${user.first_name || ''} ${user.last_name || ''}`.trim()}
-                        style={{ 
-                          width: '40px', 
-                          height: '40px', 
-                          borderRadius: '10px', 
+                        style={{
+                          width: '40px',
+                          height: '40px',
+                          borderRadius: '10px',
                           objectFit: 'cover'
                         }}
                         onError={(e) => {
@@ -348,13 +355,13 @@ export default function Users() {
                         }}
                       />
                     ) : null}
-                    <div style={{ 
-                      width: '40px', 
-                      height: '40px', 
-                      background: 'linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%)', 
-                      borderRadius: '10px', 
+                    <div style={{
+                      width: '40px',
+                      height: '40px',
+                      background: 'linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%)',
+                      borderRadius: '10px',
                       display: user.profile_image_url || user.profile_image ? 'none' : 'flex',
-                      alignItems: 'center', 
+                      alignItems: 'center',
                       justifyContent: 'center'
                     }}>
                       <UserIcon style={{ width: '20px', height: '20px', color: '#9333ea' }} />
@@ -372,11 +379,14 @@ export default function Users() {
                     {user.first_name || user.last_name ? `${user.first_name || ''} ${user.last_name || ''}`.trim() : '-'}
                   </p>
                 </td>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>
+                  {user.phone_number || '-'}
+                </td>
                 <td style={{ padding: '12px 16px' }}>
-                  {currentUser?.role === 'superadmin' && editingUserId === user.cms_user_id ? (
+                  {currentUser?.role === 'superadmin' && editingUserId === (user.cms_user_id || user.users_table_id) ? (
                     <select
                       value={user.role}
-                      onChange={(e) => handleRoleChange(user.cms_user_id, e.target.value)}
+                      onChange={(e) => handleRoleChange(user.cms_user_id || user.users_table_id, e.target.value)}
                       onBlur={() => setEditingUserId(null)}
                       autoFocus
                       style={{
@@ -397,10 +407,10 @@ export default function Users() {
                     </select>
                   ) : (
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <span style={{ 
-                        padding: '3px 8px', 
-                        borderRadius: '16px', 
-                        fontSize: '11px', 
+                      <span style={{
+                        padding: '3px 8px',
+                        borderRadius: '16px',
+                        fontSize: '11px',
                         fontWeight: '500',
                         background: user.role === 'admin' || user.role === 'superadmin' ? '#f3e8ff' : 'var(--bg-secondary)',
                         color: user.role === 'admin' || user.role === 'superadmin' ? '#9333ea' : 'var(--text-secondary)'
@@ -410,7 +420,7 @@ export default function Users() {
                       </span>
                       {currentUser?.role === 'superadmin' && (
                         <button
-                          onClick={() => setEditingUserId(user.cms_user_id)}
+                          onClick={() => setEditingUserId(user.cms_user_id || user.users_table_id)}
                           style={{
                             padding: '4px',
                             background: 'transparent',
@@ -498,7 +508,7 @@ export default function Users() {
               <button
                 onClick={() => {
                   setShowCreateModal(false)
-                  setFormData({ username: '', email: '', password: '', first_name: '', last_name: '', role: 'user' })
+                  setFormData({ username: '', email: '', password: '', first_name: '', last_name: '', phone_number: '', role: 'user' })
                 }}
                 style={{
                   padding: '8px',
@@ -667,6 +677,34 @@ export default function Users() {
                   </div>
                 </div>
                 <div>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Phone Number</label>
+                  <input
+                    type="text"
+                    name="phone_number"
+                    value={formData.phone_number}
+                    onChange={handleInputChange}
+                    placeholder="Enter phone number..."
+                    style={{
+                      width: '100%',
+                      padding: '12px 16px',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
+                      borderRadius: '12px',
+                      outline: 'none',
+                      fontSize: '14px',
+                      transition: 'all 0.2s ease'
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.borderColor = '#7c3aed'
+                      e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
+                      e.currentTarget.style.boxShadow = 'none'
+                    }}
+                  />
+                </div>
+                <div>
                   <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Role</label>
                   <select
                     name="role"
@@ -703,7 +741,7 @@ export default function Users() {
               <button
                 onClick={() => {
                   setShowCreateModal(false)
-                  setFormData({ username: '', email: '', password: '', first_name: '', last_name: '', role: 'user' })
+                  setFormData({ username: '', email: '', password: '', first_name: '', last_name: '', phone_number: '', role: 'user' })
                 }}
                 style={{
                   padding: '10px 20px',
