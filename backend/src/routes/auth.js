@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const { registerValidation, loginValidation } = require('../middleware/validation');
 const { logSecurityEvent, SecurityEventTypes, getClientIp, getUserAgent } = require('../middleware/securityLogger');
 const { ipBlocker } = require('../middleware/ipBlocker');
+const { assignMembershipNumber } = require('../utils/membershipNumber');
 
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) {
@@ -16,7 +17,7 @@ const SALT_ROUNDS = 8;
 // Register new user
 router.post('/register', registerValidation, async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, phone_number } = req.body;
     
     // Check if email already exists
     const [existingUsers] = await db.query(
@@ -31,9 +32,9 @@ router.post('/register', registerValidation, async (req, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
     
-    // Validate role (default to 'superadmin' if not provided or invalid)
+    // Validate role (default to 'user' if not provided or invalid)
     const validRoles = ['admin', 'user', 'contributor', 'superadmin', 'editor'];
-    const userRole = validRoles.includes(role) ? role : 'superadmin';
+    const userRole = validRoles.includes(role) ? role : 'user';
     
     // Insert new user into cms_users
     const [result] = await db.query(
@@ -43,12 +44,15 @@ router.post('/register', registerValidation, async (req, res) => {
     );
     
     // Also insert into users table for user management
-    await db.query(
-      `INSERT INTO users (cms_user_id, username, email, role) 
-       VALUES (?, ?, ?, ?)`,
-      [result.insertId, name, email, userRole]
+    const [userResult] = await db.query(
+      `INSERT INTO users (cms_user_id, username, email, phone_number, role)
+       VALUES (?, ?, ?, ?, ?)`,
+      [result.insertId, name, email, phone_number || null, userRole]
     );
-    
+
+    // Assign membership number
+    await assignMembershipNumber(userResult.insertId);
+
     // Get the created user
     const [newUser] = await db.query(
       'SELECT id, name, email, role FROM cms_users WHERE id = ?',
