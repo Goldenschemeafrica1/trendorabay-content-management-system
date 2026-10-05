@@ -19,20 +19,37 @@ const upload = uploadFields([
 // Get all stories (public read, editor+ for full access)
 router.get('/', optionalAuth, async (req, res) => {
   try {
+    const { section } = req.query;
+
+    let whereClause = '';
+
+    // Handle display section filtering
+    if (section && section !== 'all') {
+      // Convert section names to database values
+      const sectionMap = {
+        'latest_stories': 'latest_stories',
+        'must_read': 'must_read',
+        'innovation': 'innovation'
+      };
+      const dbSection = sectionMap[section] || section;
+      whereClause += ` AND s.display_section = '${dbSection}'`;
+    }
+
     const [rows] = await db.query(`
-      SELECT s.*, a.name as author_name, c.name as category_name 
-      FROM stories s 
-      LEFT JOIN authors a ON s.author_id = a.id 
+      SELECT s.*, a.name as author_name, c.name as category_name
+      FROM stories s
+      LEFT JOIN authors a ON s.author_id = a.id
       LEFT JOIN categories c ON s.category_id = c.id
+      WHERE 1=1 ${whereClause}
       ORDER BY s.created_at DESC
     `);
-    
+
     // Non-authenticated users only see published stories
     if (!req.user) {
       const publishedStories = rows.filter(s => s.status === 'published');
       return res.json(publishedStories);
     }
-    
+
     res.json(rows);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -74,9 +91,9 @@ router.post('/', authenticate, isEditor, upload, storyValidation, async (req, re
     console.log('Files:', req.files);
     console.log('Use Cloudinary:', useCloudinary);
     
-    const { title, author_id, category, content, status, featured, read_time } = req.body;
+    const { title, author_id, category, content, status, featured, read_time, display_section, display_order, priority, display_start_date, display_end_date, is_pinned } = req.body;
     
-    console.log('Creating story with data:', { title, author_id, category, contentLength: content?.length, status, featured, read_time });
+    console.log('Creating story with data:', { title, author_id, category, contentLength: content?.length, status, featured, read_time, display_section, display_order, priority, is_pinned });
     
     // Handle multiple image uploads
     const imageFields = ['cover_image', 'cover_image_2', 'cover_image_3', 'cover_image_4'];
@@ -114,13 +131,14 @@ router.post('/', authenticate, isEditor, upload, storyValidation, async (req, re
     
     // Convert featured to boolean
     const featuredValue = featured === 'true' || featured === true ? 1 : 0;
-    
-    console.log('Inserting story with:', { title, category_id, author_id, status, featuredValue, read_time });
-    
+    const isPinnedValue = is_pinned === 'true' || is_pinned === true ? 1 : 0;
+
+    console.log('Inserting story with:', { title, category_id, author_id, status, featuredValue, read_time, display_section, display_order, priority, isPinnedValue });
+
     const [result] = await db.query(
-      `INSERT INTO stories (title, content, featured_image_url, featured_image_url_2, featured_image_url_3, featured_image_url_4, author_id, category_id, status, featured, published_at, read_time, views) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [title, content, imageUrls.cover_image, imageUrls.cover_image_2, imageUrls.cover_image_3, imageUrls.cover_image_4, author_id, category_id, status, featuredValue, published_at, read_time || '5 min read', 0]
+      `INSERT INTO stories (title, content, featured_image_url, featured_image_url_2, featured_image_url_3, featured_image_url_4, author_id, category_id, status, featured, published_at, read_time, views, display_section, display_order, priority, display_start_date, display_end_date, is_pinned)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [title, content, imageUrls.cover_image, imageUrls.cover_image_2, imageUrls.cover_image_3, imageUrls.cover_image_4, author_id, category_id, status, featuredValue, published_at, read_time || '5 min read', 0, display_section || 'default', display_order || 0, priority || 0, display_start_date || null, display_end_date || null, isPinnedValue]
     );
     
     console.log('Story created successfully with ID:', result.insertId);
@@ -138,7 +156,7 @@ router.put('/:id', authenticate, isEditor, storyIdValidation, upload, storyValid
     console.log('Files:', req.files);
     console.log('Use Cloudinary:', useCloudinary);
     
-    const { title, author_id, category, content, status, featured, read_time } = req.body;
+    const { title, author_id, category, content, status, featured, read_time, display_section, display_order, priority, display_start_date, display_end_date, is_pinned } = req.body;
     
     // Handle multiple image uploads
     const imageFields = ['cover_image', 'cover_image_2', 'cover_image_3', 'cover_image_4'];
@@ -187,10 +205,11 @@ router.put('/:id', authenticate, isEditor, storyIdValidation, upload, storyValid
     
     // Convert featured to boolean
     const featuredValue = featured === 'true' || featured === true ? 1 : 0;
-    
+    const isPinnedValue = is_pinned === 'true' || is_pinned === true ? 1 : 0;
+
     // Build update query
-    const query = `UPDATE stories SET title = ?, content = ?, featured_image_url = ?, featured_image_url_2 = ?, featured_image_url_3 = ?, featured_image_url_4 = ?, author_id = ?, category_id = ?, status = ?, featured = ?, published_at = ?, read_time = ? WHERE id = ?`;
-    const params = [title, content, final_image_url, final_image_url_2, final_image_url_3, final_image_url_4, author_id, category_id, status, featuredValue, published_at, read_time || '5 min read', req.params.id];
+    const query = `UPDATE stories SET title = ?, content = ?, featured_image_url = ?, featured_image_url_2 = ?, featured_image_url_3 = ?, featured_image_url_4 = ?, author_id = ?, category_id = ?, status = ?, featured = ?, published_at = ?, read_time = ?, display_section = ?, display_order = ?, priority = ?, display_start_date = ?, display_end_date = ?, is_pinned = ? WHERE id = ?`;
+    const params = [title, content, final_image_url, final_image_url_2, final_image_url_3, final_image_url_4, author_id, category_id, status, featuredValue, published_at, read_time || '5 min read', display_section || 'default', display_order || 0, priority || 0, display_start_date || null, display_end_date || null, isPinnedValue, req.params.id];
     
     await db.query(query, params);
     res.json({ message: 'Story updated successfully' });
@@ -207,10 +226,10 @@ router.delete('/:id', authenticate, storyIdValidation, async (req, res) => {
     if (!hasRole(req.user.role, 'admin')) {
       return res.status(403).json({ error: 'Admin access required to delete stories' });
     }
-    
+
     // Get story details before deletion for audit logging
     const [storyToDelete] = await db.query('SELECT id, title FROM stories WHERE id = ?', [req.params.id]);
-    
+
     await db.query('DELETE FROM stories WHERE id = ?', [req.params.id]);
 
     // Log audit event
@@ -225,6 +244,51 @@ router.delete('/:id', authenticate, storyIdValidation, async (req, res) => {
 
     res.json({ message: 'Story deleted successfully' });
   } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Reorder stories (editor+)
+router.put('/reorder', authenticate, isEditor, async (req, res) => {
+  try {
+    const { stories } = req.body; // Array of { id, display_order }
+
+    if (!Array.isArray(stories)) {
+      return res.status(400).json({ error: 'Stories must be an array' });
+    }
+
+    // Update display_order for each story
+    for (const story of stories) {
+      if (story.id && story.display_order !== undefined) {
+        await db.query(
+          'UPDATE stories SET display_order = ? WHERE id = ?',
+          [story.display_order, story.id]
+        );
+      }
+    }
+
+    res.json({ message: 'Stories reordered successfully' });
+  } catch (error) {
+    console.error('Error reordering stories:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Update story display settings (editor+)
+router.patch('/:id/display', authenticate, isEditor, storyIdValidation, async (req, res) => {
+  try {
+    const { display_section, display_order, priority, is_pinned } = req.body;
+
+    const isPinnedValue = is_pinned === 'true' || is_pinned === true ? 1 : 0;
+
+    await db.query(
+      `UPDATE stories SET display_section = ?, display_order = ?, priority = ?, is_pinned = ? WHERE id = ?`,
+      [display_section || 'default', display_order || 0, priority || 0, isPinnedValue, req.params.id]
+    );
+
+    res.json({ message: 'Display settings updated successfully' });
+  } catch (error) {
+    console.error('Error updating display settings:', error);
     res.status(500).json({ error: error.message });
   }
 });

@@ -62,15 +62,29 @@ CREATE TABLE IF NOT EXISTS stories (
   content LONGTEXT,
   excerpt TEXT,
   featured_image_url VARCHAR(500),
+  featured_image_url_2 VARCHAR(500),
+  featured_image_url_3 VARCHAR(500),
+  featured_image_url_4 VARCHAR(500),
   author_id INT,
   category_id INT,
   status ENUM('draft', 'published') DEFAULT 'draft',
   featured TINYINT(1) DEFAULT 0,
   published_at TIMESTAMP NULL,
+  read_time VARCHAR(50) DEFAULT '5 min read',
+  views INT(11) DEFAULT 0,
+  display_section ENUM('default', 'latest_stories', 'must_read', 'innovation') DEFAULT 'default',
+  display_order INT DEFAULT 0,
+  priority INT DEFAULT 0,
+  display_start_date DATE NULL,
+  display_end_date DATE NULL,
+  is_pinned TINYINT(1) DEFAULT 0,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (author_id) REFERENCES authors(id) ON DELETE SET NULL,
-  FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
+  FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL,
+  INDEX idx_stories_display_section_order (display_section, display_order),
+  INDEX idx_stories_pinned (is_pinned, display_section),
+  INDEX idx_stories_display_dates (display_start_date, display_end_date)
 );
 
 -- Magazines table

@@ -93,7 +93,25 @@ const storyValidationRules = [
   body('read_time')
     .optional()
     .trim()
-    .isLength({ max: 50 }).withMessage('Read time must be less than 50 characters')
+    .isLength({ max: 50 }).withMessage('Read time must be less than 50 characters'),
+  body('display_section')
+    .optional()
+    .isIn(['default', 'latest_stories', 'must_read', 'innovation']).withMessage('Invalid display section'),
+  body('display_order')
+    .optional()
+    .isInt({ min: 0 }).withMessage('Display order must be a non-negative integer'),
+  body('priority')
+    .optional()
+    .isInt({ min: 0 }).withMessage('Priority must be a non-negative integer'),
+  body('display_start_date')
+    .optional()
+    .isISO8601().withMessage('Invalid display start date format'),
+  body('display_end_date')
+    .optional()
+    .isISO8601().withMessage('Invalid display end date format'),
+  body('is_pinned')
+    .optional()
+    .isBoolean().withMessage('Is pinned must be a boolean')
 ];
 
 const storyIdValidationRules = [

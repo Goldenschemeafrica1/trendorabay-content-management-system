@@ -58,21 +58,28 @@ router.post('/', authenticate, isEditor, upload, async (req, res) => {
   try {
     const { folder } = req.body;
     const file = req.file;
-    
+
+    console.log('Media upload request received');
+    console.log('Folder:', folder);
+    console.log('File:', file ? file.originalname : 'No file');
+
     if (!file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
-    
+
     let file_url;
     if (useCloudinary) {
+      console.log('Uploading to Cloudinary with folder:', folder || 'media');
       file_url = await uploadFileToCloud(file, folder || 'media');
     } else {
       file_url = file.location || `/uploads/media/${file.filename}`;
     }
-    
+
+    console.log('File URL after upload:', file_url);
+
     // Insert into database
     const [result] = await db.query(
-      `INSERT INTO media (file_url, original_name, file_type, file_size, folder, created_at) 
+      `INSERT INTO media (file_url, original_name, file_type, file_size, folder, created_at)
        VALUES (?, ?, ?, ?, ?, NOW())`,
       [
         file_url,
@@ -82,9 +89,9 @@ router.post('/', authenticate, isEditor, upload, async (req, res) => {
         folder || 'media'
       ]
     );
-    
-    res.status(201).json({ 
-      message: 'File uploaded successfully', 
+
+    res.status(201).json({
+      message: 'File uploaded successfully',
       media: {
         id: result.insertId,
         file_url: file_url,

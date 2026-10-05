@@ -192,7 +192,7 @@ export default function Orders() {
               <DollarSign style={{ width: '16px', height: '16px', color: '#16a34a' }} />
             </div>
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>${totalRevenue.toLocaleString()}</h3>
+          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)' }}>KSH {totalRevenue.toLocaleString()}</h3>
           <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>Total Revenue</p>
         </div>
       </div>
@@ -289,7 +289,7 @@ export default function Orders() {
                 </td>
                 <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{order.customer}</td>
                 <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{order.items}</td>
-                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>${order.total.toFixed(2)}</td>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>KSH {order.total.toFixed(2)}</td>
                 <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>{order.date}</td>
                 <td style={{ padding: '12px 16px' }}>
                   <span style={{ 

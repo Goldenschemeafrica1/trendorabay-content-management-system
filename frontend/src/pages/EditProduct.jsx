@@ -17,35 +17,50 @@ export default function EditProduct() {
   })
   const [imageFile, setImageFile] = useState(null)
   const [imagePreview, setImagePreview] = useState(null)
+  const [categories, setCategories] = useState([])
+  const [loadingCategories, setLoadingCategories] = useState(true)
   const productImageInputRef = useRef(null)
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const product = await api.get(`/products/${id}`)
-        const imageUrl = product.image_url
-          ? (product.image_url.startsWith('http')
-              ? product.image_url
-              : `${BASE_URL}${product.image_url}`)
-          : null
-        setFormData({
-          name: product.name,
-          description: product.description || '',
-          price: product.price,
-          stock: product.stock,
-          category: product.category || '',
-          status: product.status || 'active',
-          image_url: product.image_url || ''
-        })
-        setImagePreview(imageUrl)
-      } catch (error) {
-        console.error('Failed to fetch product:', error)
-        alert('Failed to load product data')
-        navigate('/dashboard/merchandise')
-      }
-    }
     fetchProduct()
+    fetchCategories()
   }, [id, navigate])
+
+  const fetchProduct = async () => {
+    try {
+      const product = await api.get(`/products/${id}`)
+      const imageUrl = product.image_url
+        ? (product.image_url.startsWith('http')
+            ? product.image_url
+            : `${BASE_URL}${product.image_url}`)
+        : null
+      setFormData({
+        name: product.name,
+        description: product.description || '',
+        price: product.price,
+        stock: product.stock,
+        category: product.category || '',
+        status: product.status || 'active',
+        image_url: product.image_url || ''
+      })
+      setImagePreview(imageUrl)
+    } catch (error) {
+      console.error('Failed to fetch product:', error)
+      alert('Failed to load product data')
+      navigate('/dashboard/merchandise')
+    }
+  }
+
+  const fetchCategories = async () => {
+    try {
+      const data = await api.get('/categories')
+      setCategories(data)
+    } catch (error) {
+      console.error('Failed to fetch categories:', error)
+    } finally {
+      setLoadingCategories(false)
+    }
+  }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -291,12 +306,11 @@ export default function EditProduct() {
 
           <div>
             <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Category</label>
-            <input
-              type="text"
+            <select
               name="category"
               value={formData.category}
               onChange={handleInputChange}
-              placeholder="Enter category..."
+              disabled={loadingCategories}
               style={{
                 width: '100%',
                 padding: '12px 16px',
@@ -306,17 +320,27 @@ export default function EditProduct() {
                 outline: 'none',
                 fontSize: '14px',
                 color: 'var(--text-primary)',
+                cursor: loadingCategories ? 'not-allowed' : 'pointer',
                 transition: 'all 0.2s ease'
               }}
               onFocus={(e) => {
-                e.currentTarget.style.borderColor = '#7c3aed'
-                e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
+                if (!loadingCategories) {
+                  e.currentTarget.style.borderColor = '#7c3aed'
+                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
+                }
               }}
               onBlur={(e) => {
                 e.currentTarget.style.borderColor = 'var(--border-color)'
                 e.currentTarget.style.boxShadow = 'none'
               }}
-            />
+            >
+              <option value="">{loadingCategories ? 'Loading categories...' : 'Select a category'}</option>
+              {categories.map(category => (
+                <option key={category.id} value={category.name}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div>
