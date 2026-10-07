@@ -13,6 +13,7 @@ export default function CreateOpportunity() {
     title: '',
     description: '',
     category: '',
+    work_type: '',
     organization_name: '',
     opportunity_type: 'free',
     status: 'draft',
@@ -212,6 +213,46 @@ export default function CreateOpportunity() {
               {categories.map(category => (
                 <option key={category.id} value={category.name}>{category.name}</option>
               ))}
+            </select>
+          </div>
+          <div>
+            <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Work Type</label>
+            <select
+              name="work_type"
+              value={formData.work_type}
+              onChange={handleInputChange}
+              style={{
+                width: '100%',
+                padding: '12px 16px',
+                background: isDarkMode ? '#0f172a' : '#f8fafc',
+                border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
+                borderRadius: '12px',
+                outline: 'none',
+                fontSize: '14px',
+                color: isDarkMode ? '#f1f5f9' : '#0f172a',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.borderColor = '#7c3aed'
+                e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
+                e.currentTarget.style.boxShadow = 'none'
+              }}
+            >
+              <option value="">Select work type...</option>
+              <option value="Jobs">Jobs</option>
+              <option value="Internships">Internships</option>
+              <option value="Scholarships">Scholarships</option>
+              <option value="Grants">Grants</option>
+              <option value="Fellowships">Fellowships</option>
+              <option value="Competitions">Competitions</option>
+              <option value="Events">Events</option>
+              <option value="Training">Training</option>
+              <option value="Courses">Courses</option>
+              <option value="Volunteering">Volunteering</option>
             </select>
           </div>
           <div>
