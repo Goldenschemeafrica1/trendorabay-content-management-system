@@ -69,7 +69,40 @@ async function assignMembershipNumber(userId) {
   }
 }
 
+// Ensure a user has a membership number (assign if missing)
+async function ensureMembershipNumber(userId) {
+  try {
+    const [users] = await db.query(
+      `SELECT id, role, membership_number FROM users WHERE id = ?`,
+      [userId]
+    );
+
+    if (users.length === 0) {
+      return null;
+    }
+
+    const user = users[0];
+
+    // Skip admin/superadmin
+    if (user.role === 'admin' || user.role === 'superadmin') {
+      return null;
+    }
+
+    // If already has membership number, return it
+    if (user.membership_number) {
+      return user.membership_number;
+    }
+
+    // Assign new membership number
+    return await assignMembershipNumber(userId);
+  } catch (error) {
+    console.error('Error ensuring membership number:', error);
+    throw error;
+  }
+}
+
 module.exports = {
   generateMembershipNumber,
-  assignMembershipNumber
+  assignMembershipNumber,
+  ensureMembershipNumber
 };

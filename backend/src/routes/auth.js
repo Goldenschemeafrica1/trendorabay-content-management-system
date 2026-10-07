@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const { registerValidation, loginValidation } = require('../middleware/validation');
 const { logSecurityEvent, SecurityEventTypes, getClientIp, getUserAgent } = require('../middleware/securityLogger');
 const { ipBlocker } = require('../middleware/ipBlocker');
-const { assignMembershipNumber } = require('../utils/membershipNumber');
+const { assignMembershipNumber, ensureMembershipNumber } = require('../utils/membershipNumber');
 
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) {
@@ -192,6 +192,14 @@ router.post('/login', ipBlocker, loginValidation, async (req, res) => {
       await req.ipBlocker.clearFailedAttempts();
     }
 
+    // Ensure user has a membership number (if not admin/superadmin)
+    try {
+      await ensureMembershipNumber(user.id);
+    } catch (err) {
+      console.error('Error ensuring membership number on login:', err);
+      // Don't block login if this fails
+    }
+
     // Generate tokens in parallel
     const [token, refreshToken] = await Promise.all([
       jwt.sign(
@@ -299,7 +307,27 @@ router.get('/verify', async (req, res) => {
       if (user.status === 'banned') {
         return res.status(403).json({ error: 'Account is banned' });
       }
-      
+
+      // Ensure user has a membership number (if not admin/superadmin)
+      try {
+        await ensureMembershipNumber(user.id);
+        // Refresh user data to get the membership number
+        const [updatedUser] = await db.query(
+          `SELECT c.id, c.name, c.email, c.role, c.status, c.profile_image_url, c.last_active, c.created_at, u.membership_number
+           FROM cms_users c
+           LEFT JOIN users u ON c.id = u.cms_user_id
+           WHERE c.id = ?`,
+          [decoded.userId]
+        );
+        if (updatedUser.length > 0) {
+          res.json({ user: updatedUser[0] });
+          return;
+        }
+      } catch (err) {
+        console.error('Error ensuring membership number on verify:', err);
+        // Don't block verification if this fails
+      }
+
       res.json({ user });
     } catch (jwtError) {
       return res.status(401).json({ error: 'Invalid token' });

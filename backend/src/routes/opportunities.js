@@ -74,10 +74,11 @@ router.post('/', authenticate, isEditor, upload, async (req, res) => {
     console.log('File:', req.file);
     console.log('Request body:', req.body);
 
-    const { 
-      title, 
-      description, 
-      category, 
+    const {
+      title,
+      description,
+      category,
+      work_type,
       organization_name,
       opportunity_type,
       status,
@@ -123,17 +124,18 @@ router.post('/', authenticate, isEditor, upload, async (req, res) => {
 
     const [result] = await db.query(
       `INSERT INTO opportunities (
-        title, slug, short_description, description, category, organization_name,
+        title, slug, short_description, description, category, work_type, organization_name,
         opportunity_type, status, featured, country, city, location, remote,
         application_url, application_email, deadline, published_at, expires_at,
         image_url, created_at, updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         title,
         slug,
         short_description,
         description,
         category || 'General',
+        work_type || null,
         organization_name || null,
         opportunity_type || 'free',
         finalStatus,
@@ -167,10 +169,11 @@ router.put('/:id', authenticate, isEditor, upload, async (req, res) => {
     console.log('File:', req.file);
     console.log('Request body:', req.body);
 
-    const { 
-      title, 
-      description, 
-      category, 
+    const {
+      title,
+      description,
+      category,
+      work_type,
       organization_name,
       opportunity_type,
       status,
@@ -212,7 +215,7 @@ router.put('/:id', authenticate, isEditor, upload, async (req, res) => {
     }
 
     let query = `UPDATE opportunities SET
-      title = ?, slug = ?, short_description = ?, description = ?, category = ?,
+      title = ?, slug = ?, short_description = ?, description = ?, category = ?, work_type = ?,
       organization_name = ?, opportunity_type = ?, status = ?, featured = ?,
       country = ?, city = ?, location = ?, remote = ?,
       application_url = ?, application_email = ?, deadline = ?,
@@ -224,6 +227,7 @@ router.put('/:id', authenticate, isEditor, upload, async (req, res) => {
       short_description,
       description,
       category || 'General',
+      work_type || null,
       organization_name || null,
       opportunity_type || 'free',
       finalStatus,
