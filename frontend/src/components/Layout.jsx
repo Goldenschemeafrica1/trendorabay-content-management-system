@@ -49,7 +49,8 @@ import {
 } from '../contexts/LayoutContexts'
 
 const navigation = [
-  { name: 'Overview', href: '/dashboard', icon: LayoutDashboard, notificationKey: null },
+  // { name: 'Overview', href: '/dashboard', icon: LayoutDashboard, notificationKey: null },
+  { name: 'Dashboard', href: '/dashboard/old', icon: LayoutDashboard, notificationKey: null },
   { section: 'Content' },
   { name: 'Stories', href: '/dashboard/stories', icon: FileText, notificationKey: 'stories' },
   { name: 'Magazines', href: '/dashboard/magazines', icon: BookOpen, notificationKey: 'magazines' },

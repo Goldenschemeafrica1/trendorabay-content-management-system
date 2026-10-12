@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Upload, ArrowLeft, X } from 'lucide-react'
+import { Upload, ArrowLeft } from 'lucide-react'
 import api, { BASE_URL } from '../services/api'
 
 export default function EditCommunity() {
@@ -23,8 +23,7 @@ export default function EditCommunity() {
   const [iconPreview, setIconPreview] = useState(null)
   const [coverFile, setCoverFile] = useState(null)
   const [coverPreview, setCoverPreview] = useState(null)
-  const [uploadingIcon, setUploadingIcon] = useState(false)
-  const [uploadingCover, setUploadingCover] = useState(false)
+  const [isUpdating, setIsUpdating] = useState(false)
   const iconInputRef = useRef(null)
   const coverInputRef = useRef(null)
 
@@ -113,11 +112,8 @@ export default function EditCommunity() {
     const file = e.target.files[0]
     if (file) {
       setIconFile(file)
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setIconPreview(reader.result)
-      }
-      reader.readAsDataURL(file)
+      const preview = URL.createObjectURL(file)
+      setIconPreview(preview)
     }
   }
 
@@ -125,71 +121,8 @@ export default function EditCommunity() {
     const file = e.target.files[0]
     if (file) {
       setCoverFile(file)
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setCoverPreview(reader.result)
-      }
-      reader.readAsDataURL(file)
-    }
-  }
-
-  const handleIconUpload = async () => {
-    if (!iconFile) return
-
-    setUploadingIcon(true)
-    const formData = new FormData()
-    formData.append('file', iconFile)
-    formData.append('folder', 'communities')
-
-    try {
-      const response = await api.post('/media', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      })
-      console.log('Icon upload response:', response)
-      console.log('Setting icon_url to:', response.media.file_url)
-
-      // Convert relative URL to absolute URL
-      const iconUrl = response.media.file_url.startsWith('http')
-        ? response.media.file_url
-        : `${BASE_URL}${response.media.file_url}`
-
-      setFormData(prev => ({ ...prev, icon_url: iconUrl }))
-      setIconPreview(iconUrl)
-      alert('Icon uploaded successfully!')
-    } catch (error) {
-      console.error('Failed to upload icon:', error)
-      alert('Failed to upload icon: ' + error.message)
-    } finally {
-      setUploadingIcon(false)
-    }
-  }
-
-  const handleCoverUpload = async () => {
-    if (!coverFile) return
-
-    setUploadingCover(true)
-    const formData = new FormData()
-    formData.append('file', coverFile)
-    formData.append('folder', 'communities')
-
-    try {
-      const response = await api.post('/media', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      })
-
-      // Convert relative URL to absolute URL
-      const coverUrl = response.media.file_url.startsWith('http')
-        ? response.media.file_url
-        : `${BASE_URL}${response.media.file_url}`
-
-      setFormData(prev => ({ ...prev, cover_image_url: coverUrl }))
-      setCoverPreview(coverUrl)
-      alert('Cover image uploaded successfully!')
-    } catch (error) {
-      console.error('Failed to upload cover image:', error)
-      alert('Failed to upload cover image: ' + error.message)
-    } finally {
-      setUploadingCover(false)
+      const preview = URL.createObjectURL(file)
+      setCoverPreview(preview)
     }
   }
 
@@ -198,6 +131,8 @@ export default function EditCommunity() {
       alert('Please fill in the required fields (name, category)')
       return
     }
+
+    setIsUpdating(true)
 
     // Generate slug if empty or invalid
     let slugToUse = formData.slug || formData.name
@@ -210,34 +145,96 @@ export default function EditCommunity() {
       slugToUse = `community-${Date.now()}`
     }
 
-    // Convert absolute URLs back to relative URLs for database storage
-    const iconUrlToSend = formData.icon_url && formData.icon_url.startsWith(BASE_URL)
-      ? formData.icon_url.replace(BASE_URL, '')
-      : formData.icon_url
-
-    const coverUrlToSend = formData.cover_image_url && formData.cover_image_url.startsWith(BASE_URL)
-      ? formData.cover_image_url.replace(BASE_URL, '')
-      : formData.cover_image_url
-
-    const dataToSend = {
-      ...formData,
-      slug: slugToUse,
-      icon_url: iconUrlToSend,
-      cover_image_url: coverUrlToSend
-    }
-
-    console.log('Updating community with dataToSend:', dataToSend)
-    console.log('Icon URL in dataToSend:', dataToSend.icon_url)
-    console.log('Cover URL in dataToSend:', dataToSend.cover_image_url)
-
     try {
+      let iconUrl = formData.icon_url
+      let coverUrl = formData.cover_image_url
+
+      // Upload images in parallel if files are selected
+      const uploadPromises = []
+
+      if (iconFile) {
+        const formDataUpload = new FormData()
+        formDataUpload.append('file', iconFile)
+        formDataUpload.append('folder', 'communities')
+        const token = sessionStorage.getItem('auth_token')
+        uploadPromises.push(
+          fetch(`${BASE_URL}/api/media`, {
+            method: 'POST',
+            headers: token ? { 'Authorization': `Bearer ${token}` } : {},
+            body: formDataUpload
+          }).then(async (res) => {
+            if (!res.ok) {
+              const errorData = await res.json()
+              throw new Error(`Icon upload failed: ${errorData.error || 'Unknown error'}`)
+            }
+            const data = await res.json()
+            if (data.media && data.media.file_url) {
+              iconUrl = data.media.file_url.startsWith('http')
+                ? data.media.file_url
+                : `${BASE_URL}${data.media.file_url}`
+            }
+          })
+        )
+      }
+
+      if (coverFile) {
+        const formDataUpload = new FormData()
+        formDataUpload.append('file', coverFile)
+        formDataUpload.append('folder', 'communities')
+        const token = sessionStorage.getItem('auth_token')
+        uploadPromises.push(
+          fetch(`${BASE_URL}/api/media`, {
+            method: 'POST',
+            headers: token ? { 'Authorization': `Bearer ${token}` } : {},
+            body: formDataUpload
+          }).then(async (res) => {
+            if (!res.ok) {
+              const errorData = await res.json()
+              throw new Error(`Cover image upload failed: ${errorData.error || 'Unknown error'}`)
+            }
+            const data = await res.json()
+            if (data.media && data.media.file_url) {
+              coverUrl = data.media.file_url.startsWith('http')
+                ? data.media.file_url
+                : `${BASE_URL}${data.media.file_url}`
+            }
+          })
+        )
+      }
+
+      // Wait for all uploads to complete
+      if (uploadPromises.length > 0) {
+        await Promise.all(uploadPromises)
+      }
+
+      // Convert absolute URLs back to relative URLs for database storage
+      const iconUrlToSend = iconUrl && iconUrl.startsWith(BASE_URL)
+        ? iconUrl.replace(BASE_URL, '')
+        : iconUrl
+
+      const coverUrlToSend = coverUrl && coverUrl.startsWith(BASE_URL)
+        ? coverUrl.replace(BASE_URL, '')
+        : coverUrl
+
+      const dataToSend = {
+        ...formData,
+        slug: slugToUse,
+        icon_url: iconUrlToSend,
+        cover_image_url: coverUrlToSend
+      }
+
+      console.log('Updating community with dataToSend:', dataToSend)
+      console.log('Icon URL in dataToSend:', dataToSend.icon_url)
+      console.log('Cover URL in dataToSend:', dataToSend.cover_image_url)
+
       await api.put(`/communities/${id}`, dataToSend)
       alert('Community updated successfully!')
-      // Refresh the community data to show updated images
-      await fetchCommunity()
+      navigate('/dashboard/communities')
     } catch (error) {
       console.error('Failed to update community:', error)
       alert('Failed to update community: ' + error.message)
+    } finally {
+      setIsUpdating(false)
     }
   }
 
@@ -509,54 +506,29 @@ export default function EditCommunity() {
           <div>
             <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Icon</label>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <div style={{ display: 'flex', gap: '12px' }}>
-                <button
-                  onClick={() => iconInputRef.current?.click()}
-                  style={{
-                    padding: '10px 16px',
-                    background: 'var(--bg-secondary)',
-                    border: '1px solid var(--border-color)',
-                    borderRadius: '12px',
-                    cursor: 'pointer',
-                    fontSize: '14px',
-                    color: 'var(--text-primary)',
-                    fontWeight: '500',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    transition: 'all 0.2s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = '#7c3aed'
-                    e.currentTarget.style.background = 'var(--bg-primary)'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--border-color)'
-                    e.currentTarget.style.background = 'var(--bg-secondary)'
-                  }}
-                >
-                  <Upload style={{ width: '16px', height: '16px' }} />
-                  Choose File
-                </button>
-                {iconFile && (
-                  <button
-                    onClick={handleIconUpload}
-                    disabled={uploadingIcon}
-                    style={{
-                      padding: '10px 16px',
-                      background: uploadingIcon ? 'var(--bg-secondary)' : 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)',
-                      border: 'none',
-                      borderRadius: '12px',
-                      cursor: uploadingIcon ? 'not-allowed' : 'pointer',
-                      fontSize: '14px',
-                      fontWeight: '500',
-                      color: uploadingIcon ? 'var(--text-secondary)' : 'white',
-                      transition: 'all 0.2s ease'
-                    }}
-                  >
-                    {uploadingIcon ? 'Uploading...' : 'Upload'}
-                  </button>
-                )}
+              <div
+                style={{
+                  border: '2px dashed var(--border-color)',
+                  borderRadius: '12px',
+                  padding: '24px',
+                  textAlign: 'center',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  background: 'var(--bg-secondary)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = '#7c3aed'
+                  e.currentTarget.style.background = 'var(--bg-primary)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--border-color)'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
+                }}
+                onClick={() => iconInputRef.current?.click()}
+              >
+                <Upload style={{ width: '32px', height: '32px', color: 'var(--text-secondary)', margin: '0 auto 8px' }} />
+                <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0 }}>Click to upload icon</p>
+                <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: '4px 0 0 0' }}>PNG, JPG up to 5MB</p>
               </div>
               <input
                 ref={iconInputRef}
@@ -589,25 +561,17 @@ export default function EditCommunity() {
                       position: 'absolute',
                       top: '-8px',
                       right: '-8px',
-                      width: '24px',
-                      height: '24px',
-                      background: '#ef4444',
+                      background: 'rgba(0, 0, 0, 0.7)',
+                      color: 'white',
                       border: 'none',
-                      borderRadius: '50%',
+                      borderRadius: '8px',
+                      padding: '4px 8px',
                       cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      transition: 'all 0.2s ease'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'scale(1.1)'
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'scale(1)'
+                      fontSize: '10px',
+                      fontWeight: '500'
                     }}
                   >
-                    <X style={{ width: '14px', height: '14px', color: 'white' }} />
+                    Remove
                   </button>
                 </div>
               )}
@@ -617,54 +581,29 @@ export default function EditCommunity() {
           <div>
             <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Cover Image</label>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <div style={{ display: 'flex', gap: '12px' }}>
-                <button
-                  onClick={() => coverInputRef.current?.click()}
-                  style={{
-                    padding: '10px 16px',
-                    background: 'var(--bg-secondary)',
-                    border: '1px solid var(--border-color)',
-                    borderRadius: '12px',
-                    cursor: 'pointer',
-                    fontSize: '14px',
-                    color: 'var(--text-primary)',
-                    fontWeight: '500',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    transition: 'all 0.2s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = '#7c3aed'
-                    e.currentTarget.style.background = 'var(--bg-primary)'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--border-color)'
-                    e.currentTarget.style.background = 'var(--bg-secondary)'
-                  }}
-                >
-                  <Upload style={{ width: '16px', height: '16px' }} />
-                  Choose File
-                </button>
-                {coverFile && (
-                  <button
-                    onClick={handleCoverUpload}
-                    disabled={uploadingCover}
-                    style={{
-                      padding: '10px 16px',
-                      background: uploadingCover ? 'var(--bg-secondary)' : 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)',
-                      border: 'none',
-                      borderRadius: '12px',
-                      cursor: uploadingCover ? 'not-allowed' : 'pointer',
-                      fontSize: '14px',
-                      fontWeight: '500',
-                      color: uploadingCover ? 'var(--text-secondary)' : 'white',
-                      transition: 'all 0.2s ease'
-                    }}
-                  >
-                    {uploadingCover ? 'Uploading...' : 'Upload'}
-                  </button>
-                )}
+              <div
+                style={{
+                  border: '2px dashed var(--border-color)',
+                  borderRadius: '12px',
+                  padding: '24px',
+                  textAlign: 'center',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  background: 'var(--bg-secondary)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = '#7c3aed'
+                  e.currentTarget.style.background = 'var(--bg-primary)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--border-color)'
+                  e.currentTarget.style.background = 'var(--bg-secondary)'
+                }}
+                onClick={() => coverInputRef.current?.click()}
+              >
+                <Upload style={{ width: '32px', height: '32px', color: 'var(--text-secondary)', margin: '0 auto 8px' }} />
+                <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0 }}>Click to upload cover image</p>
+                <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: '4px 0 0 0' }}>PNG, JPG up to 5MB</p>
               </div>
               <input
                 ref={coverInputRef}
@@ -674,11 +613,11 @@ export default function EditCommunity() {
                 style={{ display: 'none' }}
               />
               {coverPreview && (
-                <div style={{ position: 'relative', display: 'inline-block' }}>
+                <div style={{ position: 'relative', width: '100%', height: '200px', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
                   <img
                     src={coverPreview}
                     alt="Cover preview"
-                    style={{ width: '200px', height: '120px', borderRadius: '12px', objectFit: 'cover' }}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     onError={(e) => {
                       console.error('Failed to load cover image:', coverPreview)
                       e.target.style.display = 'none'
@@ -695,27 +634,19 @@ export default function EditCommunity() {
                     }}
                     style={{
                       position: 'absolute',
-                      top: '-8px',
-                      right: '-8px',
-                      width: '24px',
-                      height: '24px',
-                      background: '#ef4444',
+                      top: '8px',
+                      right: '8px',
+                      background: 'rgba(0, 0, 0, 0.7)',
+                      color: 'white',
                       border: 'none',
-                      borderRadius: '50%',
+                      borderRadius: '8px',
+                      padding: '8px 12px',
                       cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      transition: 'all 0.2s ease'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'scale(1.1)'
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'scale(1)'
+                      fontSize: '12px',
+                      fontWeight: '500'
                     }}
                   >
-                    <X style={{ width: '14px', height: '14px', color: 'white' }} />
+                    Remove
                   </button>
                 </div>
               )}
@@ -747,27 +678,32 @@ export default function EditCommunity() {
             </button>
             <button
               onClick={handleUpdateCommunity}
+              disabled={isUpdating}
               style={{
                 padding: '10px 20px',
-                background: 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)',
+                background: isUpdating ? 'var(--bg-secondary)' : 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)',
                 border: 'none',
                 borderRadius: '12px',
-                cursor: 'pointer',
+                cursor: isUpdating ? 'not-allowed' : 'pointer',
                 fontSize: '14px',
                 fontWeight: '500',
-                color: 'white',
-                boxShadow: '0 4px 12px rgba(124, 58, 237, 0.3)',
+                color: isUpdating ? 'var(--text-secondary)' : 'white',
+                boxShadow: isUpdating ? 'none' : '0 4px 12px rgba(124, 58, 237, 0.3)',
                 transition: 'all 0.2s ease'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)'
-                e.currentTarget.style.boxShadow = '0 6px 16px rgba(124, 58, 237, 0.4)'
+                if (!isUpdating) {
+                  e.currentTarget.style.transform = 'translateY(-2px)'
+                  e.currentTarget.style.boxShadow = '0 6px 16px rgba(124, 58, 237, 0.4)'
+                }
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)'
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(124, 58, 237, 0.3)'
+                if (!isUpdating) {
+                  e.currentTarget.style.transform = 'translateY(0)'
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(124, 58, 237, 0.3)'
+                }
               }}>
-              Update Community
+              {isUpdating ? 'Updating...' : 'Update Community'}
             </button>
           </div>
         </div>
