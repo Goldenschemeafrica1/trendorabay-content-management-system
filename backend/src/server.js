@@ -122,6 +122,7 @@ const galleryRoutes = require('./routes/gallery');
 const securityRoutes = require('./routes/security');
 const notificationsRoutes = require('./routes/notifications');
 const dashboardRoutes = require('./routes/dashboard');
+const overviewRoutes = require('./routes/overview');
 console.log('Routes loaded successfully');
 
 // Use routes
@@ -161,6 +162,7 @@ app.use('/api/gallery', galleryRoutes);
 app.use('/api/security', securityRoutes);
 app.use('/api/notifications', notificationsRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/overview', overviewRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

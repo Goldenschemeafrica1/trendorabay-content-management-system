@@ -5,6 +5,7 @@ import Layout from './components/Layout'
 
 const Login = lazy(() => import('./pages/Login'))
 const Register = lazy(() => import('./pages/Register'))
+const Overview = lazy(() => import('./pages/Overview'))
 const Dashboard = lazy(() => import('./pages/Dashboard'))
 const Stories = lazy(() => import('./pages/Stories'))
 const CreateStory = lazy(() => import('./pages/CreateStory'))
@@ -86,7 +87,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Layout />}>
-          <Route index element={<Dashboard />} />
+          <Route index element={<Navigate to="/dashboard/old" replace />} />
+          <Route path="old" element={<Dashboard />} />
           <Route path="search" element={<SearchResults />} />
           <Route path="stories" element={<Stories />} />
           <Route path="stories/create" element={<CreateStory />} />

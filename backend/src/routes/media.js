@@ -53,8 +53,8 @@ router.get('/:id', authenticate, isSuperAdmin, mediaIdValidation, async (req, re
   }
 });
 
-// Create media (editor and above)
-router.post('/', authenticate, isEditor, upload, async (req, res) => {
+// Create media (authenticated users can upload)
+router.post('/', authenticate, upload, async (req, res) => {
   try {
     const { folder } = req.body;
     const file = req.file;
@@ -79,14 +79,15 @@ router.post('/', authenticate, isEditor, upload, async (req, res) => {
 
     // Insert into database
     const [result] = await db.query(
-      `INSERT INTO media (file_url, original_name, file_type, file_size, folder, created_at)
-       VALUES (?, ?, ?, ?, ?, NOW())`,
+      `INSERT INTO media (file_url, original_name, file_type, file_size, folder, filename, created_at)
+       VALUES (?, ?, ?, ?, ?, ?, NOW())`,
       [
         file_url,
         file.originalname,
         file.mimetype,
         file.size,
-        folder || 'media'
+        folder || 'media',
+        file.filename || file.originalname
       ]
     );
 
