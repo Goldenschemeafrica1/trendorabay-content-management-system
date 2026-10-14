@@ -19,7 +19,7 @@ export default function Users() {
     password: '',
     first_name: '',
     last_name: '',
-    phone_number: '',
+    phone: '',
     role: 'user'
   })
   const currentUser = JSON.parse(sessionStorage.getItem('user'))
@@ -123,7 +123,7 @@ export default function Users() {
     try {
       await api.post('/auth/register', formData)
       setShowCreateModal(false)
-      setFormData({ username: '', email: '', password: '', first_name: '', last_name: '', phone_number: '', role: 'user' })
+      setFormData({ username: '', email: '', password: '', first_name: '', last_name: '', phone: '', role: 'user' })
       const data = await api.get('/users')
       setUsers(data)
       alert('User created successfully!')
@@ -380,7 +380,7 @@ export default function Users() {
                   </p>
                 </td>
                 <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>
-                  {user.phone_number || '-'}
+                  {user.phone || '-'}
                 </td>
                 <td style={{ padding: '12px 16px' }}>
                   {currentUser?.role === 'superadmin' && editingUserId === (user.cms_user_id || user.users_table_id) ? (
@@ -508,7 +508,7 @@ export default function Users() {
               <button
                 onClick={() => {
                   setShowCreateModal(false)
-                  setFormData({ username: '', email: '', password: '', first_name: '', last_name: '', phone_number: '', role: 'user' })
+                  setFormData({ username: '', email: '', password: '', first_name: '', last_name: '', phone: '', role: 'user' })
                 }}
                 style={{
                   padding: '8px',
@@ -680,8 +680,8 @@ export default function Users() {
                   <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Phone Number</label>
                   <input
                     type="text"
-                    name="phone_number"
-                    value={formData.phone_number}
+                    name="phone"
+                    value={formData.phone}
                     onChange={handleInputChange}
                     placeholder="Enter phone number..."
                     style={{
@@ -741,7 +741,7 @@ export default function Users() {
               <button
                 onClick={() => {
                   setShowCreateModal(false)
-                  setFormData({ username: '', email: '', password: '', first_name: '', last_name: '', phone_number: '', role: 'user' })
+                  setFormData({ username: '', email: '', password: '', first_name: '', last_name: '', phone: '', role: 'user' })
                 }}
                 style={{
                   padding: '10px 20px',
