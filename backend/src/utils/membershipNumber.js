@@ -45,13 +45,23 @@ async function generateMembershipNumber() {
 async function assignMembershipNumber(userId) {
   try {
     // Check if user is admin - don't assign membership number to admins
+    // Check both cms_users and users tables for role
+    const [cmsUsers] = await db.query(
+      `SELECT role FROM cms_users WHERE id = ?`,
+      [userId]
+    );
+
     const [users] = await db.query(
       `SELECT role FROM users WHERE id = ?`,
       [userId]
     );
 
-    if (users.length > 0 && (users[0].role === 'admin' || users[0].role === 'superadmin')) {
-      console.log(`Skipping membership number assignment for admin user ${userId}`);
+    const cmsRole = cmsUsers.length > 0 ? cmsUsers[0].role : null;
+    const usersRole = users.length > 0 ? users[0].role : null;
+
+    // Skip assignment if user is admin or superadmin in either table
+    if ((cmsRole === 'admin' || cmsRole === 'superadmin') || (usersRole === 'admin' || usersRole === 'superadmin')) {
+      console.log(`Skipping membership number assignment for admin user ${userId} (cms_role: ${cmsRole}, users_role: ${usersRole})`);
       return null;
     }
 
@@ -62,6 +72,7 @@ async function assignMembershipNumber(userId) {
       [membershipNumber, userId]
     );
 
+    console.log(`Assigned membership number ${membershipNumber} to user ${userId}`);
     return membershipNumber;
   } catch (error) {
     console.error('Error assigning membership number:', error);
@@ -72,25 +83,35 @@ async function assignMembershipNumber(userId) {
 // Ensure a user has a membership number (assign if missing)
 async function ensureMembershipNumber(userId) {
   try {
+    // Check both tables for user role and membership number
+    const [cmsUsers] = await db.query(
+      `SELECT id, role FROM cms_users WHERE id = ?`,
+      [userId]
+    );
+
     const [users] = await db.query(
       `SELECT id, role, membership_number FROM users WHERE id = ?`,
       [userId]
     );
 
-    if (users.length === 0) {
+    if (cmsUsers.length === 0 && users.length === 0) {
+      console.log(`User ${userId} not found in either table`);
       return null;
     }
 
-    const user = users[0];
+    const cmsRole = cmsUsers.length > 0 ? cmsUsers[0].role : null;
+    const usersRole = users.length > 0 ? users[0].role : null;
+    const membershipNumber = users.length > 0 ? users[0].membership_number : null;
 
-    // Skip admin/superadmin
-    if (user.role === 'admin' || user.role === 'superadmin') {
+    // Skip admin/superadmin (check both tables)
+    if ((cmsRole === 'admin' || cmsRole === 'superadmin') || (usersRole === 'admin' || usersRole === 'superadmin')) {
+      console.log(`Skipping membership number for admin user ${userId}`);
       return null;
     }
 
     // If already has membership number, return it
-    if (user.membership_number) {
-      return user.membership_number;
+    if (membershipNumber) {
+      return membershipNumber;
     }
 
     // Assign new membership number

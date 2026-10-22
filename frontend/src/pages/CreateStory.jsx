@@ -15,6 +15,7 @@ export default function CreateStory() {
     title: '',
     author_id: '',
     category: '',
+    country: '',
     content: '',
     read_time: '5 min read',
     display_section: 'default',
@@ -31,6 +32,14 @@ export default function CreateStory() {
   const [coverImagePreview3, setCoverImagePreview3] = useState(null)
   const [coverImageFile4, setCoverImageFile4] = useState(null)
   const [coverImagePreview4, setCoverImagePreview4] = useState(null)
+  const [coverImageFile5, setCoverImageFile5] = useState(null)
+  const [coverImagePreview5, setCoverImagePreview5] = useState(null)
+  const [coverImageFile6, setCoverImageFile6] = useState(null)
+  const [coverImagePreview6, setCoverImagePreview6] = useState(null)
+  const [coverImageFile7, setCoverImageFile7] = useState(null)
+  const [coverImagePreview7, setCoverImagePreview7] = useState(null)
+  const [coverImageFile8, setCoverImageFile8] = useState(null)
+  const [coverImagePreview8, setCoverImagePreview8] = useState(null)
   const [authors, setAuthors] = useState([])
   const [categories, setCategories] = useState([])
 
@@ -128,6 +137,54 @@ export default function CreateStory() {
       reader.readAsDataURL(file)
     }
   }
+
+  const handleCoverImageChange5 = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      setCoverImageFile5(file)
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setCoverImagePreview5(reader.result)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const handleCoverImageChange6 = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      setCoverImageFile6(file)
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setCoverImagePreview6(reader.result)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const handleCoverImageChange7 = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      setCoverImageFile7(file)
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setCoverImagePreview7(reader.result)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const handleCoverImageChange8 = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      setCoverImageFile8(file)
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setCoverImagePreview8(reader.result)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
   
   const handleCreateStory = async (status) => {
     if (!formData.title || formData.title.trim() === '') {
@@ -152,6 +209,7 @@ export default function CreateStory() {
       formDataToSend.append('title', formData.title)
       formDataToSend.append('author_id', formData.author_id)
       formDataToSend.append('category', formData.category)
+      formDataToSend.append('country', formData.country)
       formDataToSend.append('content', formData.content)
       formDataToSend.append('status', status)
       formDataToSend.append('read_time', formData.read_time)
@@ -175,6 +233,18 @@ export default function CreateStory() {
       }
       if (coverImageFile4) {
         formDataToSend.append('cover_image_4', coverImageFile4)
+      }
+      if (coverImageFile5) {
+        formDataToSend.append('cover_image_5', coverImageFile5)
+      }
+      if (coverImageFile6) {
+        formDataToSend.append('cover_image_6', coverImageFile6)
+      }
+      if (coverImageFile7) {
+        formDataToSend.append('cover_image_7', coverImageFile7)
+      }
+      if (coverImageFile8) {
+        formDataToSend.append('cover_image_8', coverImageFile8)
       }
       
       await api.post('/stories', formDataToSend)
@@ -284,7 +354,7 @@ export default function CreateStory() {
               />
             </div>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px' }}>
             <div>
               <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Author</label>
               <select name="author_id" value={formData.author_id} onChange={handleInputChange} style={{
@@ -340,6 +410,35 @@ export default function CreateStory() {
                   <option key={category.id} value={category.name}>{category.name}</option>
                 ))}
               </select>
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Country</label>
+              <input
+                type="text"
+                name="country"
+                value={formData.country}
+                onChange={handleInputChange}
+                placeholder="e.g., Kenya"
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  background: isDarkMode ? '#0f172a' : '#f8fafc',
+                  border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
+                  borderRadius: '12px',
+                  outline: 'none',
+                  fontSize: '14px',
+                  color: isDarkMode ? '#f1f5f9' : '#0f172a',
+                  transition: 'all 0.2s ease'
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = '#7c3aed'
+                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e2e8f0'
+                  e.currentTarget.style.boxShadow = 'none'
+                }}
+              />
             </div>
           </div>
           <div>
@@ -524,103 +623,226 @@ export default function CreateStory() {
             )}
           </div>
           <div>
-            <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Featured Image 2</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleCoverImageChange2}
-              style={{
-                width: '100%',
-                padding: '8px 12px',
-                background: isDarkMode ? '#0f172a' : '#f8fafc',
-                border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
-                borderRadius: '8px',
-                outline: 'none',
-                fontSize: '13px',
-                color: isDarkMode ? '#f1f5f9' : '#0f172a',
-                cursor: 'pointer'
-              }}
-            />
-            {coverImagePreview2 && (
-              <div style={{ marginTop: '8px', position: 'relative' }}>
-                <img
-                  src={coverImagePreview2}
-                  alt="Featured image 2 preview"
+            <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Featured Images (2-8)</label>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginTop: '8px' }}>
+              <div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleCoverImageChange2}
                   style={{
                     width: '100%',
-                    maxHeight: '200px',
-                    objectFit: 'cover',
-                    borderRadius: '8px'
+                    padding: '6px 8px',
+                    background: isDarkMode ? '#0f172a' : '#f8fafc',
+                    border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
+                    borderRadius: '6px',
+                    outline: 'none',
+                    fontSize: '11px',
+                    color: isDarkMode ? '#f1f5f9' : '#0f172a',
+                    cursor: 'pointer'
                   }}
                 />
+                {coverImagePreview2 && (
+                  <img
+                    src={coverImagePreview2}
+                    alt="Featured image 2 preview"
+                    style={{
+                      width: '100%',
+                      height: '100px',
+                      objectFit: 'cover',
+                      borderRadius: '6px',
+                      marginTop: '6px'
+                    }}
+                  />
+                )}
               </div>
-            )}
-          </div>
-          <div>
-            <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Featured Image 3</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleCoverImageChange3}
-              style={{
-                width: '100%',
-                padding: '8px 12px',
-                background: isDarkMode ? '#0f172a' : '#f8fafc',
-                border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
-                borderRadius: '8px',
-                outline: 'none',
-                fontSize: '13px',
-                color: isDarkMode ? '#f1f5f9' : '#0f172a',
-                cursor: 'pointer'
-              }}
-            />
-            {coverImagePreview3 && (
-              <div style={{ marginTop: '8px', position: 'relative' }}>
-                <img
-                  src={coverImagePreview3}
-                  alt="Featured image 3 preview"
+              <div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleCoverImageChange3}
                   style={{
                     width: '100%',
-                    maxHeight: '200px',
-                    objectFit: 'cover',
-                    borderRadius: '8px'
+                    padding: '6px 8px',
+                    background: isDarkMode ? '#0f172a' : '#f8fafc',
+                    border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
+                    borderRadius: '6px',
+                    outline: 'none',
+                    fontSize: '11px',
+                    color: isDarkMode ? '#f1f5f9' : '#0f172a',
+                    cursor: 'pointer'
                   }}
                 />
+                {coverImagePreview3 && (
+                  <img
+                    src={coverImagePreview3}
+                    alt="Featured image 3 preview"
+                    style={{
+                      width: '100%',
+                      height: '100px',
+                      objectFit: 'cover',
+                      borderRadius: '6px',
+                      marginTop: '6px'
+                    }}
+                  />
+                )}
               </div>
-            )}
-          </div>
-          <div>
-            <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Featured Image 4</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleCoverImageChange4}
-              style={{
-                width: '100%',
-                padding: '8px 12px',
-                background: isDarkMode ? '#0f172a' : '#f8fafc',
-                border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
-                borderRadius: '8px',
-                outline: 'none',
-                fontSize: '13px',
-                color: isDarkMode ? '#f1f5f9' : '#0f172a',
-                cursor: 'pointer'
-              }}
-            />
-            {coverImagePreview4 && (
-              <div style={{ marginTop: '8px', position: 'relative' }}>
-                <img
-                  src={coverImagePreview4}
-                  alt="Featured image 4 preview"
+              <div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleCoverImageChange4}
                   style={{
                     width: '100%',
-                    maxHeight: '200px',
-                    objectFit: 'cover',
-                    borderRadius: '8px'
+                    padding: '6px 8px',
+                    background: isDarkMode ? '#0f172a' : '#f8fafc',
+                    border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
+                    borderRadius: '6px',
+                    outline: 'none',
+                    fontSize: '11px',
+                    color: isDarkMode ? '#f1f5f9' : '#0f172a',
+                    cursor: 'pointer'
                   }}
                 />
+                {coverImagePreview4 && (
+                  <img
+                    src={coverImagePreview4}
+                    alt="Featured image 4 preview"
+                    style={{
+                      width: '100%',
+                      height: '100px',
+                      objectFit: 'cover',
+                      borderRadius: '6px',
+                      marginTop: '6px'
+                    }}
+                  />
+                )}
               </div>
-            )}
+              <div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleCoverImageChange5}
+                  style={{
+                    width: '100%',
+                    padding: '6px 8px',
+                    background: isDarkMode ? '#0f172a' : '#f8fafc',
+                    border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
+                    borderRadius: '6px',
+                    outline: 'none',
+                    fontSize: '11px',
+                    color: isDarkMode ? '#f1f5f9' : '#0f172a',
+                    cursor: 'pointer'
+                  }}
+                />
+                {coverImagePreview5 && (
+                  <img
+                    src={coverImagePreview5}
+                    alt="Featured image 5 preview"
+                    style={{
+                      width: '100%',
+                      height: '100px',
+                      objectFit: 'cover',
+                      borderRadius: '6px',
+                      marginTop: '6px'
+                    }}
+                  />
+                )}
+              </div>
+              <div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleCoverImageChange6}
+                  style={{
+                    width: '100%',
+                    padding: '6px 8px',
+                    background: isDarkMode ? '#0f172a' : '#f8fafc',
+                    border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
+                    borderRadius: '6px',
+                    outline: 'none',
+                    fontSize: '11px',
+                    color: isDarkMode ? '#f1f5f9' : '#0f172a',
+                    cursor: 'pointer'
+                  }}
+                />
+                {coverImagePreview6 && (
+                  <img
+                    src={coverImagePreview6}
+                    alt="Featured image 6 preview"
+                    style={{
+                      width: '100%',
+                      height: '100px',
+                      objectFit: 'cover',
+                      borderRadius: '6px',
+                      marginTop: '6px'
+                    }}
+                  />
+                )}
+              </div>
+              <div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleCoverImageChange7}
+                  style={{
+                    width: '100%',
+                    padding: '6px 8px',
+                    background: isDarkMode ? '#0f172a' : '#f8fafc',
+                    border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
+                    borderRadius: '6px',
+                    outline: 'none',
+                    fontSize: '11px',
+                    color: isDarkMode ? '#f1f5f9' : '#0f172a',
+                    cursor: 'pointer'
+                  }}
+                />
+                {coverImagePreview7 && (
+                  <img
+                    src={coverImagePreview7}
+                    alt="Featured image 7 preview"
+                    style={{
+                      width: '100%',
+                      height: '100px',
+                      objectFit: 'cover',
+                      borderRadius: '6px',
+                      marginTop: '6px'
+                    }}
+                  />
+                )}
+              </div>
+              <div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleCoverImageChange8}
+                  style={{
+                    width: '100%',
+                    padding: '6px 8px',
+                    background: isDarkMode ? '#0f172a' : '#f8fafc',
+                    border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0',
+                    borderRadius: '6px',
+                    outline: 'none',
+                    fontSize: '11px',
+                    color: isDarkMode ? '#f1f5f9' : '#0f172a',
+                    cursor: 'pointer'
+                  }}
+                />
+                {coverImagePreview8 && (
+                  <img
+                    src={coverImagePreview8}
+                    alt="Featured image 8 preview"
+                    style={{
+                      width: '100%',
+                      height: '100px',
+                      objectFit: 'cover',
+                      borderRadius: '6px',
+                      marginTop: '6px'
+                    }}
+                  />
+                )}
+              </div>
+            </div>
           </div>
           <div>
             <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: isDarkMode ? '#94a3b8' : '#374151', marginBottom: '8px' }}>Content</label>
