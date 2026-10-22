@@ -34,6 +34,10 @@ const registerValidationRules = [
     .optional()
     .trim()
     .isLength({ max: 100 }).withMessage('Phone number must be less than 100 characters'),
+  body('country')
+    .optional()
+    .trim()
+    .isLength({ max: 10 }).withMessage('Country code must be less than 10 characters'),
   body('role')
     .optional()
     .isIn(['admin', 'user', 'contributor', 'superadmin', 'editor']).withMessage('Invalid role')
@@ -67,6 +71,10 @@ const updateUserValidationRules = [
     .optional()
     .trim()
     .isLength({ max: 100 }).withMessage('Phone number must be less than 100 characters'),
+  body('country')
+    .optional()
+    .trim()
+    .isLength({ max: 10 }).withMessage('Country code must be less than 10 characters'),
   body('role')
     .optional()
     .isIn(['admin', 'user', 'contributor', 'superadmin', 'editor']).withMessage('Invalid role'),

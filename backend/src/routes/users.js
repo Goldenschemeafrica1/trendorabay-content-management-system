@@ -30,6 +30,7 @@ router.get('/', authenticate, isAdmin, async (req, res) => {
         u.first_name,
         u.last_name,
         u.phone,
+        u.country,
         u.membership_number,
         u.created_at as users_created_at,
         u.updated_at as users_updated_at
@@ -53,6 +54,7 @@ router.get('/', authenticate, isAdmin, async (req, res) => {
         u.first_name,
         u.last_name,
         u.phone,
+        u.country,
         u.membership_number,
         u.created_at as users_created_at,
         u.updated_at as users_updated_at
@@ -93,6 +95,7 @@ router.get('/:id', authenticate, async (req, res) => {
         u.first_name,
         u.last_name,
         u.phone,
+        u.country,
         u.membership_number,
         u.created_at as users_created_at,
         u.updated_at as users_updated_at
@@ -113,7 +116,7 @@ router.get('/:id', authenticate, async (req, res) => {
 // Create user (admin only)
 router.post('/', authenticate, isAdmin, verifyRequestSignature, async (req, res) => {
   try {
-    const { name, email, password, role, phone } = req.body;
+    const { name, email, password, role, phone, country } = req.body;
     
     // Check if email already exists
     const [existingUsers] = await db.query(
@@ -146,9 +149,9 @@ router.post('/', authenticate, isAdmin, verifyRequestSignature, async (req, res)
     
     // Then insert into users table (for user management)
     const [result] = await db.query(
-      `INSERT INTO users (cms_user_id, username, email, phone, role)
-       VALUES (?, ?, ?, ?, ?)`,
-      [cmsResult.insertId, name, email, phone || null, userRole]
+      `INSERT INTO users (cms_user_id, username, email, phone, country, role)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [cmsResult.insertId, name, email, phone || null, country || null, userRole]
     );
 
     // Assign membership number
@@ -183,7 +186,7 @@ router.post('/', authenticate, isAdmin, verifyRequestSignature, async (req, res)
 // Update user (admin or own profile)
 router.put('/:id', authenticate, async (req, res) => {
   try {
-    const { name, email, role, profile_image_url, password, phone } = req.body;
+    const { name, email, role, profile_image_url, password, phone, country } = req.body;
     const cmsUserId = parseInt(req.params.id);
     
     // Get old values for audit logging
@@ -275,6 +278,10 @@ router.put('/:id', authenticate, async (req, res) => {
       if (phone !== undefined) {
         usersUpdateFields.push('phone = ?');
         usersUpdateValues.push(phone);
+      }
+      if (country !== undefined) {
+        usersUpdateFields.push('country = ?');
+        usersUpdateValues.push(country);
       }
 
       usersUpdateValues.push(usersTableId);

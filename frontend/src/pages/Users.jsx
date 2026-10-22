@@ -20,6 +20,7 @@ export default function Users() {
     first_name: '',
     last_name: '',
     phone: '',
+    country: '',
     role: 'user'
   })
   const currentUser = JSON.parse(sessionStorage.getItem('user'))
@@ -109,24 +110,25 @@ export default function Users() {
       alert('Please fill in the username field')
       return
     }
-    
+
     if (!formData.email || formData.email.trim() === '') {
       alert('Please fill in the email field')
       return
     }
-    
+
     if (!formData.password || formData.password.trim() === '') {
       alert('Please fill in the password field')
       return
     }
-    
+
     try {
-      await api.post('/auth/register', formData)
+      const response = await api.post('/auth/register', formData)
+      console.log('User created with response:', response)
       setShowCreateModal(false)
-      setFormData({ username: '', email: '', password: '', first_name: '', last_name: '', phone: '', role: 'user' })
+      setFormData({ username: '', email: '', password: '', first_name: '', last_name: '', phone: '', country: '', role: 'user' })
       const data = await api.get('/users')
       setUsers(data)
-      alert('User created successfully!')
+      alert(`User created successfully! Membership number: ${response.membership_number || 'Not assigned'}`)
     } catch (error) {
       console.error('Failed to create user:', error)
       alert('Failed to create user: ' + (error.message || 'Unknown error'))
@@ -317,9 +319,10 @@ export default function Users() {
           <thead style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}>
             <tr>
               <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>User</th>
-              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Membership No</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)', width: '150px' }}>Membership No</th>
               <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Name</th>
               <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Phone</th>
+              <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Country</th>
               <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Role</th>
               <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Joined</th>
               <th style={{ textAlign: 'right', padding: '12px 16px', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>Actions</th>
@@ -371,7 +374,7 @@ export default function Users() {
                     </div>
                   </div>
                 </td>
-                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px', fontWeight: '500' }}>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px', fontWeight: '500', width: '150px' }}>
                   {user.membership_number || '-'}
                 </td>
                 <td style={{ padding: '12px 16px' }}>
@@ -381,6 +384,9 @@ export default function Users() {
                 </td>
                 <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>
                   {user.phone || '-'}
+                </td>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontSize: '13px' }}>
+                  {user.country || '-'}
                 </td>
                 <td style={{ padding: '12px 16px' }}>
                   {currentUser?.role === 'superadmin' && editingUserId === (user.cms_user_id || user.users_table_id) ? (
@@ -508,7 +514,7 @@ export default function Users() {
               <button
                 onClick={() => {
                   setShowCreateModal(false)
-                  setFormData({ username: '', email: '', password: '', first_name: '', last_name: '', phone: '', role: 'user' })
+                  setFormData({ username: '', email: '', password: '', first_name: '', last_name: '', phone: '', country: '', role: 'user' })
                 }}
                 style={{
                   padding: '8px',
@@ -705,6 +711,34 @@ export default function Users() {
                   />
                 </div>
                 <div>
+                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Country</label>
+                  <input
+                    type="text"
+                    name="country"
+                    value={formData.country}
+                    onChange={handleInputChange}
+                    placeholder="Enter country code (e.g., US, UK, NG)..."
+                    style={{
+                      width: '100%',
+                      padding: '12px 16px',
+                      background: 'var(--bg-secondary)',
+                      border: '1px solid var(--border-color)',
+                      borderRadius: '12px',
+                      outline: 'none',
+                      fontSize: '14px',
+                      transition: 'all 0.2s ease'
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.borderColor = '#7c3aed'
+                      e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.borderColor = 'var(--border-color)'
+                      e.currentTarget.style.boxShadow = 'none'
+                    }}
+                  />
+                </div>
+                <div>
                   <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)', marginBottom: '8px' }}>Role</label>
                   <select
                     name="role"
@@ -741,7 +775,7 @@ export default function Users() {
               <button
                 onClick={() => {
                   setShowCreateModal(false)
-                  setFormData({ username: '', email: '', password: '', first_name: '', last_name: '', phone: '', role: 'user' })
+                  setFormData({ username: '', email: '', password: '', first_name: '', last_name: '', phone: '', country: '', role: 'user' })
                 }}
                 style={{
                   padding: '10px 20px',

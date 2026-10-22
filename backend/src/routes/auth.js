@@ -17,7 +17,7 @@ const SALT_ROUNDS = 8;
 // Register new user
 router.post('/register', registerValidation, async (req, res) => {
   try {
-    const { name, email, password, role, phone } = req.body;
+    const { name, email, password, role, phone, country } = req.body;
     
     // Check if email already exists
     const [existingUsers] = await db.query(
@@ -45,9 +45,9 @@ router.post('/register', registerValidation, async (req, res) => {
     
     // Also insert into users table for user management
     const [userResult] = await db.query(
-      `INSERT INTO users (cms_user_id, username, email, phone, role)
-       VALUES (?, ?, ?, ?, ?)`,
-      [result.insertId, name, email, phone || null, userRole]
+      `INSERT INTO users (cms_user_id, username, email, phone, country, role)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [result.insertId, name, email, phone || null, country || null, userRole]
     );
 
     // Assign membership number

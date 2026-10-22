@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Plus, Edit, Trash2, Eye, ChevronUp, ChevronDown } from 'lucide-react'
+import { Plus, Edit, Trash2, Eye, ChevronUp, ChevronDown, FileText, TrendingUp, Heart, Clock, BarChart3, Pencil } from 'lucide-react'
 import api from '../services/api'
 import { HeaderVisibilityContext, SidebarVisibilityContext, ThemeContext } from '../contexts/LayoutContexts'
 
@@ -10,13 +10,22 @@ export default function Stories() {
   const { setHideSidebar } = useContext(SidebarVisibilityContext)
   const { isDarkMode } = useContext(ThemeContext)
   const [searchParams] = useSearchParams()
-  
+
   const [searchTerm, setSearchTerm] = useState('')
   const [filterStatus, setFilterStatus] = useState('all')
   const [filterSection, setFilterSection] = useState('all')
   const [sortBy, setSortBy] = useState('created_at')
   const [stories, setStories] = useState([])
   const [,setLoading] = useState(true)
+
+  // Story statistics
+  const [storyStats, setStoryStats] = useState({
+    total: 0,
+    published: 0,
+    draft: 0,
+    totalViews: 0,
+    totalLikes: 0
+  })
 
   // Handle search from URL parameter
   useEffect(() => {
@@ -38,6 +47,16 @@ export default function Stories() {
         const url = queryString ? `/stories?${queryString}` : '/stories'
         const data = await api.get(url)
         setStories(data)
+
+        // Calculate statistics
+        const stats = {
+          total: data.length,
+          published: data.filter(s => s.status === 'published').length,
+          draft: data.filter(s => s.status === 'draft').length,
+          totalViews: data.reduce((sum, s) => sum + (s.views || 0), 0),
+          totalLikes: data.reduce((sum, s) => sum + (s.likes || 0), 0)
+        }
+        setStoryStats(stats)
       } catch (error) {
         console.error('Failed to fetch stories:', error)
       } finally {
@@ -80,6 +99,7 @@ export default function Stories() {
     author: story.author_name || 'Unknown',
     category: story.category_name || story.category || 'Uncategorized',
     views: story.views || 0,
+    read_time: story.read_time || '5 min read',
     displaySection: story.display_section || 'default',
     displayOrder: story.display_order || 0,
     priority: story.priority || 0
@@ -142,6 +162,145 @@ export default function Stories() {
           <Plus style={{ width: '20px', height: '20px' }} />
           Create Story
         </button>
+      </div>
+
+      {/* Stats */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '24px' }}>
+        <div style={{
+          background: isDarkMode ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+          backdropFilter: 'blur(20px)',
+          borderRadius: '16px',
+          padding: '8px',
+          border: isDarkMode ? '1px solid rgba(51, 65, 85, 0.8)' : '1px solid rgba(226, 232, 240, 0.8)',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
+        }}>
+          <div style={{
+            width: '32px',
+            height: '32px',
+            background: 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)',
+            borderRadius: '10px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <FileText style={{ width: '16px', height: '16px', color: '#2563eb' }} />
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: isDarkMode ? '#f1f5f9' : '#0f172a', margin: 0 }}>{storyStats.total}</h3>
+            <p style={{ fontSize: '10px', color: isDarkMode ? '#94a3b8' : '#64748b', margin: 0 }}>Total Stories</p>
+          </div>
+        </div>
+        <div style={{
+          background: isDarkMode ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+          backdropFilter: 'blur(20px)',
+          borderRadius: '16px',
+          padding: '8px',
+          border: isDarkMode ? '1px solid rgba(51, 65, 85, 0.8)' : '1px solid rgba(226, 232, 240, 0.8)',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
+        }}>
+          <div style={{
+            width: '32px',
+            height: '32px',
+            background: 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)',
+            borderRadius: '10px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <TrendingUp style={{ width: '16px', height: '16px', color: '#166534' }} />
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: isDarkMode ? '#f1f5f9' : '#0f172a', margin: 0 }}>{storyStats.published}</h3>
+            <p style={{ fontSize: '10px', color: isDarkMode ? '#94a3b8' : '#64748b', margin: 0 }}>Published</p>
+          </div>
+        </div>
+        <div style={{
+          background: isDarkMode ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+          backdropFilter: 'blur(20px)',
+          borderRadius: '16px',
+          padding: '8px',
+          border: isDarkMode ? '1px solid rgba(51, 65, 85, 0.8)' : '1px solid rgba(226, 232, 240, 0.8)',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
+        }}>
+          <div style={{
+            width: '32px',
+            height: '32px',
+            background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)',
+            borderRadius: '10px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <Pencil style={{ width: '16px', height: '16px', color: '#92400e' }} />
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: isDarkMode ? '#f1f5f9' : '#0f172a', margin: 0 }}>{storyStats.draft}</h3>
+            <p style={{ fontSize: '10px', color: isDarkMode ? '#94a3b8' : '#64748b', margin: 0 }}>Drafts</p>
+          </div>
+        </div>
+        <div style={{
+          background: isDarkMode ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+          backdropFilter: 'blur(20px)',
+          borderRadius: '16px',
+          padding: '8px',
+          border: isDarkMode ? '1px solid rgba(51, 65, 85, 0.8)' : '1px solid rgba(226, 232, 240, 0.8)',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
+        }}>
+          <div style={{
+            width: '32px',
+            height: '32px',
+            background: 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)',
+            borderRadius: '10px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <Eye style={{ width: '16px', height: '16px', color: '#1e40af' }} />
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: isDarkMode ? '#f1f5f9' : '#0f172a', margin: 0 }}>{storyStats.totalViews.toLocaleString()}</h3>
+            <p style={{ fontSize: '10px', color: isDarkMode ? '#94a3b8' : '#64748b', margin: 0 }}>Total Views</p>
+          </div>
+        </div>
+        <div style={{
+          background: isDarkMode ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+          backdropFilter: 'blur(20px)',
+          borderRadius: '16px',
+          padding: '8px',
+          border: isDarkMode ? '1px solid rgba(51, 65, 85, 0.8)' : '1px solid rgba(226, 232, 240, 0.8)',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
+        }}>
+          <div style={{
+            width: '32px',
+            height: '32px',
+            background: 'linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%)',
+            borderRadius: '10px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <Heart style={{ width: '16px', height: '16px', color: '#be185d' }} />
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: isDarkMode ? '#f1f5f9' : '#0f172a', margin: 0 }}>{storyStats.totalLikes.toLocaleString()}</h3>
+            <p style={{ fontSize: '10px', color: isDarkMode ? '#94a3b8' : '#64748b', margin: 0 }}>Total Likes</p>
+          </div>
+        </div>
       </div>
 
       {/* Filters */}
@@ -266,18 +425,21 @@ export default function Stories() {
         borderRadius: '16px',
         border: isDarkMode ? '1px solid rgba(51, 65, 85, 0.8)' : '1px solid rgba(226, 232, 240, 0.8)',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-        overflow: 'hidden'
+        overflow: 'auto'
       }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '1400px' }}>
           <thead style={{ background: isDarkMode ? '#1e293b' : '#f8fafc', borderBottom: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0' }}>
             <tr>
-              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: isDarkMode ? '#94a3b8' : '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Title</th>
+              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: isDarkMode ? '#94a3b8' : '#475569', textTransform: 'uppercase', letterSpacing: '0.5px', width: '300px' }}>Title</th>
               <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: isDarkMode ? '#94a3b8' : '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Author</th>
               <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: isDarkMode ? '#94a3b8' : '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Category</th>
+              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: isDarkMode ? '#94a3b8' : '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Country</th>
               <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: isDarkMode ? '#94a3b8' : '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Section</th>
               <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: isDarkMode ? '#94a3b8' : '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Status</th>
               <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: isDarkMode ? '#94a3b8' : '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Date</th>
+              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: isDarkMode ? '#94a3b8' : '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Read Time</th>
               <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: isDarkMode ? '#94a3b8' : '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Views</th>
+              <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: isDarkMode ? '#94a3b8' : '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Stats</th>
               <th style={{ textAlign: 'right', padding: '16px 24px', fontSize: '12px', fontWeight: '600', color: isDarkMode ? '#94a3b8' : '#475569', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Actions</th>
             </tr>
           </thead>
@@ -290,7 +452,7 @@ export default function Stories() {
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent'
                 }}>
-                <td style={{ padding: '16px 24px' }}>
+                <td style={{ padding: '16px 24px', width: '300px' }}>
                   <span style={{ fontWeight: '500', color: isDarkMode ? '#f1f5f9' : '#0f172a', fontSize: '14px' }}>{story.title}</span>
                 </td>
                 <td style={{ padding: '16px 24px', color: isDarkMode ? '#94a3b8' : '#64748b', fontSize: '14px' }}>{story.author}</td>
@@ -306,6 +468,7 @@ export default function Stories() {
                     {story.category}
                   </span>
                 </td>
+                <td style={{ padding: '16px 24px', color: isDarkMode ? '#94a3b8' : '#64748b', fontSize: '14px' }}>{story.country || '-'}</td>
                 <td style={{ padding: '16px 24px' }}>
                   <span style={{
                     padding: '4px 12px',
@@ -338,7 +501,31 @@ export default function Stories() {
                   </span>
                 </td>
                 <td style={{ padding: '16px 24px', color: isDarkMode ? '#94a3b8' : '#64748b', fontSize: '14px' }}>{story.date}</td>
+                <td style={{ padding: '16px 24px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <Clock style={{ width: '14px', height: '14px', color: isDarkMode ? '#94a3b8' : '#64748b' }} />
+                    <span style={{ color: isDarkMode ? '#94a3b8' : '#64748b', fontSize: '14px' }}>{story.read_time || '5 min read'}</span>
+                  </div>
+                </td>
                 <td style={{ padding: '16px 24px', color: isDarkMode ? '#94a3b8' : '#64748b', fontSize: '14px' }}>{story.views.toLocaleString()}</td>
+                <td style={{ padding: '16px 24px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    {story.likes > 0 ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <Heart style={{ width: '14px', height: '14px', color: '#be185d', fill: '#be185d' }} />
+                        <span style={{ fontSize: '11px', color: isDarkMode ? '#94a3b8' : '#64748b' }}>{story.likes}</span>
+                      </div>
+                    ) : (
+                      <span style={{ fontSize: '11px', color: isDarkMode ? '#64748b' : '#94a3b8' }}>0</span>
+                    )}
+                    {story.priority > 0 ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <BarChart3 style={{ width: '14px', height: '14px', color: '#059669' }} />
+                        <span style={{ fontSize: '11px', color: isDarkMode ? '#94a3b8' : '#64748b' }}>Prio: {story.priority}</span>
+                      </div>
+                    ) : null}
+                  </div>
+                </td>
                 <td style={{ padding: '16px 24px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '8px' }}>
                     <button
