@@ -156,7 +156,7 @@ router.post('/', authenticate, isEditor, upload, storyValidation, async (req, re
 
     const [result] = await db.query(
       `INSERT INTO stories (title, slug, content, featured_image_url, featured_image_url_2, featured_image_url_3, featured_image_url_4, featured_image_url_5, featured_image_url_6, featured_image_url_7, featured_image_url_8, author_id, category_id, country, status, featured, published_at, read_time, views, display_section, display_order, priority, display_start_date, display_end_date, is_pinned)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [title, slug, content, imageUrls.cover_image, imageUrls.cover_image_2, imageUrls.cover_image_3, imageUrls.cover_image_4, imageUrls.cover_image_5, imageUrls.cover_image_6, imageUrls.cover_image_7, imageUrls.cover_image_8, author_id, category_id, country || null, status, featuredValue, published_at, finalReadTime, 0, display_section || 'default', display_order || 0, priority || 0, display_start_date || null, display_end_date || null, isPinnedValue]
     );
     
